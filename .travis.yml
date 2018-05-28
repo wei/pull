@@ -1,9 +1,14 @@
 language: node_js
 node_js:
   - node
+env:
+  global:
+    - secure: lrqIuzoJjZHVQLev7hMkT4KohoFMg0DoobMJsdLertix5FPwoqJpWZXpWPswZKnQrPaOB6dvJ6fhQ1kouCHt2DpB+gdE8SdIKpfotEZO89no1R+sDCJOZRVJ83uLKX8+tpzzD/jXPyqce5qRE/JGvlwSZLGyYu9l+syzr1hVj44p7UARuC5mA+OMLPw+V1OPz0ayL0+4WoGEjBFUJzsEnNNEnSbGzRQVIouKL2/k+cVgAAqiMqwne4NT+YmRQGFKNyC+ZREV42TWb5as+5fxlvixLlL0olzIxZSuE0JgnHeVNlihCcnGiom/8P6Zi9Kc0AauUX5UVw5oKZtqlou6S3p4yAjbm+6U72ErQpt8yKmSDxzcJBOluPSeFd56d2Z4dNQaEspMGv2OzvyuUXUARcLxgIaOqaVjrz9uhsaq5w/hCSu+Gy4GS+NNXtRYSzgin9rxH2iW6XYr6B7qByNGC5ozsgSP0MyWi7ChMhQI4WktKpoBNiUsHvrbUFyJSJk72LUCzwX1Fcx1tqoUKpJ8ST35WQ33WqoWmFMDe7OKKngBfaxwaBfGywTr9LtKjwg6jgZgVCIzmHOyk76ZYtWQLBeyMNsHULhnENGv4IrYba8AkhTcNjTaShG5nkmUCcdAWNjyUHMavTUA1+klBhb82WG/Eq2LYK/24cD3dutkw2g=
+    - secure: Eyvb7tt1MB2ygFbkUTYlQv1VAnyOpQbg4tfhpXTjmjq/SzNK+6XNSpQnb5JZh2NnakwFLh1l/taQjVM6O8/Q5KEKNE7ClMSLOkl7QMW6D8kqcKuiIVFfIeaFLA3Nqk457BszigEGu8JusTcqy8+DbTaaeEIGihXE33pCV9Ug8u0ST/ofYiUkbaGiLmvgFSkcXA9P+Ip4m0KxH9Lt/M+IphCSMKfHMYgimgIziiWZm5GJIOw0TtMlxRMqp7G3jMQOFbDeRG8B8rpG3FaKNaSkHvMv7mc4vlvvZalyi/3LyeFdq9fVxYixifnNhnM6jA5ddkqt0x+C/LijFByNh66A5DMXroUEoHI+RYkfotwo0XvTcl+GcHgK4RnWirFGVmtt+AYc5OTrS3E0CUjrIje4vOrYm9fSHIuO0fQugsKVJsvhrjbafhiJr0g4BRc+mu3j644fnFKqqiXeGOXzyyyVfepNgc6a8JV2JPv+NG6Yvc5yDYs6u6Lbydx9n7D5ZlKi4bgvlj4YTl/IdU432SPavwjiEJp3SHYjiJ8pmN9/367ZQhAwbWUdGPfFwooOv5g+Nt59m7eUJXatCZRVDGbL2HK2t0PnoDPhwZ6ilDdgfH/aoYWQCeATolMrr+USt2ZCnA6DZVp4sjvaijRJ2hNc71eaFUHVrCLzBanLiOLd6Mw=
 cache:
   directories:
     - node_modules
+    - $(npm config get prefix)/lib/node_modules
 install:
   - npm i
 script:
@@ -13,4 +18,12 @@ branches:
     - master
     - /^feature-.*/
 after_success:
-  - npm i codecov && codecov
+  - npm i codecov -g && codecov
+before_deploy:
+  - export PRIVATE_BASE64=$(openssl aes-256-cbc -K $encrypted_c408d5c1e9ea_key -iv $encrypted_c408d5c1e9ea_iv -in pk.pem.enc -d | base64)
+  - npm i now -g
+deploy:
+  provider: script
+  script: npm run deploy
+  on:
+    branch: master

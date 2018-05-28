@@ -1,0 +1,16 @@
+{
+  "name": "sync-up",
+  "alias": "sync-up.now.sh",
+  "type": "npm",
+  "env": {
+    "APP_ID": "12711",
+    "NODE_ENV": "production",
+    "LOG_LEVEL": "info"
+  },
+  "scale": {
+    "sfo1": {
+      "min": 1,
+      "max": 1
+    }
+  }
+}
