@@ -7,11 +7,12 @@
   "repository": "https://github.com/wei/sync-up.git",
   "scripts": {
     "dev": "nodemon --exec \"npm start\"",
-    "start": "PRIVATE_KEY=$(echo $PRIVATE_BASE64 | base64 -d) probot run ./index.js",
+    "start": "probot run ./index.js",
+    "now-start": "PRIVATE_KEY=$(echo $PRIVATE_BASE64 | base64 -d) npm start",
     "lint:fix": "standard --fix",
     "test": "standard && jest",
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage",
-    "deploy": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now rm sync-up --safe -y --token=$NOW_TOKEN"
+    "deploy": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now rm sync-up --safe -y --token=$NOW_TOKEN && now scale sync-up.now.sh sfo1 1 --token=$NOW_TOKEN"
   },
   "dependencies": {
     "joi": "^13.3.0",

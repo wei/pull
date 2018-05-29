@@ -3,9 +3,10 @@
   "alias": "sync-up.now.sh",
   "type": "npm",
   "env": {
-    "APP_ID": "12711",
     "NODE_ENV": "production",
-    "LOG_LEVEL": "info"
+    "LOG_LEVEL": "info",
+    "APP_ID": "12711",
+    "WEBHOOK_PATH": "/webhook"
   },
   "scale": {
     "sfo1": {

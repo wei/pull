@@ -1,6 +1,6 @@
 version: "1"
 rules:
-  master:
+  - head: master
     upstream: wei:master
     autoMerge: true
     autoMergeHardReset: true

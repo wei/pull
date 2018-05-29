@@ -61,9 +61,12 @@ module.exports = async (robot) => {
     return new SyncUp(context.github, context.repo({ logger: robot.log }), config)
   }
 
-  const app = robot.route('/_')
+  const app = robot.route()
+
+  app.get('/', (req, res) => res.redirect('https://github.com/wei/sync-up#readme'))
 
   app.get('/check/:owner/:repo', (req, res) => {
+    robot.log.info(`[${req.params.owner}/${req.params.repo}] Checking ${SYNCUP_CONFIG}`)
     fetch(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/contents/.github/${SYNCUP_CONFIG}`)
       .then(githubRes => githubRes.json())
       .then(json => Buffer.from(json.content, 'base64').toString())
@@ -71,10 +74,17 @@ module.exports = async (robot) => {
       .then((config) => {
         const { error, value } = schema.validate(config)
         if (error) throw error
-        res.end(JSON.stringify(value, null, 2))
+
+        const reqs = value.rules.map(r => new Promise((resolve, reject) => {
+          fetch(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/compare/${r.base}...${r.upstream}`)
+            .then(githubRes => (githubRes.ok ? resolve() : reject(Error(`${r.base}...${r.upstream}`))))
+            .catch(e => reject(e))
+        }))
+
+        Promise.all(reqs)
+          .then(() => res.end(JSON.stringify(value, null, 2)))
+          .catch(e => res.status(400).end(`Cannot compare ${e.message}`))
       })
-      .catch((e) => {
-        res.status(400).end(`File not found or invalid`)
-      })
+      .catch(e => res.status(400).end(`File not found or invalid`))
   })
 }

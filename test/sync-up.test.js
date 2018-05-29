@@ -43,24 +43,31 @@ beforeEach(() => {
 
 const goodConfig = {
   version: '1',
-  rules: {
-    master: {
+  rules: [
+    {
+      base: 'master',
       upstream: 'upstream:master',
-      autoMerge: false
+      autoMerge: false,
+      assignees: [],
+      reviewers: []
     },
-    'feature/new-1': {
+    {
+      base: 'feature/new-1',
       upstream: 'upstream:dev',
       autoMerge: true,
-      autoMergeHardReset: true
+      autoMergeHardReset: true,
+      assignees: ['tom'],
+      reviewers: ['jerry']
     },
-    'hotfix/bug-1': {
+    {
+      base: 'hotfix/bug-1',
       upstream: 'upstream:dev',
       autoMerge: true,
-      autoMergeHardReset: false
+      autoMergeHardReset: false,
+      assignees: ['wei'],
+      reviewers: ['wei']
     }
-  },
-  assignees: ['wei'],
-  reviewers: ['wei'],
+  ],
   label: 'sync-up'
 }
 const getSyncUp = () => new SyncUp(github, { owner: 'wei', repo: 'fork', logger: robot.log }, goodConfig)
@@ -82,8 +89,8 @@ describe('sync-up - routineCheck', () => {
 
   test('same branch', async () => {
     const configs = [
-      { version: '1', rules: { master: { upstream: 'master' } } },
-      { version: '1', rules: { master: { upstream: 'wei:master' } } }
+      { version: '1', rules: [{ base: 'master', upstream: 'master' }] },
+      { version: '1', rules: [{ base: 'master', upstream: 'wei:master' }] }
     ]
 
     for (let i = 0; i < configs.length; i++) {
@@ -103,6 +110,9 @@ describe('sync-up - routineCheck', () => {
     await syncUp.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
+    })
+    expect(github.repos.compareCommits).nthCalledWith(3, {
+      owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev'
     })
     expect(github.repos.compareCommits).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev'
@@ -163,14 +173,14 @@ describe('sync-up - routineCheck', () => {
     })
     expect(github.issues.edit).toHaveBeenCalledTimes(2)
     expect(github.issues.edit).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', number: 12, assignees: ['wei'], labels: ['sync-up'], body: helper.getPRBody('wei/fork', 12)
+      owner: 'wei', repo: 'fork', number: 12, assignees: ['tom'], labels: ['sync-up'], body: helper.getPRBody('wei/fork', 12)
     })
     expect(github.issues.edit).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', number: 16, assignees: ['wei'], labels: ['sync-up'], body: helper.getPRBody('wei/fork', 16)
     })
     expect(github.pullRequests.createReviewRequest).toHaveBeenCalledTimes(2)
     expect(github.pullRequests.createReviewRequest).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', number: 12, reviewers: ['wei']
+      owner: 'wei', repo: 'fork', number: 12, reviewers: ['jerry']
     })
     expect(github.pullRequests.createReviewRequest).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', number: 16, reviewers: ['wei']
@@ -188,7 +198,8 @@ describe('sync-up - checkAutoMerge', () => {
     const syncUp = getSyncUp()
     await syncUp.checkAutoMerge({
       number: 10,
-      base: { ref: 'master' },
+      base: { ref: 'master', label: 'wei:master' },
+      head: { ref: 'master', label: 'upstream:master' },
       state: 'open',
       user: { login: 'sync-up[bot]' },
       mergeable: true,
@@ -205,7 +216,7 @@ describe('sync-up - checkAutoMerge', () => {
     await syncUp.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
-      head: { sha: 'sha1-placeholder' },
+      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
       user: { login: 'sync-up[bot]' },
       mergeable: null,
@@ -225,7 +236,7 @@ describe('sync-up - checkAutoMerge', () => {
     await syncUp.checkAutoMerge({
       number: 16,
       base: { ref: 'hotfix/bug-1' },
-      head: { sha: 'sha1-placeholder' },
+      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
       user: { login: 'sync-up[bot]' },
       mergeable: null,
@@ -243,7 +254,7 @@ describe('sync-up - checkAutoMerge', () => {
     await syncUp.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
-      head: { sha: 'sha1-placeholder' },
+      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
       user: { login: 'sync-up[bot]' },
       mergeable: null,
@@ -264,7 +275,7 @@ describe('sync-up - checkAutoMerge', () => {
     await syncUp.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
-      head: { sha: 'sha1-placeholder' },
+      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
       user: { login: 'sync-up[bot]' },
       mergeable: null,
@@ -283,15 +294,35 @@ describe('sync-up - checkAutoMerge', () => {
     await syncUp.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
-      head: { sha: 'sha1-placeholder' },
+      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
       user: { login: 'sync-up[bot]' },
-      mergeable: true,
+      mergeable: null,
       mergeable_state: 'unknown'
-    }, { isMergableMaxRetries: 2 })
+    })
     expect(github.pullRequests.get).toHaveBeenCalledTimes(1)
     expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
     expect(github.gitdata.updateReference).toHaveBeenCalled()
+  })
+
+  test('should handle same repo auto merge', async () => {
+    github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
+    github.gitdata.updateReference.mockRejectedValue(new Error('Update reference failed'))
+
+    const config = { version: '1', rules: [{ base: 'dev', upstream: 'master', autoMerge: true }] }
+    const syncUp = new SyncUp(github, { owner: 'wei', repo: 'fork', logger: robot.log }, config)
+    await syncUp.checkAutoMerge({
+      number: 16,
+      base: { ref: 'dev' },
+      head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
+      state: 'open',
+      user: { login: 'sync-up[bot]' },
+      mergeable: null,
+      mergeable_state: 'unknown'
+    })
+    expect(github.pullRequests.get).toHaveBeenCalledTimes(1)
+    expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16 })
+    expect(github.gitdata.updateReference).not.toHaveBeenCalled()
   })
 })
 
