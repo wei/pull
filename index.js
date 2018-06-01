@@ -51,7 +51,7 @@ module.exports = async (robot) => {
 
   async function forRepository (context) {
     if (!context.payload.repository.fork) {
-      robot.log.info(`[${context.payload.repository.full_name}] Not a fork, unscheduling.`)
+      robot.log.info(`[${context.payload.repository.full_name}] Not a fork, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }
@@ -59,7 +59,7 @@ module.exports = async (robot) => {
     const config = await getConfig(context, PULL_CONFIG) ||
       await getDefaultConfig(context.github, context.repo({ logger: robot.log }))
     if (!config) {
-      robot.log.info(`[${context.payload.repository.full_name}] Unable to fetch config, unscheduling.`)
+      robot.log.info(`[${context.payload.repository.full_name}] Unable to fetch config, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }

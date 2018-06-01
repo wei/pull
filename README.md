@@ -26,20 +26,20 @@ _Upstream must be in the same fork network_
 
 ### Basic setup:
 :exclamation:<span style="color:red">**DESTRUCTIVE**</span>:exclamation:
- 1. Fork a repository
+ 1. Fork a repository. If you've made changes in the past, make a local backup by running `git clone --mirror <clone_url>` just in case.
  2. (Read 3. first) Install Pull app via https://github.com/apps/pull and select only the repos you wish to pull.
- 3. If `.github/pull.yml` file is NOT found, Pull app will automatically watch and pull in upstream's `master` branch to your `master` branch via **hard reset**. :warning:Any changes made on your `master` branch will be lost.
+ 3. If `.github/pull.yml` file is NOT found, Pull app will automatically watch and pull in upstream's `master` branch to your `master` branch via **hard reset**. :warning:Any current or future changes on your `master` branch will be lost.
 
-_Do NOT work on master branch from a fork. If the upstream uses a different default_branch, replace the word `master` above to the respective branch name._
+_Do NOT make changes in master branch from a fork. If the upstream uses a different default_branch, replace the word `master` above to the respective branch name._
 
 
 ### Recommended setup:
- 1. Fork a repository
+ 1. Fork a repository. If you've made changes in the past, make a local backup by running `git clone --mirror <clone_url>` just in case.
  2. Create a new branch
  3. Setup the new branch as Default branch under repository Settings > Branches
  4. Add `.github/pull.yml` to your default branch.
 
-Most common `pull.xml`:
+Most common `pull.xml` (Default configuration when `pull.yml` is not found or failed validation):
 ```yaml
 version: "1"
 rules:
@@ -68,6 +68,25 @@ label: "pull :arrow_down:" # Optional
 
  5. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `pull.yml`.
  6. Install Pull app via https://github.com/apps/pull and select only the repos you wish to pull.
+
+
+## For Repository Owners
+
+If you have a popular repo with a fork network, consider adding `.github/pull.yml` to your repository pointing to yourself (see example). This will allow forks to install Pull and stay updated with zero-configuration.
+
+Example (assuming `owner` is your user or organization name):
+```yaml
+version: "1"
+rules:
+  - head: master
+    upstream: owner:master
+    autoMerge: true
+    autoMergeHardReset: true
+  - head: docs
+    upstream: owner:docs
+    autoMerge: true
+    autoMergeHardReset: true
+```
 
 
 ## Author
