@@ -17,6 +17,7 @@ module.exports = async (robot) => {
       type: 'raw',
       level: process.env.LOG_LEVEL || 'trace',
       stream: bsyslog.createBunyanStream({
+        name: 'pull',
         host: papertrailHost,
         port: papertrailPort
       })
