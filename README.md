@@ -1,4 +1,4 @@
-<img align="right" width="120" height="120" src="https://user-images.githubusercontent.com/5880908/40619990-2deb6502-6265-11e8-88c3-f2bcbac74a42.png" />
+<a href="https://github.com/apps/pull"><img align="right" width="120" height="120" src="https://user-images.githubusercontent.com/5880908/40619990-2deb6502-6265-11e8-88c3-f2bcbac74a42.png" /></a>
 
 # Pull
 
@@ -24,50 +24,59 @@ _Upstream must be in the same fork network_
 
 ## Setup
 
-### Basic setup:
-:exclamation:<span style="color:red">**DESTRUCTIVE**</span>:exclamation:
- 1. Fork a repository. If you've made changes in the past, make a local backup by running `git clone --mirror <clone_url>` just in case.
- 2. (Read 3. first) Install Pull app via https://github.com/apps/pull and select only the repos you wish to pull.
- 3. If `.github/pull.yml` file is NOT found, Pull app will automatically watch and pull in upstream's `master` branch to your `master` branch via **hard reset**. :warning:Any current or future changes on your `master` branch will be lost.
+### Basic setup (without config):
 
-_Do NOT make changes in master branch from a fork. If the upstream uses a different default_branch, replace the word `master` above to the respective branch name._
+:warning:**WARNING**
+
+_Make sure you have not made and will not make any changes your fork's default (master) branch. Changes to other branches will not be touched._
+
+ 1. Fork a repository.
+ 2. Make a local backup using `git clone --mirror`.
+ 3. Install [Pull app](https://github.com/apps/pull) and select only the repos you wish to pull.
+ 4. With zero-configuration, Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
+
+:bulb:_Do NOT touch default (master) branch in any forked repo, always create new branches to work on._
 
 
-### Recommended setup:
- 1. Fork a repository. If you've made changes in the past, make a local backup by running `git clone --mirror <clone_url>` just in case.
- 2. Create a new branch
- 3. Setup the new branch as Default branch under repository Settings > Branches
- 4. Add `.github/pull.yml` to your default branch.
+### Recommended setup (with config):
 
-Most common `pull.xml` (Default configuration when `pull.yml` is not found or failed validation):
+ 1. Fork a repository.
+ 2. Make a local backup using `git clone --mirror`.
+ 3. Create a new branch.
+ 4. Setup the new branch as Default branch under repository Settings > Branches.
+ 5. Add `.github/pull.yml` to your default branch.
+
+#### Most common
+(Basic setup default)
+
 ```yaml
 version: "1"
 rules:
   - head: master
-    upstream: wei:master
+    upstream: wei:master        # change wei to the owner of upstream repo
     autoMerge: true
     autoMergeHardReset: true
 ```
 
-Explained:
+#### Advanced usage
 ```yaml
 version: "1"
-rules:                           # Array of branches to pull
-  - head: master                 # Required. Target local branch
+rules:                           # Array of rules
+  - head: master                 # Required. Target branch
     upstream: wei:master         # Required. Must be in the same fork network.
     autoMerge: true              # Optional, Default: false
-    autoMergeHardReset: true     # Optional, Default: false DESTRUCTIVE!! Remove merge commits along with any changes to the target local branch
+    autoMergeHardReset: true     # Optional, Default: false DANGEROUS Wipes target branch changes and reset ref to match upstream
   - head: dev
     upstream: master
     assignees:                   # Optional
       - wei
     reviewers:                   # Optional
       - wei
-label: "pull :arrow_down:" # Optional
+label: "pull :arrow_down:"       # Optional
 ```
 
- 5. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `pull.yml`.
- 6. Install Pull app via https://github.com/apps/pull and select only the repos you wish to pull.
+ 6. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `.github/pull.yml`.
+ 7. Install [Pull app](https://github.com/apps/pull) and select only the repos you wish to pull.
 
 
 ## For Repository Owners
