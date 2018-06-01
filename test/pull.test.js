@@ -55,7 +55,7 @@ const goodConfig = {
       base: 'feature/new-1',
       upstream: 'upstream:dev',
       autoMerge: true,
-      autoMergeHardReset: true,
+      autoMergeHardReset: false,
       assignees: ['tom'],
       reviewers: ['jerry']
     },
@@ -63,7 +63,7 @@ const goodConfig = {
       base: 'hotfix/bug-1',
       upstream: 'upstream:dev',
       autoMerge: true,
-      autoMergeHardReset: false,
+      autoMergeHardReset: true,
       assignees: ['wei'],
       reviewers: ['wei']
     }
@@ -224,12 +224,12 @@ describe('pull - checkAutoMerge', () => {
     })
     expect(github.pullRequests.get).toHaveBeenCalledTimes(2)
     expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
-    expect(github.gitdata.updateReference).toHaveBeenCalledWith({
-      owner: 'wei', repo: 'fork', ref: `heads/feature/new-1`, sha: 'sha1-placeholder', force: true
-    })
+    expect(github.pullRequests.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
+    expect(github.gitdata.updateReference).not.toHaveBeenCalled()
 
     github.pullRequests.get = jest.fn()
       .mockResolvedValueOnce({ data: { mergeable: null, mergeable_state: 'unknown' } })
+    github.pullRequests.merge = jest.fn()
     setTimeout(() => {
       github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
     }, 500)
@@ -242,9 +242,11 @@ describe('pull - checkAutoMerge', () => {
       mergeable: null,
       mergeable_state: 'unknown'
     })
-    expect(github.pullRequests.get).toHaveBeenCalledTimes(2)
-    expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16 })
-    expect(github.gitdata.updateReference).not.toHaveBeenCalledWith()
+    expect(github.pullRequests.get).not.toHaveBeenCalled()
+    expect(github.pullRequests.merge).not.toHaveBeenCalled()
+    expect(github.gitdata.updateReference).toHaveBeenCalledWith(
+      { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder', force: true }
+    )
   })
 
   test('should not merge if mergablity is null', async () => {
@@ -293,16 +295,17 @@ describe('pull - checkAutoMerge', () => {
     const pull = getPull()
     await pull.checkAutoMerge({
       number: 12,
-      base: { ref: 'feature/new-1' },
+      base: { ref: 'hotfix/bug-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
       user: { login: 'pull[bot]' },
       mergeable: null,
       mergeable_state: 'unknown'
     })
-    expect(github.pullRequests.get).toHaveBeenCalledTimes(1)
-    expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
-    expect(github.gitdata.updateReference).toHaveBeenCalled()
+    expect(github.pullRequests.get).not.toHaveBeenCalled()
+    expect(github.gitdata.updateReference).toHaveBeenCalledWith(
+      { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder', force: true }
+    )
   })
 
   test('should handle same repo auto merge', async () => {
