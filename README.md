@@ -72,7 +72,7 @@ rules:                           # Array of rules
       - wei
     reviewers:                   # Optional
       - wei
-label: "pull :arrow_down:"       # Optional
+label: ":arrow_heading_down: pull"       # Optional
 ```
 
  6. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `.github/pull.yml`.

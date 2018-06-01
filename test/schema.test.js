@@ -63,7 +63,7 @@ describe('schema', () => {
           reviewers: []
         }
       ],
-      label: 'pull :arrow_down:'
+      label: ':arrow_heading_down: pull'
     })
   })
 
