@@ -51,6 +51,7 @@ module.exports = async (robot) => {
 
   async function forRepository (context) {
     if (!context.payload.repository.fork) {
+      robot.log.info(`[${context.payload.repository.full_name}] Not a fork, unscheduling.`)
       scheduler.stop(context.payload.repository)
       return null
     }
@@ -58,6 +59,7 @@ module.exports = async (robot) => {
     const config = await getConfig(context, PULL_CONFIG) ||
       await getDefaultConfig(context.github, context.repo({ logger: robot.log }))
     if (!config) {
+      robot.log.info(`[${context.payload.repository.full_name}] Unable to fetch config, unscheduling.`)
       scheduler.stop(context.payload.repository)
       return null
     }
@@ -66,14 +68,15 @@ module.exports = async (robot) => {
   }
 
   async function getDefaultConfig (github, { owner, repo, logger }) {
+    logger.debug(`[${owner}/${repo}] Fetching default config`)
     const repoInfo = await github.repos.get({
       owner,
       repo
     })
 
-    if (repoInfo && repoInfo.fork && repoInfo.parent) {
-      const upstreamOwner = repoInfo.parent.owner && repoInfo.parent.owner.login
-      const defaultBranch = repoInfo.parent.default_branch
+    if (repoInfo && repoInfo.data && repoInfo.data.fork && repoInfo.data.parent) {
+      const upstreamOwner = repoInfo.data.parent.owner && repoInfo.data.parent.owner.login
+      const defaultBranch = repoInfo.data.parent.default_branch
 
       if (upstreamOwner && defaultBranch) {
         logger.info(`[${owner}/${repo}] Using default config ${defaultBranch}...${upstreamOwner}:${defaultBranch}`)
