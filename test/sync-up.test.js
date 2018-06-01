@@ -3,7 +3,7 @@
 process.env.LOG_LEVEL = 'fatal'
 
 const { createRobot } = require('probot')
-const SyncUp = require('../lib/sync-up')
+const Pull = require('../lib/pull')
 const helper = require('../lib/helper')
 
 let robot
@@ -68,14 +68,14 @@ const goodConfig = {
       reviewers: ['wei']
     }
   ],
-  label: 'sync-up'
+  label: 'pull'
 }
-const getSyncUp = () => new SyncUp(github, { owner: 'wei', repo: 'fork', logger: robot.log }, goodConfig)
+const getPull = () => new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log }, goodConfig)
 
-describe('sync-up - routineCheck', () => {
+describe('pull - routineCheck', () => {
   test('bad config', async () => {
     try {
-      new SyncUp(github, { owner: 'wei', repo: 'fork', logger: robot.log })  // eslint-disable-line
+      new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log })  // eslint-disable-line
       throw Error('Should throw error and go to catch')
     } catch (err) {
       expect(err.message).toEqual('Invalid config')
@@ -83,8 +83,8 @@ describe('sync-up - routineCheck', () => {
   })
 
   test('logger fall back to console', async () => {
-    const syncUp = new SyncUp(github, { owner: 'wei', repo: 'fork' }, goodConfig)
-    expect(syncUp.logger).toBe(console)
+    const pull = new Pull(github, { owner: 'wei', repo: 'fork' }, goodConfig)
+    expect(pull.logger).toBe(console)
   })
 
   test('same branch', async () => {
@@ -94,8 +94,8 @@ describe('sync-up - routineCheck', () => {
     ]
 
     for (let i = 0; i < configs.length; i++) {
-      const syncUp = new SyncUp(github, { owner: 'wei', repo: 'fork', logger: robot.log }, configs[i])
-      await syncUp.routineCheck()
+      const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log }, configs[i])
+      await pull.routineCheck()
       expect(github.repos.compareCommits).not.toHaveBeenCalled()
       expect(github.search.issues).not.toHaveBeenCalled()
       expect(github.pullRequests.create).not.toHaveBeenCalled()
@@ -106,8 +106,8 @@ describe('sync-up - routineCheck', () => {
   test('no diff', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 0 } })
 
-    const syncUp = getSyncUp()
-    await syncUp.routineCheck()
+    const pull = getPull()
+    await pull.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
     })
@@ -126,8 +126,8 @@ describe('sync-up - routineCheck', () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
     github.search.issues.mockResolvedValue({ data: { total_count: 1 } })
 
-    const syncUp = getSyncUp()
-    await syncUp.routineCheck()
+    const pull = getPull()
+    await pull.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
     })
@@ -152,8 +152,8 @@ describe('sync-up - routineCheck', () => {
       .mockResolvedValueOnce({ data: { number: 12 } })
       .mockResolvedValueOnce({ data: { number: 16 } })
 
-    const syncUp = getSyncUp()
-    await syncUp.routineCheck()
+    const pull = getPull()
+    await pull.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
     })
@@ -173,10 +173,10 @@ describe('sync-up - routineCheck', () => {
     })
     expect(github.issues.edit).toHaveBeenCalledTimes(2)
     expect(github.issues.edit).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', number: 12, assignees: ['tom'], labels: ['sync-up'], body: helper.getPRBody('wei/fork', 12)
+      owner: 'wei', repo: 'fork', number: 12, assignees: ['tom'], labels: ['pull'], body: helper.getPRBody('wei/fork', 12)
     })
     expect(github.issues.edit).nthCalledWith(2, {
-      owner: 'wei', repo: 'fork', number: 16, assignees: ['wei'], labels: ['sync-up'], body: helper.getPRBody('wei/fork', 16)
+      owner: 'wei', repo: 'fork', number: 16, assignees: ['wei'], labels: ['pull'], body: helper.getPRBody('wei/fork', 16)
     })
     expect(github.pullRequests.createReviewRequest).toHaveBeenCalledTimes(2)
     expect(github.pullRequests.createReviewRequest).nthCalledWith(1, {
@@ -188,20 +188,20 @@ describe('sync-up - routineCheck', () => {
   })
 })
 
-describe('sync-up - checkAutoMerge', () => {
+describe('pull - checkAutoMerge', () => {
   test('bad parameters', async () => {
-    const syncUp = getSyncUp()
-    expect(await syncUp.checkAutoMerge()).toBeNull()
+    const pull = getPull()
+    expect(await pull.checkAutoMerge()).toBeNull()
   })
 
   test('should honor autoMerge flag', async () => {
-    const syncUp = getSyncUp()
-    await syncUp.checkAutoMerge({
+    const pull = getPull()
+    await pull.checkAutoMerge({
       number: 10,
       base: { ref: 'master', label: 'wei:master' },
       head: { ref: 'master', label: 'upstream:master' },
       state: 'open',
-      user: { login: 'sync-up[bot]' },
+      user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
     })
@@ -213,12 +213,12 @@ describe('sync-up - checkAutoMerge', () => {
     setTimeout(() => {
       github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
     }, 500)
-    await syncUp.checkAutoMerge({
+    await pull.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'sync-up[bot]' },
+      user: { login: 'pull[bot]' },
       mergeable: null,
       mergeable_state: 'unknown'
     })
@@ -233,12 +233,12 @@ describe('sync-up - checkAutoMerge', () => {
     setTimeout(() => {
       github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
     }, 500)
-    await syncUp.checkAutoMerge({
+    await pull.checkAutoMerge({
       number: 16,
       base: { ref: 'hotfix/bug-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'sync-up[bot]' },
+      user: { login: 'pull[bot]' },
       mergeable: null,
       mergeable_state: 'unknown'
     })
@@ -250,13 +250,13 @@ describe('sync-up - checkAutoMerge', () => {
   test('should not merge if mergablity is null', async () => {
     github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: null, mergeable_state: 'unknown' } })
 
-    const syncUp = getSyncUp()
-    await syncUp.checkAutoMerge({
+    const pull = getPull()
+    await pull.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'sync-up[bot]' },
+      user: { login: 'pull[bot]' },
       mergeable: null,
       mergeable_state: 'unknown'
     }, { isMergableMaxRetries: 1 })
@@ -271,13 +271,13 @@ describe('sync-up - checkAutoMerge', () => {
       github.pullRequests.get.mockResolvedValue({ data: { mergeable: false, mergeable_state: 'dirty' } })
     }, 500)
 
-    const syncUp = getSyncUp()
-    await syncUp.checkAutoMerge({
+    const pull = getPull()
+    await pull.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'sync-up[bot]' },
+      user: { login: 'pull[bot]' },
       mergeable: null,
       mergeable_state: 'unknown'
     }, { isMergableMaxRetries: 2 })
@@ -290,13 +290,13 @@ describe('sync-up - checkAutoMerge', () => {
     github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
     github.gitdata.updateReference.mockRejectedValue(new Error('Update reference failed'))
 
-    const syncUp = getSyncUp()
-    await syncUp.checkAutoMerge({
+    const pull = getPull()
+    await pull.checkAutoMerge({
       number: 12,
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'sync-up[bot]' },
+      user: { login: 'pull[bot]' },
       mergeable: null,
       mergeable_state: 'unknown'
     })
@@ -310,13 +310,13 @@ describe('sync-up - checkAutoMerge', () => {
     github.gitdata.updateReference.mockRejectedValue(new Error('Update reference failed'))
 
     const config = { version: '1', rules: [{ base: 'dev', upstream: 'master', autoMerge: true }] }
-    const syncUp = new SyncUp(github, { owner: 'wei', repo: 'fork', logger: robot.log }, config)
-    await syncUp.checkAutoMerge({
+    const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log }, config)
+    await pull.checkAutoMerge({
       number: 16,
       base: { ref: 'dev' },
       head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'sync-up[bot]' },
+      user: { login: 'pull[bot]' },
       mergeable: null,
       mergeable_state: 'unknown'
     })
@@ -326,20 +326,20 @@ describe('sync-up - checkAutoMerge', () => {
   })
 })
 
-describe('sync-up - misc', () => {
+describe('pull - misc', () => {
   test('functions with bad parameters', async () => {
     github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
 
-    const syncUp = getSyncUp()
-    await syncUp.isMergeable(12)
+    const pull = getPull()
+    await pull.isMergeable(12)
     expect(github.pullRequests.get).toHaveBeenCalledTimes(1)
-    await expect(syncUp.addReviewers()).resolves.toBeNull()
-    await expect(syncUp.addReviewers(12)).resolves.toBeNull()
-    await expect(syncUp.addReviewers(12, [])).resolves.toBeNull()
-    await expect(syncUp.mergePR()).resolves.toBeNull()
-    await expect(syncUp.mergePR(12)).resolves.not.toBeNull()
-    await expect(syncUp.hardResetCommit()).resolves.toBeNull()
-    await expect(syncUp.hardResetCommit('master')).resolves.toBeNull()
-    await expect(syncUp.hardResetCommit('', 'sha1-placeholder')).resolves.toBeNull()
+    await expect(pull.addReviewers()).resolves.toBeNull()
+    await expect(pull.addReviewers(12)).resolves.toBeNull()
+    await expect(pull.addReviewers(12, [])).resolves.toBeNull()
+    await expect(pull.mergePR()).resolves.toBeNull()
+    await expect(pull.mergePR(12)).resolves.not.toBeNull()
+    await expect(pull.hardResetCommit()).resolves.toBeNull()
+    await expect(pull.hardResetCommit('master')).resolves.toBeNull()
+    await expect(pull.hardResetCommit('', 'sha1-placeholder')).resolves.toBeNull()
   })
 })

@@ -1,11 +1,11 @@
-const SYNCUP_CONFIG = process.env.SYNCUP_CONFIG || 'sync-up.yml'
+const PULL_CONFIG = process.env.PULL_CONFIG || 'pull.yml'
 
 const getConfig = require('probot-config')
 const createScheduler = require('probot-scheduler')
 const fetch = require('node-fetch')
 const yaml = require('js-yaml')
 
-const SyncUp = require('./lib/sync-up')
+const Pull = require('./lib/pull')
 const schema = require('./lib/schema')
 
 module.exports = async (robot) => {
@@ -16,14 +16,14 @@ module.exports = async (robot) => {
   robot.on(['pull_request', 'pull_request_review'], checkPRStatus)
 
   async function handlePush (context) {
-    if (context.payload.commits.filter(c => c.message.indexOf(SYNCUP_CONFIG) > -1).length > 0) {
+    if (context.payload.commits.filter(c => c.message.indexOf(PULL_CONFIG) > -1).length > 0) {
       await routineCheck(context)
     }
   }
 
   async function routineCheck (context) {
-    const syncUp = await forRepository(context)
-    if (syncUp) await syncUp.routineCheck()
+    const pull = await forRepository(context)
+    if (pull) await pull.routineCheck()
   }
 
   async function checkPRStatus (context) {
@@ -42,8 +42,8 @@ module.exports = async (robot) => {
         return
     }
 
-    const syncUp = await forRepository(context)
-    if (syncUp) await syncUp.checkAutoMerge(context.payload.pull_request)
+    const pull = await forRepository(context)
+    if (pull) await pull.checkAutoMerge(context.payload.pull_request)
   }
 
   async function forRepository (context) {
@@ -52,22 +52,22 @@ module.exports = async (robot) => {
       return null
     }
 
-    const config = await getConfig(context, SYNCUP_CONFIG)
+    const config = await getConfig(context, PULL_CONFIG)
     if (!config) {
       scheduler.stop(context.payload.repository)
       return null
     }
 
-    return new SyncUp(context.github, context.repo({ logger: robot.log }), config)
+    return new Pull(context.github, context.repo({ logger: robot.log }), config)
   }
 
   const app = robot.route()
 
-  app.get('/', (req, res) => res.redirect('https://github.com/wei/sync-up#readme'))
+  app.get('/', (req, res) => res.redirect('https://github.com/wei/pull#readme'))
 
   app.get('/check/:owner/:repo', (req, res) => {
-    robot.log.info(`[${req.params.owner}/${req.params.repo}] Checking ${SYNCUP_CONFIG}`)
-    fetch(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/contents/.github/${SYNCUP_CONFIG}`)
+    robot.log.info(`[${req.params.owner}/${req.params.repo}] Checking ${PULL_CONFIG}`)
+    fetch(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/contents/.github/${PULL_CONFIG}`)
       .then(githubRes => githubRes.json())
       .then(json => Buffer.from(json.content, 'base64').toString())
       .then(yml => yaml.safeLoad(yml))

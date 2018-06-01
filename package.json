@@ -1,10 +1,10 @@
 {
-  "name": "sync-up",
+  "name": "pull",
   "version": "1.0.0",
   "description": "",
   "author": "Wei He <github@weispot.com> (https://whe.me)",
   "license": "ISC",
-  "repository": "https://github.com/wei/sync-up.git",
+  "repository": "https://github.com/wei/pull.git",
   "scripts": {
     "dev": "nodemon --exec \"npm start\"",
     "start": "probot run ./index.js",
@@ -12,7 +12,7 @@
     "lint:fix": "standard --fix",
     "test": "standard && jest",
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage",
-    "deploy": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now rm sync-up --safe -y --token=$NOW_TOKEN && now scale sync-up.now.sh sfo1 1 --token=$NOW_TOKEN"
+    "deploy": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now scale pull.now.sh sfo1 1 --token=$NOW_TOKEN && now rm pull --safe -y --token=$NOW_TOKEN"
   },
   "dependencies": {
     "joi": "^13.3.0",

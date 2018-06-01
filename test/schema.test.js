@@ -4,7 +4,7 @@ const schema = require('../lib/schema')
 
 const validConfigs = [
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }] }],
-  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true }], label: 'sync-up' }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true }], label: 'pull' }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, assignees: ['wei'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'] }] }],
   [{
@@ -20,7 +20,7 @@ const validConfigs = [
       { base: 'master', upstream: 'upstream:master', autoMerge: true, autoMergeHardReset: true, assignees: ['wei'] },
       { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true, reviewers: ['wei'] }
     ],
-    label: 'sync-up'
+    label: 'pull'
   }]
 ]
 
@@ -63,7 +63,7 @@ describe('schema', () => {
           reviewers: []
         }
       ],
-      label: 'sync-up :arrow_up_down:'
+      label: 'pull :arrow_down:'
     })
   })
 

@@ -1,11 +1,11 @@
 {
-  "name": "sync-up",
-  "alias": "sync-up.now.sh",
+  "name": "pull",
+  "alias": "pull.now.sh",
   "type": "npm",
   "env": {
     "NODE_ENV": "production",
     "LOG_LEVEL": "info",
-    "APP_ID": "12711",
+    "APP_ID": "12910",
     "WEBHOOK_PATH": "/webhook"
   },
   "scale": {
