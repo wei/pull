@@ -12,7 +12,7 @@
     "lint:fix": "standard --fix",
     "test": "standard && jest",
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage",
-    "deploy": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now scale pull.now.sh sfo1 1 --token=$NOW_TOKEN && now rm pull --safe -y --token=$NOW_TOKEN"
+    "travis:deploy-now": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now scale $NOW_ALIAS.now.sh sfo1 1 --token=$NOW_TOKEN && now rm $NOW_ALIAS --safe -y --token=$NOW_TOKEN"
   },
   "dependencies": {
     "joi": "^13.3.0",
