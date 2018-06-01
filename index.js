@@ -4,11 +4,25 @@ const getConfig = require('probot-config')
 const createScheduler = require('probot-scheduler')
 const fetch = require('node-fetch')
 const yaml = require('js-yaml')
+const bsyslog = require('bunyan-syslog-udp')
 
 const Pull = require('./lib/pull')
 const schema = require('./lib/schema')
 
 module.exports = async (robot) => {
+  const papertrailHost = process.env.PAPERTRAIL_HOST
+  const papertrailPort = parseInt(process.env.PAPERTRAIL_PORT, 10)
+  if (papertrailHost && papertrailPort) {
+    robot.log.target.addStream({
+      type: 'raw',
+      level: process.env.LOG_LEVEL || 'trace',
+      stream: bsyslog.createBunyanStream({
+        host: papertrailHost,
+        port: papertrailPort
+      })
+    })
+  }
+
   const scheduler = createScheduler(robot, {
     delay: !process.env.DISABLE_DELAY,
     interval: (parseInt(process.env.PULL_INTERVAL, 10) || 3600) * 1000
