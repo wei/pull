@@ -11,7 +11,7 @@ const schema = require('./lib/schema')
 module.exports = async (robot) => {
   const scheduler = createScheduler(robot, {
     delay: !process.env.DISABLE_DELAY,
-    interval: (parseInt(process.env.PULL_INTERVAL) || 3600) * 1000
+    interval: (parseInt(process.env.PULL_INTERVAL, 10) || 3600) * 1000
   })
 
   robot.on('schedule.repository', routineCheck)
@@ -55,13 +55,42 @@ module.exports = async (robot) => {
       return null
     }
 
-    const config = await getConfig(context, PULL_CONFIG)
+    const config = await getConfig(context, PULL_CONFIG) ||
+      await getDefaultConfig(context.github, context.repo({ logger: robot.log }))
     if (!config) {
       scheduler.stop(context.payload.repository)
       return null
     }
 
     return new Pull(context.github, context.repo({ logger: robot.log }), config)
+  }
+
+  async function getDefaultConfig (github, { owner, repo, logger }) {
+    const repoInfo = await github.repos.get({
+      owner,
+      repo
+    })
+
+    if (repoInfo && repoInfo.fork && repoInfo.parent) {
+      const upstreamOwner = repoInfo.parent.owner && repoInfo.parent.owner.login
+      const defaultBranch = repoInfo.parent.default_branch
+
+      if (upstreamOwner && defaultBranch) {
+        logger.info(`[${owner}/${repo}] Using default config ${defaultBranch}...${upstreamOwner}:${defaultBranch}`)
+        return {
+          version: '1',
+          rules: [
+            {
+              base: `${defaultBranch}`,
+              upstream: `${upstreamOwner}:${defaultBranch}`,
+              autoMerge: true,
+              autoMergeHardReset: true
+            }
+          ]
+        }
+      }
+    }
+    return null
   }
 
   const app = robot.route()
@@ -88,6 +117,6 @@ module.exports = async (robot) => {
           .then(() => res.end(JSON.stringify(value, null, 2)))
           .catch(e => res.status(400).end(`Cannot compare ${e.message}`))
       })
-      .catch(e => res.status(400).end(`File not found or invalid`))
+      .catch(e => res.status(400).end(`.github/${PULL_CONFIG} file was either not found or failed validation`))
   })
 }

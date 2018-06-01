@@ -24,7 +24,16 @@ _Upstream must be in the same fork network_
 
 ## Setup
 
-Recommended setup:
+### Basic setup:
+:exclamation:<span style="color:red">**DESTRUCTIVE**</span>:exclamation:
+ 1. Fork a repository
+ 2. (Read 3. first) Install Pull app via https://github.com/apps/pull and select only the repos you wish to pull.
+ 3. If `.github/pull.yml` file is NOT found, Pull app will automatically watch and pull in upstream's `master` branch to your `master` branch via **hard reset**. :warning:Any changes made on your `master` branch will be lost.
+
+_Do NOT work on master branch from a fork. If the upstream uses a different default_branch, replace the word `master` above to the respective branch name._
+
+
+### Recommended setup:
  1. Fork a repository
  2. Create a new branch
  3. Setup the new branch as Default branch under repository Settings > Branches
