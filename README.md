@@ -1,4 +1,4 @@
-<a href="https://github.com/apps/pull"><img align="right" width="120" height="120" src="https://user-images.githubusercontent.com/5880908/40619990-2deb6502-6265-11e8-88c3-f2bcbac74a42.png" /></a>
+<a href="https://github.com/apps/pull"><img align="right" width="120" height="120" src="https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull.svg" /></a>
 
 # Pull
 
@@ -24,27 +24,24 @@ _Upstream must be in the same fork network_
 
 ## Setup
 
+:warning:**Before you start:** _Create a new branch if you have made changes to your fork's default (master) branch._
+
+
 ### Basic setup (without config):
 
-:warning:**WARNING**
+ 1. Run `git clone --mirror` to make a backup (Recommended if you have made changes).
+ 2. Install **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
+ 3. With zero-configuration, Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
 
-_Make sure you have not made and will not make any changes your fork's default (master) branch. Changes to other branches will not be touched._
-
- 1. Fork a repository.
- 2. Make a local backup using `git clone --mirror`.
- 3. Install [Pull app](https://github.com/apps/pull) and select only the repos you wish to pull.
- 4. With zero-configuration, Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
-
-:bulb:_Do NOT touch default (master) branch in any forked repo, always create new branches to work on._
+:bulb:_Do NOT touch default (master) branch in any forks. Always create new branches to work on._
 
 
 ### Recommended setup (with config):
 
- 1. Fork a repository.
- 2. Make a local backup using `git clone --mirror`.
- 3. Create a new branch.
- 4. Setup the new branch as Default branch under repository Settings > Branches.
- 5. Add `.github/pull.yml` to your default branch.
+ 1. Run `git clone --mirror` to make a backup (optional).
+ 2. Create a new branch.
+ 3. Setup the new branch as default branch under repository Settings > Branches.
+ 4. Add `.github/pull.yml` to your default branch.
 
 #### Most common
 (Basic setup default)
@@ -75,8 +72,8 @@ rules:                           # Array of rules
 label: ":arrow_heading_down: pull"       # Optional
 ```
 
- 6. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `.github/pull.yml`.
- 7. Install [Pull app](https://github.com/apps/pull) and select only the repos you wish to pull.
+ 5. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `.github/pull.yml`.
+ 6. Install **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
 
 
 ## For Repository Owners
