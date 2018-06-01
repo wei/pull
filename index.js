@@ -9,7 +9,10 @@ const Pull = require('./lib/pull')
 const schema = require('./lib/schema')
 
 module.exports = async (robot) => {
-  const scheduler = createScheduler(robot)
+  const scheduler = createScheduler(robot, {
+    delay: !process.env.DISABLE_DELAY,
+    interval: (parseInt(process.env.PULL_INTERVAL) || 3600) * 1000
+  })
 
   robot.on('schedule.repository', routineCheck)
   robot.on('push', handlePush)

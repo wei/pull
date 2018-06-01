@@ -16,7 +16,7 @@
 
 ## Features
 
- 1. A pull request is created when an upstream is updated (checks hourly).
+ 1. A pull request is created when an upstream is updated (checks periodically).
  2. Pull requests can be automatically merged or hard reset to match upstream.
 
 _Upstream must be in the same fork network_
