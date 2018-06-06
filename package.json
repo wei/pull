@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "bunyan-syslog-udp": "^0.1.0",
-    "joi": "^13.3.0",
+    "joi": "^13.4.0",
     "js-yaml": "^3.11.0",
     "node-fetch": "^2.1.2",
     "probot": "^6.2.0",
