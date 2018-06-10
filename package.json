@@ -21,7 +21,7 @@
     "node-fetch": "^2.1.2",
     "probot": "^6.2.0",
     "probot-config": "^0.1.0",
-    "probot-scheduler": "^1.1.0"
+    "probot-scheduler": "^1.2.0"
   },
   "devDependencies": {
     "jest": "^23.1.0",
