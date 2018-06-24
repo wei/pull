@@ -49,7 +49,7 @@ _Upstream must be in the same fork network_
 ```yaml
 version: "1"
 rules:
-  - head: master
+  - base: master
     upstream: wei:master        # change wei to the owner of upstream repo
     autoMerge: true
     autoMergeHardReset: true
@@ -59,11 +59,11 @@ rules:
 ```yaml
 version: "1"
 rules:                           # Array of rules
-  - head: master                 # Required. Target branch
+  - base: master                 # Required. Target branch
     upstream: wei:master         # Required. Must be in the same fork network.
     autoMerge: true              # Optional, Default: false
     autoMergeHardReset: true     # Optional, Default: false DANGEROUS Wipes target branch changes and reset ref to match upstream
-  - head: dev
+  - base: dev
     upstream: master
     assignees:                   # Optional
       - wei
@@ -84,11 +84,11 @@ Example (assuming `owner` is your user or organization name):
 ```yaml
 version: "1"
 rules:
-  - head: master
+  - base: master
     upstream: owner:master
     autoMerge: true
     autoMergeHardReset: true
-  - head: docs
+  - base: docs
     upstream: owner:docs
     autoMerge: true
     autoMergeHardReset: true
