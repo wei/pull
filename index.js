@@ -9,11 +9,11 @@ const bsyslog = require('bunyan-syslog-udp')
 const Pull = require('./lib/pull')
 const schema = require('./lib/schema')
 
-module.exports = async (robot) => {
+module.exports = async (app) => {
   const papertrailHost = process.env.PAPERTRAIL_HOST
   const papertrailPort = parseInt(process.env.PAPERTRAIL_PORT, 10)
   if (papertrailHost && papertrailPort) {
-    robot.log.target.addStream({
+    app.log.target.addStream({
       type: 'raw',
       level: process.env.LOG_LEVEL || 'trace',
       stream: bsyslog.createBunyanStream({
@@ -24,14 +24,14 @@ module.exports = async (robot) => {
     })
   }
 
-  const scheduler = createScheduler(robot, {
+  const scheduler = createScheduler(app, {
     delay: !process.env.DISABLE_DELAY,
     interval: (parseInt(process.env.PULL_INTERVAL, 10) || 3600) * 1000
   })
 
-  robot.on('schedule.repository', routineCheck)
-  robot.on('push', handlePush)
-  robot.on(['pull_request', 'pull_request_review'], checkPRStatus)
+  app.on('schedule.repository', routineCheck)
+  app.on('push', handlePush)
+  app.on(['pull_request', 'pull_request_review'], checkPRStatus)
 
   async function handlePush (context) {
     if (context.payload.commits.filter(c => c.message.indexOf(PULL_CONFIG) > -1).length > 0) {
@@ -66,20 +66,20 @@ module.exports = async (robot) => {
 
   async function forRepository (context) {
     if (!context.payload.repository.fork) {
-      robot.log.info(`[${context.payload.repository.full_name}] Not a fork, unscheduled`)
+      app.log.info(`[${context.payload.repository.full_name}] Not a fork, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }
 
     const config = await getConfig(context, PULL_CONFIG) ||
-      await getDefaultConfig(context.github, context.repo({ logger: robot.log }))
+      await getDefaultConfig(context.github, context.repo({ logger: app.log }))
     if (!config) {
-      robot.log.info(`[${context.payload.repository.full_name}] Unable to fetch config, unscheduled`)
+      app.log.info(`[${context.payload.repository.full_name}] Unable to fetch config, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }
 
-    return new Pull(context.github, context.repo({ logger: robot.log }), config)
+    return new Pull(context.github, context.repo({ logger: app.log }), config)
   }
 
   async function getDefaultConfig (github, { owner, repo, logger }) {
@@ -111,12 +111,12 @@ module.exports = async (robot) => {
     return null
   }
 
-  const app = robot.route()
+  const routes = app.route()
 
-  app.get('/', (req, res) => res.redirect('https://github.com/wei/pull#readme'))
+  routes.get('/', (req, res) => res.redirect('https://github.com/wei/pull#readme'))
 
-  app.get('/check/:owner/:repo', (req, res) => {
-    robot.log.info(`[${req.params.owner}/${req.params.repo}] Checking ${PULL_CONFIG}`)
+  routes.get('/check/:owner/:repo', (req, res) => {
+    app.log.info(`[${req.params.owner}/${req.params.repo}] Checking ${PULL_CONFIG}`)
     fetch(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/contents/.github/${PULL_CONFIG}`)
       .then(githubRes => githubRes.json())
       .then(json => Buffer.from(json.content, 'base64').toString())

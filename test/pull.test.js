@@ -2,15 +2,15 @@
 
 process.env.LOG_LEVEL = 'fatal'
 
-const { createRobot } = require('probot')
+const { Application } = require('probot')
 const Pull = require('../lib/pull')
 const helper = require('../lib/helper')
 
-let robot
+let app
 let github
 
 beforeEach(() => {
-  robot = createRobot()
+  app = new Application()
 
   // Mock out the GitHub API
   github = {
@@ -35,10 +35,10 @@ beforeEach(() => {
   }
 
   // Mock out GitHub client
-  robot.auth = () => Promise.resolve(github)
+  app.auth = () => Promise.resolve(github)
 
   // TODO
-  // robot.log = console
+  // app.log = console
 })
 
 const goodConfig = {
@@ -70,12 +70,12 @@ const goodConfig = {
   ],
   label: 'pull'
 }
-const getPull = () => new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log }, goodConfig)
+const getPull = () => new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, goodConfig)
 
 describe('pull - routineCheck', () => {
   test('bad config', async () => {
     try {
-      new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log })  // eslint-disable-line
+      new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log })  // eslint-disable-line
       throw Error('Should throw error and go to catch')
     } catch (err) {
       expect(err.message).toEqual('Invalid config')
@@ -94,7 +94,7 @@ describe('pull - routineCheck', () => {
     ]
 
     for (let i = 0; i < configs.length; i++) {
-      const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log }, configs[i])
+      const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, configs[i])
       await pull.routineCheck()
       expect(github.repos.compareCommits).not.toHaveBeenCalled()
       expect(github.search.issues).not.toHaveBeenCalled()
@@ -362,7 +362,7 @@ describe('pull - checkAutoMerge', () => {
     github.gitdata.updateReference.mockRejectedValue(new Error('Update reference failed'))
 
     const config = { version: '1', rules: [{ base: 'dev', upstream: 'master', autoMerge: true }] }
-    const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: robot.log }, config)
+    const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, config)
     await pull.checkAutoMerge({
       number: 16,
       base: { ref: 'dev' },
