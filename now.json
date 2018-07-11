@@ -6,7 +6,7 @@
     "NODE_ENV": "production",
     "LOG_LEVEL": "info",
     "APP_ID": "12910",
-    "PULL_INTERVAL": "900",
+    "PULL_INTERVAL": "1800",
     "WEBHOOK_PATH": "/webhook"
   },
   "scale": {
