@@ -127,7 +127,7 @@ describe('pull - routineCheck', () => {
     github.search.issues.mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 12 } ] } })
       .mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 13 } ] } })
       .mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 14 } ] } })
-    github.pullRequests.get.mockResolvedValueOnce({
+    github.pullRequests.get.mockResolvedValueOnce({ data: {
       number: 12,
       base: { ref: 'master' },
       head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
@@ -135,7 +135,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    }).mockResolvedValueOnce({
+    }}).mockResolvedValueOnce({ data: {
       number: 13,
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-13' },
@@ -143,7 +143,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    }).mockResolvedValueOnce({
+    }}).mockResolvedValueOnce({ data: {
       number: 14,
       base: { ref: 'hotfix/bug-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-14' },
@@ -151,7 +151,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    })
+    }})
 
     const pull = getPull()
     await pull.routineCheck()
@@ -188,7 +188,7 @@ describe('pull - routineCheck', () => {
       .mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 10 } ] } })
       .mockResolvedValueOnce({ data: { total_count: 0 } })
       .mockResolvedValueOnce({ data: { total_count: 0 } })
-    github.pullRequests.get.mockResolvedValueOnce({
+    github.pullRequests.get.mockResolvedValueOnce({ data: {
       number: 10,
       base: { ref: 'master' },
       head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder' },
@@ -196,7 +196,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    })
+    }})
     github.pullRequests.create
       .mockResolvedValueOnce({ data: { number: 12 } })
       .mockResolvedValueOnce({ data: { number: 16 } })
