@@ -20,7 +20,7 @@
     "js-yaml": "^3.12.0",
     "node-fetch": "^2.1.2",
     "probot": "^7.0.1",
-    "probot-config": "^0.1.0",
+    "probot-config": "^0.2.0",
     "probot-scheduler": "^1.2.0"
   },
   "devDependencies": {
