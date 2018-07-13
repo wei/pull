@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/wei/pull/master.svg?maxAge=3600)](https://codecov.io/gh/wei/pull)
 [![Depfu](https://img.shields.io/depfu/wei/pull.svg?maxAge=3600)](https://depfu.com/github/wei/pull)
 [![Installations](https://img.shields.io/badge/dynamic/json.svg?label=installed&url=https%3A%2F%2Fpull.now.sh%2Fprobot%2Fstats&query=%24.installations&colorB=007ec6&suffix=%20times&maxAge=3600)](https://probot.github.io/apps/pull/)
-[![Triggered #](https://img.shields.io/badge/dynamic/json.svg?label=triggered&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3Aapp%2Fpull%26per_page%3D1&query=%24.total_count&colorB=007ec6&suffix=%20times&maxAge=600)](https://probot.github.io/apps/pull/)
+[![Triggered #](https://img.shields.io/badge/dynamic/json.svg?label=triggered&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3Aapp%2Fpull%26per_page%3D1&query=%24.total_count&colorB=007ec6&suffix=%20times&maxAge=600)](https://github.com/issues?q=author%3Aapp%2Fpull)
 <br/>
 [![Probot](https://img.shields.io/badge/built%20with-probot-orange.svg?maxAge=86400)](https://probot.github.io/)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?maxAge=86400)](https://standardjs.com)
