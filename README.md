@@ -3,10 +3,10 @@
 # Pull
 
 [![TravisCI](https://travis-ci.com/wei/pull.svg?branch=master)](https://travis-ci.com/wei/pull)
-[![Codecov](https://codecov.io/gh/wei/pull/branch/master/graph/badge.svg)](https://codecov.io/gh/wei/pull)
-[![Depfu](https://badges.depfu.com/badges/4a6fdae34a957e6c1ac11a83f6491162/overview.svg)](https://depfu.com/github/wei/pull)
-[![Installed](https://img.shields.io/badge/dynamic/json.svg?label=installations&url=https%3A%2F%2Fpull.now.sh%2Fprobot%2Fstats&query=%24.installations&colorB=007ec6&suffix=%20times&maxAge=3600)](https://probot.github.io/apps/pull/)
-[![Triggered #](https://img.shields.io/badge/dynamic/json.svg?label=triggered&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3Aapp%2Fpull%26per_page%3D1&query=%24.total_count&colorB=007ec6&suffix=%20times&maxAge=3600)](https://probot.github.io/apps/pull/)
+[![Codecov](https://img.shields.io/codecov/c/github/wei/pull/master.svg?maxAge=3600)](https://codecov.io/gh/wei/pull)
+[![Depfu](https://img.shields.io/depfu/wei/pull.svg?maxAge=3600)](https://depfu.com/github/wei/pull)
+[![Installations](https://img.shields.io/badge/dynamic/json.svg?label=installed&url=https%3A%2F%2Fpull.now.sh%2Fprobot%2Fstats&query=%24.installations&colorB=007ec6&suffix=%20times&maxAge=3600)](https://probot.github.io/apps/pull/)
+[![Triggered #](https://img.shields.io/badge/dynamic/json.svg?label=triggered&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3Aapp%2Fpull%26per_page%3D1&query=%24.total_count&colorB=007ec6&suffix=%20times&maxAge=600)](https://probot.github.io/apps/pull/)
 <br/>
 [![Probot](https://img.shields.io/badge/built%20with-probot-orange.svg?maxAge=86400)](https://probot.github.io/)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?maxAge=86400)](https://standardjs.com)
@@ -26,27 +26,27 @@ _Upstream must be in the same fork network_
 
 ## Setup
 
-:warning:**Before you start:** _Create a new branch if you have made changes to your fork's default (master) branch._
+:warning:**Before you start:** _Always make a backup if you've made changes._
 
 
-### Basic setup (without config):
+### Basic setup:
 
- 1. Run `git clone --mirror` to make a backup (Recommended if you have made changes).
- 2. Install **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
- 3. With zero-configuration, Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
+ 1. Install  **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
+ 2. **_That's it!_**
 
-:bulb:_Do NOT touch default (master) branch in any forks. Always create new branches to work on._
+Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
+
+:bulb: Best Practice: _Do NOT touch default (master) branch in any forks. Always create new branches to work on._
 
 
-### Recommended setup (with config):
+### Advanced setup (with config):
 
- 1. Run `git clone --mirror` to make a backup (optional).
- 2. Create a new branch.
- 3. Setup the new branch as default branch under repository Settings > Branches.
- 4. Add `.github/pull.yml` to your default branch.
+ 1. Create a new branch.
+ 2. Setup the new branch as default branch under repository Settings > Branches.
+ 3. Add `.github/pull.yml` to your default branch.
 
 #### Most common
-(Basic setup default)
+(behaves the same as basic setup)
 
 ```yaml
 version: "1"
@@ -74,13 +74,14 @@ rules:                           # Array of rules
 label: ":arrow_heading_down: pull"       # Optional
 ```
 
- 5. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `.github/pull.yml`.
- 6. Install **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
+ 4. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `.github/pull.yml`.
+ 5. Install  **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
 
 
 ## For Repository Owners
 
-If you have a popular repo with a fork network, consider adding `.github/pull.yml` to your repository pointing to yourself (see example). This will allow forks to install Pull and stay updated with zero-configuration.
+For the most common use case (a single `master` branch), you can just direct users to install Pull with no configurations.
+If you need a more advanced setup (such as a `docs` branch in addition to `master`), consider adding `.github/pull.yml` to your repository pointing to yourself (see example). This will allow forks to install Pull and stay updated automatically.
 
 Example (assuming `owner` is your user or organization name):
 ```yaml
