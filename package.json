@@ -30,7 +30,8 @@
     "standard": "^11.0.1"
   },
   "engines": {
-    "node": ">= 10.2.1"
+    "node": ">= 10.2.1",
+    "npm": ">= 6.2.0"
   },
   "standard": {
     "env": [
