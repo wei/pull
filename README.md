@@ -1,4 +1,4 @@
-<a href="https://github.com/apps/pull"><img align="right" width="120" height="120" src="https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull.svg" /></a>
+<a href="https://github.com/apps/pull"><img align="right" width="120" height="120" src="https://prod.download/pull-svg" /></a>
 
 # Pull
 
@@ -26,12 +26,12 @@ _Upstream must be in the same fork network_
 
 ## Setup
 
-:warning:**Before you start:** _Always make a backup if you've made changes._
+:warning:**Before you start:** _Make a backup if you've made changes._
 
 
 ### Basic setup:
 
- 1. Install  **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
+ 1. Install **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app](https://github.com/apps/pull)**.
  2. **_That's it!_**
 
 Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
@@ -74,8 +74,8 @@ rules:                           # Array of rules
 label: ":arrow_heading_down: pull"       # Optional
 ```
 
- 4. Go to `https://pull.now.sh/check/:owner/:repo` to validate your `.github/pull.yml`.
- 5. Install  **[![Pull](https://cdn.rawgit.com/wei/40d98877c6ac5f917d78ccfe72a0f928/raw/0f6ee2e8715412295998e68754027505f30d0f91/pull-18h.svg) Pull app](https://github.com/apps/pull)**.
+ 4. Go to `https://pull.now.sh/check/${owner}/${repo}` to validate your `.github/pull.yml`.
+ 5. Install **[![<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull](https://prod.download/pull-18h-svg) Pull app](https://github.com/apps/pull)**.
 
 
 ## For Repository Owners
