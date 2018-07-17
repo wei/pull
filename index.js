@@ -68,8 +68,8 @@ module.exports = async (app) => {
   }
 
   async function forRepository (context) {
-    if (managedAccounts.indexOf(context.payload.repository.owner.name) === -1) {
-      managedAccounts.push(context.payload.repository.owner.name)
+    if (managedAccounts.indexOf(context.payload.repository.owner.login) === -1) {
+      managedAccounts.push(context.payload.repository.owner.login)
     }
     if (managedRepos.indexOf(context.payload.repository.full_name) === -1) {
       managedRepos.push(context.payload.repository.full_name)
