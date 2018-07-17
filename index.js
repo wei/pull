@@ -9,6 +9,9 @@ const bsyslog = require('bunyan-syslog-udp')
 const Pull = require('./lib/pull')
 const schema = require('./lib/schema')
 
+const managedAccounts = []
+const managedRepos = []
+
 module.exports = async (app) => {
   const papertrailHost = process.env.PAPERTRAIL_HOST
   const papertrailPort = parseInt(process.env.PAPERTRAIL_PORT, 10)
@@ -65,6 +68,13 @@ module.exports = async (app) => {
   }
 
   async function forRepository (context) {
+    if (managedAccounts.indexOf(context.payload.repository.owner.name) === -1) {
+      managedAccounts.push(context.payload.repository.owner.name)
+    }
+    if (managedRepos.indexOf(context.payload.repository.full_name) === -1) {
+      managedRepos.push(context.payload.repository.full_name)
+    }
+
     if (!context.payload.repository.fork) {
       app.log.info(`[${context.payload.repository.full_name}] Not a fork, unscheduled`)
       scheduler.stop(context.payload.repository)
@@ -114,6 +124,13 @@ module.exports = async (app) => {
   const routes = app.route()
 
   routes.get('/', (req, res) => res.redirect('https://github.com/wei/pull#readme'))
+
+  routes.get('/installations', async (req, res) => {
+    res.json({
+      installations: managedAccounts.length,
+      repos: managedRepos.length
+    })
+  })
 
   routes.get('/check/:owner/:repo', (req, res) => {
     app.log.info(`[${req.params.owner}/${req.params.repo}] Checking ${PULL_CONFIG}`)
