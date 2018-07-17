@@ -76,7 +76,7 @@ module.exports = async (app) => {
     }
 
     if (!context.payload.repository.fork) {
-      app.log.info(`[${context.payload.repository.full_name}] Not a fork, unscheduled`)
+      app.log.debug(`[${context.payload.repository.full_name}] Not a fork, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }
@@ -84,7 +84,7 @@ module.exports = async (app) => {
     const config = await getConfig(context, PULL_CONFIG) ||
       await getDefaultConfig(context.github, context.repo({ logger: app.log }))
     if (!config) {
-      app.log.info(`[${context.payload.repository.full_name}] Unable to fetch config, unscheduled`)
+      app.log.warn({}, `[${context.payload.repository.full_name}] Unable to fetch config, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }
@@ -104,7 +104,7 @@ module.exports = async (app) => {
       const defaultBranch = repoInfo.data.parent.default_branch
 
       if (upstreamOwner && defaultBranch) {
-        logger.info(`[${owner}/${repo}] Using default config ${defaultBranch}...${upstreamOwner}:${defaultBranch}`)
+        logger.debug(`[${owner}/${repo}] Using default config ${defaultBranch}...${upstreamOwner}:${defaultBranch}`)
         return {
           version: '1',
           rules: [

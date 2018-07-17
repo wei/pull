@@ -122,6 +122,60 @@ describe('pull - routineCheck', () => {
     expect(github.issues.edit).not.toHaveBeenCalled()
   })
 
+  test('diff too large', async () => {
+    github.repos.compareCommits.mockImplementation(() => { throw Error('Server Error: Sorry, this diff is taking too long to generate.') })
+    github.search.issues.mockResolvedValue({ data: { total_count: 0 } })
+    github.pullRequests.create.mockResolvedValue({ data: {
+      number: 12,
+      base: { ref: 'master' },
+      head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
+      state: 'open',
+      user: { login: 'pull[bot]' },
+      mergeable: true,
+      mergeable_state: 'clean'
+    }})
+
+    const pull = getPull()
+    await pull.routineCheck()
+    expect(github.repos.compareCommits.mock.calls.length).toBe(3)
+    expect(github.search.issues).toHaveBeenCalled()
+    expect(github.pullRequests.create).toHaveBeenCalled()
+    expect(github.issues.edit).toHaveBeenCalled()
+  })
+
+  test('diff not found', async () => {
+    github.repos.compareCommits.mockImplementation(() => { throw Error('Not Found') })
+
+    const pull = getPull()
+    await pull.routineCheck()
+    expect(github.repos.compareCommits.mock.calls.length).toBe(3)
+    expect(github.search.issues).not.toHaveBeenCalled()
+    expect(github.pullRequests.create).not.toHaveBeenCalled()
+    expect(github.issues.edit).not.toHaveBeenCalled()
+  })
+
+  test('diff no common ancestor', async () => {
+    github.repos.compareCommits.mockImplementation(() => { throw Error('No common ancestor between --- and ---:---') })
+
+    const pull = getPull()
+    await pull.routineCheck()
+    expect(github.repos.compareCommits.mock.calls.length).toBe(3)
+    expect(github.search.issues).not.toHaveBeenCalled()
+    expect(github.pullRequests.create).not.toHaveBeenCalled()
+    expect(github.issues.edit).not.toHaveBeenCalled()
+  })
+
+  test('diff other error', async () => {
+    github.repos.compareCommits.mockImplementation(() => { throw Error('Internal Server Error') })
+
+    const pull = getPull()
+    await pull.routineCheck()
+    expect(github.repos.compareCommits.mock.calls.length).toBe(3)
+    expect(github.search.issues).not.toHaveBeenCalled()
+    expect(github.pullRequests.create).not.toHaveBeenCalled()
+    expect(github.issues.edit).not.toHaveBeenCalled()
+  })
+
   test('yes diff, already has PR', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
     github.search.issues.mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 12 } ] } })
