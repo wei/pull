@@ -3,6 +3,7 @@ const PULL_CONFIG = process.env.PULL_CONFIG || 'pull.yml'
 const getConfig = require('probot-config')
 const createScheduler = require('probot-scheduler')
 const requestPromise = require('request-promise')
+const badgen = require('badgen')
 const yaml = require('js-yaml')
 const bsyslog = require('bunyan-syslog-udp')
 
@@ -132,10 +133,74 @@ module.exports = async (app) => {
   routes.get('/', (req, res) => res.redirect('https://github.com/wei/pull#readme'))
 
   routes.get('/installations', async (req, res) => {
-    res.json({
+    const output = {
       installations: managedAccounts.length,
       repos: managedRepos.length
-    })
+    }
+    if (req.query.key === process.env.WEBHOOK_SECRET) {
+      output.managedAccounts = managedAccounts.sort()
+      output.managedRepos = managedRepos.sort()
+    }
+    res.json(output)
+  })
+
+  routes.get('/badge/:type', async (req, res) => {
+    let color = 'blue'
+    let suffix = ''
+    let maxAge = 600
+    const type = req.params.type
+    try {
+      let value = ''
+      switch (type) {
+        case 'installed':
+          value = managedAccounts.length
+          suffix = ' times'
+          break
+        case 'managing':
+          value = managedRepos.length
+          suffix = ' repos'
+          break
+        case 'triggered':
+          value = (await getJSON(`https://api.github.com/search/issues?q=author:app/pull&per_page=1`)).total_count
+          suffix = ' times'
+          break
+        case 'code_style':
+          value = 'standard'
+          color = 'green'
+          maxAge = 86400
+          break
+        case 'built_with':
+          value = 'probot'
+          color = 'orange'
+          maxAge = 86400
+          break
+        case 'license':
+          value = 'MIT'
+          maxAge = 86400
+          break
+        default:
+          throw Error('Invalid type')
+      }
+
+      const svgString = badgen({
+        subject: type,
+        status: `${value}${suffix}`,
+        color: color
+      }).replace(/\n\s+([^\n]+)/g, '$1')
+
+      res.writeHead(200, {
+        'Content-Type': 'image/svg+xml;charset=utf-8',
+        'Cache-Control': `max-age=${maxAge}`
+      })
+      res.end(svgString)
+    } catch (_) {
+      const buf = Buffer.from('4749463839610100010000000021F90401000000002C00000000010001000002', 'hex')
+      res.writeHead(200, {
+        'Content-Type': 'image/gif',
+        'Content-Length': buf.length
+      })
+      res.end(buf)
+    }
   })
 
   routes.get('/check/:owner/:repo', (req, res) => {

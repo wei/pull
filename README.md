@@ -3,16 +3,16 @@
 # Pull
 
 [![TravisCI](https://travis-ci.com/wei/pull.svg?branch=master)](https://travis-ci.com/wei/pull)
-[![Codecov](https://img.shields.io/codecov/c/github/wei/pull/master.svg?maxAge=3600)](https://codecov.io/gh/wei/pull)
-[![Depfu](https://img.shields.io/depfu/wei/pull.svg?maxAge=3600)](https://depfu.com/github/wei/pull)
-[![Installations](https://img.shields.io/badge/dynamic/json.svg?label=installed&url=https%3A%2F%2Fpull.now.sh%2Fprobot%2Fstats&query=%24.installations&colorB=007ec6&suffix=%20times&maxAge=600)](https://probot.github.io/apps/pull/)
-[![Managing](https://img.shields.io/badge/dynamic/json.svg?label=managing&url=https%3A%2F%2Fpull.now.sh%2Finstallations&query=%24.repos&colorB=007ec6&suffix=%20repos&maxAge=600)](https://probot.github.io/apps/pull/)
-[![Triggered #](https://img.shields.io/badge/dynamic/json.svg?label=triggered&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3Aapp%2Fpull%26per_page%3D1&query=%24.total_count&colorB=007ec6&suffix=%20times)](https://github.com/issues?q=author%3Aapp%2Fpull)
+[![Codecov](https://codecov.io/gh/wei/pull/branch/master/graph/badge.svg)](https://codecov.io/gh/wei/pull)
+[![Depfu](https://badges.depfu.com/badges/4a6fdae34a957e6c1ac11a83f6491162/overview.svg)](https://depfu.com/github/wei/pull)
+[![Installations](https://pull.now.sh/badge/installed)](https://probot.github.io/apps/pull/)
+[![Managing](https://pull.now.sh/badge/managing)](https://probot.github.io/apps/pull/)
+[![Triggered #](https://pull.now.sh/badge/triggered)](https://github.com/issues?q=author%3Aapp%2Fpull)
 <br/>
-[![Probot](https://img.shields.io/badge/built%20with-probot-orange.svg?maxAge=86400)](https://probot.github.io/)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?maxAge=86400)](https://standardjs.com)
+[![Probot](https://pull.now.sh/badge/built_with)](https://probot.github.io/)
+[![JavaScript Style Guide](https://pull.now.sh/badge/code_style)](https://standardjs.com)
 [![jest](https://facebook.github.io/jest/img/jest-badge.svg)](https://github.com/facebook/jest)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?maxAge=86400)](https://wei.mit-license.org)
+[![MIT License](https://pull.now.sh/badge/license)](https://wei.mit-license.org)
 
 > 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your repository up-to-date with upstream changes via automated pull requests.
 
