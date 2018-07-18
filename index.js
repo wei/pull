@@ -2,7 +2,7 @@ const PULL_CONFIG = process.env.PULL_CONFIG || 'pull.yml'
 
 const getConfig = require('probot-config')
 const createScheduler = require('probot-scheduler')
-const fetch = require('node-fetch')
+const requestPromise = require('request-promise')
 const yaml = require('js-yaml')
 const bsyslog = require('bunyan-syslog-udp')
 
@@ -11,6 +11,12 @@ const schema = require('./lib/schema')
 
 const managedAccounts = []
 const managedRepos = []
+
+const getJSON = uri => requestPromise({
+  uri,
+  headers: { 'User-Agent': process.env.APP_ID || 'pull[bot]' },
+  json: true
+})
 
 module.exports = async (app) => {
   const papertrailHost = process.env.PAPERTRAIL_HOST
@@ -134,8 +140,7 @@ module.exports = async (app) => {
 
   routes.get('/check/:owner/:repo', (req, res) => {
     app.log.info(`[${req.params.owner}/${req.params.repo}] Checking ${PULL_CONFIG}`)
-    fetch(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/contents/.github/${PULL_CONFIG}`)
-      .then(githubRes => githubRes.json())
+    getJSON(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/contents/.github/${PULL_CONFIG}`)
       .then(json => Buffer.from(json.content, 'base64').toString())
       .then(yml => yaml.safeLoad(yml))
       .then((config) => {
@@ -143,7 +148,7 @@ module.exports = async (app) => {
         if (error) throw error
 
         const reqs = value.rules.map(r => new Promise((resolve, reject) => {
-          fetch(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/compare/${r.base}...${r.upstream}`)
+          getJSON(`https://api.github.com/repos/${req.params.owner}/${req.params.repo}/compare/${r.base}...${r.upstream}`)
             .then(githubRes => (githubRes.ok ? resolve() : reject(Error(`${r.base}...${r.upstream}`))))
             .catch(e => reject(e))
         }))
