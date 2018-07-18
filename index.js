@@ -19,16 +19,16 @@ const getJSON = uri => requestPromise({
 })
 
 module.exports = async (app) => {
-  const papertrailHost = process.env.PAPERTRAIL_HOST
-  const papertrailPort = parseInt(process.env.PAPERTRAIL_PORT, 10)
-  if (papertrailHost && papertrailPort) {
+  const syslogHost = process.env.SYSLOG_UDP_HOST
+  const syslogPort = parseInt(process.env.SYSLOG_UDP_PORT, 10)
+  if (syslogHost && syslogPort) {
     app.log.target.addStream({
       type: 'raw',
       level: process.env.LOG_LEVEL || 'trace',
       stream: bsyslog.createBunyanStream({
         name: 'pull',
-        host: papertrailHost,
-        port: papertrailPort
+        host: syslogHost,
+        port: syslogPort
       })
     })
   }

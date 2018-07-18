@@ -12,7 +12,7 @@
     "lint:fix": "standard --fix",
     "test": "standard && jest",
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage",
-    "travis:deploy-now": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" -e SENTRY_DSN=\"$SENTRY_DSN\" -e PAPERTRAIL_HOST=$PAPERTRAIL_HOST -e PAPERTRAIL_PORT=$PAPERTRAIL_PORT --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now scale $NOW_ALIAS.now.sh sfo1 1 --token=$NOW_TOKEN && (now rm $NOW_ALIAS --safe -y --token=$NOW_TOKEN || true)"
+    "travis:deploy-now": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" -e SENTRY_DSN=\"$SENTRY_DSN\" -e SYSLOG_UDP_HOST=$SYSLOG_UDP_HOST -e SYSLOG_UDP_PORT=$SYSLOG_UDP_PORT --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now scale $NOW_ALIAS.now.sh sfo1 1 --token=$NOW_TOKEN && (now rm $NOW_ALIAS --safe -y --token=$NOW_TOKEN || true)"
   },
   "dependencies": {
     "bunyan-syslog-udp": "^0.1.0",
