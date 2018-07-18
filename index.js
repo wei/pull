@@ -183,7 +183,7 @@ module.exports = async (app) => {
       }
 
       const svgString = badgen({
-        subject: type,
+        subject: type.replace(/_/g, ' '),
         status: `${value}${suffix}`,
         color: color
       }).replace(/\n\s+([^\n]+)/g, '$1')
