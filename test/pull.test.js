@@ -253,7 +253,7 @@ describe('pull - routineCheck', () => {
     }})
     github.pullRequests.create
       .mockResolvedValueOnce({ data: { number: 12 } })
-      .mockResolvedValueOnce({ data: { number: 16 } })
+      .mockImplementationOnce(() => { throw Error({ code: 512 }) })
 
     const pull = getPull()
     await pull.routineCheck()
@@ -274,19 +274,13 @@ describe('pull - routineCheck', () => {
     expect(github.pullRequests.create).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev', maintainer_can_modify: false, title: helper.getPRTitle('hotfix/bug-1', 'upstream:dev'), body: helper.getPRBody('wei/fork')
     })
-    expect(github.issues.edit).toHaveBeenCalledTimes(2)
+    expect(github.issues.edit).toHaveBeenCalledTimes(1)
     expect(github.issues.edit).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', number: 12, assignees: ['tom'], labels: ['pull'], body: helper.getPRBody('wei/fork', 12)
     })
-    expect(github.issues.edit).nthCalledWith(2, {
-      owner: 'wei', repo: 'fork', number: 16, assignees: ['wei'], labels: ['pull'], body: helper.getPRBody('wei/fork', 16)
-    })
-    expect(github.pullRequests.createReviewRequest).toHaveBeenCalledTimes(2)
+    expect(github.pullRequests.createReviewRequest).toHaveBeenCalledTimes(1)
     expect(github.pullRequests.createReviewRequest).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', number: 12, reviewers: ['jerry']
-    })
-    expect(github.pullRequests.createReviewRequest).nthCalledWith(2, {
-      owner: 'wei', repo: 'fork', number: 16, reviewers: ['wei']
     })
   })
 })

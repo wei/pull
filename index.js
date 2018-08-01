@@ -71,8 +71,12 @@ module.exports = async (app) => {
     try {
       config = await getConfig(context, app.CONFIG_FILENAME)
     } catch (error) {
-      app.log.warn({ error }, `[${context.payload.repository.full_name}] Repo is blocked, unscheduled`)
-      scheduler.stop(context.payload.repository)
+      if (error && error.code >= 500) {
+        app.log.warn({ error }, `[${context.payload.repository.full_name}] Repo access failed with server error ${error.code}`)
+      } else {
+        app.log.warn({ error }, `[${context.payload.repository.full_name}] Repo is blocked, unscheduled`)
+        scheduler.stop(context.payload.repository)
+      }
       return null
     }
 
