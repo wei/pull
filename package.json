@@ -22,7 +22,7 @@
     "probot": "^7.0.1",
     "probot-config": "^0.2.0",
     "probot-scheduler": "^1.2.0",
-    "request": "^2.87.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
