@@ -133,7 +133,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    }})
+    } })
 
     const pull = getPull()
     await pull.routineCheck()
@@ -189,7 +189,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    }}).mockResolvedValueOnce({ data: {
+    } }).mockResolvedValueOnce({ data: {
       number: 13,
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-13' },
@@ -197,7 +197,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    }}).mockResolvedValueOnce({ data: {
+    } }).mockResolvedValueOnce({ data: {
       number: 14,
       base: { ref: 'hotfix/bug-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-14' },
@@ -205,7 +205,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    }})
+    } })
 
     const pull = getPull()
     await pull.routineCheck()
@@ -250,7 +250,7 @@ describe('pull - routineCheck', () => {
       user: { login: 'pull[bot]' },
       mergeable: true,
       mergeable_state: 'clean'
-    }})
+    } })
     github.pullRequests.create
       .mockResolvedValueOnce({ data: { number: 12 } })
       .mockImplementationOnce(() => { throw Error({ code: 512 }) })
