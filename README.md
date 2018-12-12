@@ -5,6 +5,7 @@
 [![TravisCI](https://travis-ci.com/wei/pull.svg?branch=master)](https://travis-ci.com/wei/pull)
 [![Codecov](https://codecov.io/gh/wei/pull/branch/master/graph/badge.svg)](https://codecov.io/gh/wei/pull)
 [![Depfu](https://badges.depfu.com/badges/4a6fdae34a957e6c1ac11a83f6491162/overview.svg)](https://depfu.com/github/wei/pull)
+<br/>
 [![Installations](https://pull.now.sh/badge/installed)](https://probot.github.io/apps/pull/)
 [![Managing](https://pull.now.sh/badge/managing)](https://probot.github.io/apps/pull/)
 [![Triggered #](https://pull.now.sh/badge/triggered)](https://github.com/issues?q=author%3Aapp%2Fpull)
