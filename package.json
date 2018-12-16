@@ -15,13 +15,13 @@
     "travis:deploy-now": "now --public -e WEBHOOK_SECRET=$WEBHOOK_SECRET -e CLIENT_ID=$CLIENT_ID -e CLIENT_SECRET=$CLIENT_SECRET -e PRIVATE_BASE64=\"$PRIVATE_BASE64\" -e SENTRY_DSN=\"$SENTRY_DSN\" -e SYSLOG_UDP_HOST=$SYSLOG_UDP_HOST -e SYSLOG_UDP_PORT=$SYSLOG_UDP_PORT --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN && now scale $NOW_ALIAS.now.sh sfo1 1 --token=$NOW_TOKEN && (now rm $NOW_ALIAS --safe -y --token=$NOW_TOKEN || true)"
   },
   "dependencies": {
-    "@bcgov/probot-scheduler": "^1.2.1",
     "badgen": "^2.5.0",
     "bunyan-syslog-udp": "^0.1.0",
     "joi": "^14.3.0",
     "js-yaml": "^3.12.0",
     "probot": "^7.4.0",
     "probot-config": "^0.2.0",
+    "probot-scheduler": "wei/probot-scheduler",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },

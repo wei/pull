@@ -1,4 +1,4 @@
-const createScheduler = require('@bcgov/probot-scheduler')
+const createScheduler = require('probot-scheduler')
 
 const Pull = require('./lib/pull')
 const getConfig = require('./lib/get-config')
