@@ -25,28 +25,28 @@ const validConfigs = [
 ]
 
 const invalidConfigs = [
-  [{ }, '"version" is required'],
-  [{ rules: {} }, '"version" is required'],
-  [{ version: '' }, '"version" is not allowed to be empty'],
-  [{ version: '1' }, '"rules" is required'],
-  [{ version: '1', rules: [] }, '"rules" does not contain 1 required value(s)'],
-  [{ version: '1', rules: [{ base: 'master' }] }, '"rules" does not contain 1 required value(s)'],
-  [{ version: 1, rules: [{ base: 'master', upstream: 'upstream:master' }] }, '"version" must be a string'],
-  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: 1 }, '"label" must be a string'],
-  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: '' }, '"label" is not allowed to be empty'],
-  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', assignees: '' }] }, '"rules" does not contain 1 required value(s)'],
-  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '' }] }, '"rules" does not contain 1 required value(s)'],
-  [{ version: '1', rules: [{ base: 'master', upstream: '' }] }, '"rules" does not contain 1 required value(s)'],
-  [{ version: '1', rules: [{ base: 'master', autoMerge: 1 }] }, '"rules" does not contain 1 required value(s)'],
-  [{ version: '1', rules: [{ base: 'master', autoMerge: '' }] }, '"rules" does not contain 1 required value(s)'],
-  [{
+  { },
+  { rules: {} },
+  { version: '' },
+  { version: '1' },
+  { version: '1', rules: [] },
+  { version: '1', rules: [{ base: 'master' }] },
+  { version: 1, rules: [{ base: 'master', upstream: 'upstream:master' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: 1 },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: '' },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', assignees: '' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '' }] },
+  { version: '1', rules: [{ base: 'master', upstream: '' }] },
+  { version: '1', rules: [{ base: 'master', autoMerge: 1 }] },
+  { version: '1', rules: [{ base: 'master', autoMerge: '' }] },
+  {
     version: '1',
     rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, autoMergeHardReset: 1 }]
-  }, '"rules" does not contain 1 required value'],
-  [{
+  },
+  {
     version: '1',
     rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, autoMergeHardReset: '' }]
-  }, '"rules" does not contain 1 required value']
+  }
 ]
 
 describe('schema', () => {
@@ -75,10 +75,10 @@ describe('schema', () => {
     })
   })
 
-  invalidConfigs.forEach(([example, message]) => {
+  invalidConfigs.forEach((example) => {
     test(`${JSON.stringify(example)} is invalid`, () => {
       const { error } = schema.validate(example)
-      expect(error && error.toString()).toMatch(message)
+      expect(error && error.toString()).toMatchSnapshot()
     })
   })
 })
