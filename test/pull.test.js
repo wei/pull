@@ -24,10 +24,10 @@ beforeEach(() => {
       merge: jest.fn()
     },
     issues: {
-      edit: jest.fn()
+      update: jest.fn()
     },
     gitdata: {
-      updateReference: jest.fn()
+      updateRef: jest.fn()
     },
     search: {
       issues: jest.fn()
@@ -99,7 +99,7 @@ describe('pull - routineCheck', () => {
       expect(github.repos.compareCommits).not.toHaveBeenCalled()
       expect(github.search.issues).not.toHaveBeenCalled()
       expect(github.pullRequests.create).not.toHaveBeenCalled()
-      expect(github.issues.edit).not.toHaveBeenCalled()
+      expect(github.issues.update).not.toHaveBeenCalled()
     }
   })
 
@@ -119,7 +119,7 @@ describe('pull - routineCheck', () => {
     })
     expect(github.search.issues).not.toHaveBeenCalled()
     expect(github.pullRequests.create).not.toHaveBeenCalled()
-    expect(github.issues.edit).not.toHaveBeenCalled()
+    expect(github.issues.update).not.toHaveBeenCalled()
   })
 
   test('diff too large', async () => {
@@ -140,7 +140,7 @@ describe('pull - routineCheck', () => {
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
     expect(github.search.issues).toHaveBeenCalled()
     expect(github.pullRequests.create).toHaveBeenCalled()
-    expect(github.issues.edit).toHaveBeenCalled()
+    expect(github.issues.update).toHaveBeenCalled()
   })
 
   test('diff not found', async () => {
@@ -151,7 +151,7 @@ describe('pull - routineCheck', () => {
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
     expect(github.search.issues).not.toHaveBeenCalled()
     expect(github.pullRequests.create).not.toHaveBeenCalled()
-    expect(github.issues.edit).not.toHaveBeenCalled()
+    expect(github.issues.update).not.toHaveBeenCalled()
   })
 
   test('diff no common ancestor', async () => {
@@ -162,7 +162,7 @@ describe('pull - routineCheck', () => {
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
     expect(github.search.issues).not.toHaveBeenCalled()
     expect(github.pullRequests.create).not.toHaveBeenCalled()
-    expect(github.issues.edit).not.toHaveBeenCalled()
+    expect(github.issues.update).not.toHaveBeenCalled()
   })
 
   test('diff other error', async () => {
@@ -173,7 +173,7 @@ describe('pull - routineCheck', () => {
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
     expect(github.search.issues).not.toHaveBeenCalled()
     expect(github.pullRequests.create).not.toHaveBeenCalled()
-    expect(github.issues.edit).not.toHaveBeenCalled()
+    expect(github.issues.update).not.toHaveBeenCalled()
   })
 
   test('yes diff, already has PR', async () => {
@@ -228,12 +228,12 @@ describe('pull - routineCheck', () => {
     })
     expect(github.search.issues).toHaveBeenCalled()
     expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 14 })
-    expect(github.gitdata.updateReference).toHaveBeenCalledWith(
+    expect(github.gitdata.updateRef).toHaveBeenCalledWith(
       { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder-14', force: true }
     )
 
     expect(github.pullRequests.create).not.toHaveBeenCalled()
-    expect(github.issues.edit).not.toHaveBeenCalled()
+    expect(github.issues.update).not.toHaveBeenCalled()
   })
 
   test('yes diff, no PR, create PR', async () => {
@@ -274,8 +274,8 @@ describe('pull - routineCheck', () => {
     expect(github.pullRequests.create).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev', maintainer_can_modify: false, title: helper.getPRTitle('hotfix/bug-1', 'upstream:dev'), body: helper.getPRBody('wei/fork')
     })
-    expect(github.issues.edit).toHaveBeenCalledTimes(1)
-    expect(github.issues.edit).nthCalledWith(1, {
+    expect(github.issues.update).toHaveBeenCalledTimes(1)
+    expect(github.issues.update).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', number: 12, assignees: ['tom'], labels: ['pull'], body: helper.getPRBody('wei/fork', 12)
     })
     expect(github.pullRequests.createReviewRequest).toHaveBeenCalledTimes(1)
@@ -303,7 +303,7 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'clean'
     })
     expect(github.pullRequests.get).not.toHaveBeenCalled()
-    expect(github.gitdata.updateReference).not.toHaveBeenCalled()
+    expect(github.gitdata.updateRef).not.toHaveBeenCalled()
 
     github.pullRequests.get
       .mockResolvedValueOnce({ data: { mergeable: null, mergeable_state: 'unknown' } })
@@ -322,7 +322,7 @@ describe('pull - checkAutoMerge', () => {
     expect(github.pullRequests.get).toHaveBeenCalledTimes(2)
     expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
     expect(github.pullRequests.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
-    expect(github.gitdata.updateReference).not.toHaveBeenCalled()
+    expect(github.gitdata.updateRef).not.toHaveBeenCalled()
 
     github.pullRequests.get = jest.fn()
       .mockResolvedValueOnce({ data: { mergeable: null, mergeable_state: 'unknown' } })
@@ -341,7 +341,7 @@ describe('pull - checkAutoMerge', () => {
     })
     expect(github.pullRequests.get).not.toHaveBeenCalled()
     expect(github.pullRequests.merge).not.toHaveBeenCalled()
-    expect(github.gitdata.updateReference).toHaveBeenCalledWith(
+    expect(github.gitdata.updateRef).toHaveBeenCalledWith(
       { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder', force: true }
     )
   })
@@ -361,7 +361,7 @@ describe('pull - checkAutoMerge', () => {
     }, { isMergableMaxRetries: 1 })
     expect(github.pullRequests.get).toHaveBeenCalledTimes(1)
     expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
-    expect(github.gitdata.updateReference).not.toHaveBeenCalled()
+    expect(github.gitdata.updateRef).not.toHaveBeenCalled()
   })
 
   test('should not merge if mergable_status is dirty', async () => {
@@ -382,12 +382,12 @@ describe('pull - checkAutoMerge', () => {
     }, { isMergableMaxRetries: 2 })
     expect(github.pullRequests.get).toHaveBeenCalledTimes(2)
     expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
-    expect(github.gitdata.updateReference).not.toHaveBeenCalled()
+    expect(github.gitdata.updateRef).not.toHaveBeenCalled()
   })
 
   test('hard reset failed', async () => {
     github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
-    github.gitdata.updateReference.mockRejectedValue(new Error('Update reference failed'))
+    github.gitdata.updateRef.mockRejectedValue(new Error('Update reference failed'))
 
     const pull = getPull()
     await pull.checkAutoMerge({
@@ -400,14 +400,14 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     })
     expect(github.pullRequests.get).not.toHaveBeenCalled()
-    expect(github.gitdata.updateReference).toHaveBeenCalledWith(
+    expect(github.gitdata.updateRef).toHaveBeenCalledWith(
       { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder', force: true }
     )
   })
 
   test('should handle same repo auto merge', async () => {
     github.pullRequests.get.mockResolvedValueOnce({ data: { mergeable: true, mergeable_state: 'clean' } })
-    github.gitdata.updateReference.mockRejectedValue(new Error('Update reference failed'))
+    github.gitdata.updateRef.mockRejectedValue(new Error('Update reference failed'))
 
     const config = { version: '1', rules: [{ base: 'dev', upstream: 'master', autoMerge: true }] }
     const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, config)
@@ -422,7 +422,7 @@ describe('pull - checkAutoMerge', () => {
     })
     expect(github.pullRequests.get).toHaveBeenCalledTimes(1)
     expect(github.pullRequests.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16 })
-    expect(github.gitdata.updateReference).not.toHaveBeenCalled()
+    expect(github.gitdata.updateRef).not.toHaveBeenCalled()
   })
 })
 
