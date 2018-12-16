@@ -21,7 +21,7 @@
     "js-yaml": "^3.12.0",
     "probot": "^7.4.0",
     "probot-config": "^0.2.0",
-    "probot-scheduler": "^1.2.0",
+    "@bcgov/probot-scheduler": "^1.2.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
