@@ -19,7 +19,7 @@
     "bunyan-syslog-udp": "^0.1.0",
     "joi": "^14.3.1",
     "js-yaml": "^3.12.1",
-    "probot": "^7.4.0",
+    "probot": "^7.5.0",
     "probot-config": "^1.0.0",
     "probot-scheduler": "wei/probot-scheduler",
     "request": "^2.88.0",
