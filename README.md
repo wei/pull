@@ -19,6 +19,24 @@
  </a>
 </p>
 
+<h2>Table of contents</h2>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Basic setup](#basic-setup)
+  - [Advanced setup (with config)](#advanced-setup-with-config)
+    - [Most common](#most-common)
+    - [Advanced usage](#advanced-usage)
+- [For Repository Owners](#for-repository-owners)
+- [Author](#author)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## Introduction
 
@@ -54,13 +72,13 @@ Trusted by [![Repository Count](https://pull.now.sh/badge/installed?plain)](http
  - Upstream must be in the same fork network.
  - :warning: _Make a backup if you've made changes._
 
-### Basic setup:
+### Basic setup
 
  - Just install **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app](https://github.com/apps/pull)**.
 
 Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
 
-### Advanced setup (with config):
+### Advanced setup (with config)
 
  1. Create a new branch.
  2. Setup the new branch as default branch under repository Settings > Branches.
