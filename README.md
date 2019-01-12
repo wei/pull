@@ -1,9 +1,9 @@
-<h1 align="center"> Pull </h1> <br/>
 <p align="center">
  <a href="https://github.com/apps/pull">
    <img width="200" height="200" alt="Pull App" src="https://prod.download/pull-svg" />
  </a>
 </p>
+<h1 align="center">Pull</h1>
 <p align="center">
   Keep your forks up-to-date.
 </p>
@@ -48,7 +48,7 @@
 [![jest](https://facebook.github.io/jest/img/jest-badge.svg)](https://github.com/facebook/jest)
 [![MIT License](https://pull.now.sh/badge/license)](https://wei.mit-license.org)
 
-> 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your repository up-to-date with upstream changes via automated pull requests.
+> 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your forks up-to-date with upstream via automated pull requests.
 
 Incorporate new changes as they happen, not in 6 months. 
 
