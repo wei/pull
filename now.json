@@ -1,4 +1,5 @@
 {
+  "version": 1,
   "name": "pull",
   "alias": "pull.now.sh",
   "type": "npm",
