@@ -9,17 +9,17 @@
 </p>
 <p align="center">
  <a href="https://github.com/apps/pull">
-   <img alt="Installations" src="https://pull.now.sh/badge/installed" />
+   <img alt="Managing" src="https://pull.now.sh/badge/managing" />
  </a>
  <a href="https://github.com/apps/pull">
-   <img alt="Managing" src="https://pull.now.sh/badge/managing" />
+   <img alt="Installations" src="https://pull.now.sh/badge/installed" />
  </a>
  <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
    <img alt="Triggered #" src="https://pull.now.sh/badge/triggered" />
  </a>
 </p>
 
-<h2>Table of contents</h2>
+<h2>Table of Contents</h2>
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -27,9 +27,9 @@
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Basic setup](#basic-setup)
-  - [Advanced setup (with config)](#advanced-setup-with-config)
-    - [Most common](#most-common)
+  - [Basic Setup](#basic-setup)
+  - [Advanced Setup (with config)](#advanced-setup-with-config)
+    - [Most Common](#most-common)
     - [Advanced usage](#advanced-usage)
 - [For Repository Owners](#for-repository-owners)
 - [Author](#author)
@@ -52,7 +52,7 @@
 
 Incorporate new changes as they happen, not in 6 months. 
 
-Trusted by [![Repository Count](https://pull.now.sh/badge/installed?plain)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://pull.now.sh/badge/triggered?plain)](https://github.com/issues?q=author%3Aapp%2Fpull) times.
+Trusted by [![Repository Count](https://pull.now.sh/badge/installed?plain&style=flat)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://pull.now.sh/badge/triggered?plain&style=flat)](https://github.com/issues?q=author%3Aapp%2Fpull) times.
 
 ## Features
 
@@ -72,21 +72,20 @@ Trusted by [![Repository Count](https://pull.now.sh/badge/installed?plain)](http
  - Upstream must be in the same fork network.
  - :warning: _Make a backup if you've made changes._
 
-### Basic setup
+### Basic Setup
 
  - Just install **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app](https://github.com/apps/pull)**.
 
 Pull app will automatically watch and pull in upstream's default (master) branch to yours with **hard reset**.
 
-### Advanced setup (with config)
+### Advanced Setup (with config)
 
  1. Create a new branch.
  2. Setup the new branch as default branch under repository Settings > Branches.
  3. Add `.github/pull.yml` to your default branch.
 
-#### Most common
-(behaves the same as basic setup)
-
+#### Most Common
+(behaves the same as Basic Setup)
 ```yaml
 version: "1"
 rules:
