@@ -77,8 +77,8 @@ describe('pull - routineCheck', () => {
     try {
       new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log })  // eslint-disable-line
       throw Error('Should throw error and go to catch')
-    } catch (err) {
-      expect(err.message).toEqual('Invalid config')
+    } catch (e) {
+      expect(e.message).toEqual('Invalid config')
     }
   })
 

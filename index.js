@@ -70,18 +70,18 @@ module.exports = async (app) => {
     let config
     try {
       config = await getConfig(context, app.CONFIG_FILENAME)
-    } catch (error) {
-      if (error && error.code >= 500) {
-        app.log.warn({ error }, `[${context.payload.repository.full_name}] Repo access failed with server error ${error.code}`)
+    } catch (e) {
+      if (e && e.code >= 500) {
+        app.log.warn(e, `[${context.payload.repository.full_name}] Repo access failed with server error ${e.code}`)
       } else {
-        app.log.warn({ error }, `[${context.payload.repository.full_name}] Repo is blocked, unscheduled`)
+        app.log.debug(e, `[${context.payload.repository.full_name}] Repo is blocked, unscheduled`)
         scheduler.stop(context.payload.repository)
       }
       return null
     }
 
     if (!config) {
-      app.log.warn(`[${context.payload.repository.full_name}] Unable to get config, unscheduled`)
+      app.log.debug(`[${context.payload.repository.full_name}] Unable to get config, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }
