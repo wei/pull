@@ -25,8 +25,8 @@
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
   - [Basic Setup](#basic-setup)
   - [Advanced Setup (with config)](#advanced-setup-with-config)
     - [Most Common](#most-common)
@@ -42,7 +42,7 @@
 
 [![TravisCI](https://travis-ci.com/wei/pull.svg?branch=master)](https://travis-ci.com/wei/pull)
 [![Codecov](https://codecov.io/gh/wei/pull/branch/master/graph/badge.svg)](https://codecov.io/gh/wei/pull)
-[![Depfu](https://badges.depfu.com/badges/4a6fdae34a957e6c1ac11a83f6491162/overview.svg)](https://depfu.com/github/wei/pull)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=wei/pull)](https://dependabot.com)
 [![Probot](https://pull.now.sh/badge/built_with)](https://probot.github.io/)
 [![JavaScript Style Guide](https://pull.now.sh/badge/code_style)](https://standardjs.com)
 [![jest](https://facebook.github.io/jest/img/jest-badge.svg)](https://github.com/facebook/jest)
@@ -65,12 +65,12 @@ Trusted by [![Repository Count](https://pull.now.sh/badge/installed?plain&style=
  - Honor branch protection rules.
  - Work well with pull request checks and reviews.
 
-
-## Getting Started
-
 ### Prerequisites
  - Upstream must be in the same fork network.
  - :warning: _Make a backup if you've made changes._
+
+
+## Getting Started
 
 ### Basic Setup
 
