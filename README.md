@@ -47,6 +47,7 @@
 [![JavaScript Style Guide](https://pull.now.sh/badge/code_style)](https://standardjs.com)
 [![jest](https://facebook.github.io/jest/img/jest-badge.svg)](https://github.com/facebook/jest)
 [![MIT License](https://pull.now.sh/badge/license)](https://wei.mit-license.org)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwei%2Fpull.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwei%2Fpull?ref=badge_shield)
 
 > 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your forks up-to-date with upstream via automated pull requests.
 
@@ -142,3 +143,5 @@ rules:
 
 ## License
 [MIT](https://wei.mit-license.org)
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwei%2Fpull.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwei%2Fpull?ref=badge_large)
