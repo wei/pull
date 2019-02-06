@@ -93,6 +93,7 @@ rules:
     upstream: wei:master      # change `wei` to the owner of upstream repo
     autoMerge: true
     autoMergeHardReset: true
+    autoMergeRebase: false
 ```
 
 #### Advanced usage
@@ -103,6 +104,7 @@ rules:                        # Array of rules
     upstream: wei:master      # Required. Must be in the same fork network.
     autoMerge: true           # Optional, Default: false
     autoMergeHardReset: true  # Optional, Default: false DANGEROUS
+    autoMergeRebase: false    # Optional, Default: false 
   - base: dev
     upstream: master          # Required. Can be a branch in the same forked repo.
     assignees:                # Optional
