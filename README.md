@@ -76,7 +76,7 @@ Trusted by [![Repository Count](https://pull.now.sh/badge/managing?plain&style=f
 
  - Just install **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app](https://github.com/apps/pull)**.
 
-Pull app will automatically watch and pull in upstream's default (master) branch to yours using rebase merge.
+Pull app will automatically watch and pull in upstream's default (master) branch to yours using **hard reset**.
 
 ### Advanced Setup (with config)
 
@@ -91,7 +91,7 @@ version: "1"
 rules:
   - base: master
     upstream: wei:master      # change `wei` to the owner of upstream repo
-    mergeMethod: rebase
+    mergeMethod: hardreset
 ```
 
 #### Advanced usage
@@ -100,7 +100,7 @@ version: "1"
 rules:                        # Array of rules
   - base: master              # Required. Target branch
     upstream: wei:master      # Required. Must be in the same fork network.
-    mergeMethod: squash       # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+    mergeMethod: hardreset       # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
   - base: dev
     upstream: master          # Required. Can be a branch in the same forked repo.
     assignees:                # Optional
@@ -125,10 +125,10 @@ version: "1"
 rules:
   - base: master
     upstream: owner:master
-    mergeMethod: rebase
+    mergeMethod: hardreset
   - base: docs
     upstream: owner:docs
-    mergeMethod: rebase
+    mergeMethod: hardreset
 ```
 
 
