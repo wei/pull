@@ -17,6 +17,13 @@ const validConfigs = [
   [{
     version: '1',
     rules: [
+      { base: 'master', upstream: 'upstream:master', autoMerge: true },
+      { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: false, autoMergeRebase: true }
+    ]
+  }],
+  [{
+    version: '1',
+    rules: [
       { base: 'master', upstream: 'upstream:master', autoMerge: true, autoMergeHardReset: true, assignees: ['wei'] },
       { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true, reviewers: ['wei'] }
     ],
@@ -59,6 +66,7 @@ describe('schema', () => {
           upstream: 'upstream:master',
           autoMerge: false,
           autoMergeHardReset: false,
+          autoMergeRebase: false,
           assignees: [],
           reviewers: []
         }
