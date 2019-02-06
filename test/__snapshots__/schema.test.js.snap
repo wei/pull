@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`schema [{"version":"1","rules":[{"base":"master","upstream":"upstream:master","mergeMethod":""}]}] is invalid 1`] = `"ValidationError: \\"value\\" must be an object"`;
+
+exports[`schema [{"version":"1","rules":[{"base":"master","upstream":"upstream:master","mergeMethod":"invalid"}]}] is invalid 1`] = `"ValidationError: \\"value\\" must be an object"`;
+
+exports[`schema [{"version":"1","rules":[{"base":"master","upstream":"upstream:master","mergeMethod":true}]}] is invalid 1`] = `"ValidationError: \\"value\\" must be an object"`;
+
 exports[`schema {"rules":{}} is invalid 1`] = `"ValidationError: child \\"version\\" fails because [\\"version\\" is required]"`;
 
 exports[`schema {"version":""} is invalid 1`] = `"ValidationError: child \\"version\\" fails because [\\"version\\" is not allowed to be empty]"`;

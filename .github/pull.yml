@@ -2,5 +2,4 @@ version: "1"
 rules:
   - base: master
     upstream: wei:master
-    autoMerge: true
-    autoMergeHardReset: true
+    mergeMethod: rebase

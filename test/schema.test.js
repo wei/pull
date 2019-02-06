@@ -7,18 +7,13 @@ const validConfigs = [
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true }], label: 'pull' }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, assignees: ['wei'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'] }] }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'squash' }] }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'hardreset', assignees: ['wei'] }] }],
   [{
     version: '1',
     rules: [
       { base: 'master', upstream: 'upstream:master', autoMerge: true },
       { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true }
-    ]
-  }],
-  [{
-    version: '1',
-    rules: [
-      { base: 'master', upstream: 'upstream:master', autoMerge: true },
-      { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: false, autoMergeRebase: true }
     ]
   }],
   [{
@@ -46,6 +41,9 @@ const invalidConfigs = [
   { version: '1', rules: [{ base: 'master', upstream: '' }] },
   { version: '1', rules: [{ base: 'master', autoMerge: 1 }] },
   { version: '1', rules: [{ base: 'master', autoMerge: '' }] },
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: '' }] }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'invalid' }] }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: true }] }],
   {
     version: '1',
     rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, autoMergeHardReset: 1 }]
@@ -66,7 +64,7 @@ describe('schema', () => {
           upstream: 'upstream:master',
           autoMerge: false,
           autoMergeHardReset: false,
-          autoMergeRebase: false,
+          mergeMethod: 'none',
           assignees: [],
           reviewers: []
         }
