@@ -90,22 +90,22 @@ Pull app will automatically watch and pull in upstream's default (master) branch
 version: "1"
 rules:
   - base: master
-    upstream: wei:master      # change `wei` to the owner of upstream repo
+    upstream: wei:master    # change `wei` to the owner of upstream repo
     mergeMethod: hardreset
 ```
 
 #### Advanced usage
 ```yaml
 version: "1"
-rules:                        # Array of rules
-  - base: master              # Required. Target branch
-    upstream: wei:master      # Required. Must be in the same fork network.
-    mergeMethod: hardreset       # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+rules:                      # Array of rules
+  - base: master            # Required. Target branch
+    upstream: wei:master    # Required. Must be in the same fork network.
+    mergeMethod: hardreset  # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
   - base: dev
-    upstream: master          # Required. Can be a branch in the same forked repo.
-    assignees:                # Optional
+    upstream: master        # Required. Can be a branch in the same forked repo.
+    assignees:              # Optional
       - wei
-    reviewers:                # Optional
+    reviewers:              # Optional
       - wei
 label: ":arrow_heading_down: pull"  # Optional
 ```
