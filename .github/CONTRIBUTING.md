@@ -1,10 +1,5 @@
 ## Contributing
 
-[fork]: /fork
-[pr]: /compare
-[style]: https://standardjs.com/
-[code-of-conduct]: CODE_OF_CONDUCT.md
-
 Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great.
 
 Please note that this project is released with a [Contributor Code of Conduct][code-of-conduct]. By participating in this project you agree to abide by its terms.
@@ -33,3 +28,8 @@ Work in Progress pull request are also welcome to get feedback early on, or if t
 - [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
 - [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
 - [GitHub Help](https://help.github.com)
+
+[fork]: ../../../fork
+[pr]: ../../../compare
+[style]: https://standardjs.com
+[code-of-conduct]: CODE_OF_CONDUCT.md
