@@ -1,0 +1,10 @@
+version: "3"
+services:
+  pull:
+    build: ./
+    volumes:
+      - ./pk.pem:/home/node/pk.pem:ro
+    env_file:
+      - ./.env
+    ports:
+      - 3000:3000
