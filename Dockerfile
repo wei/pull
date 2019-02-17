@@ -6,7 +6,7 @@ ENV \
   PORT=3000 \
   LOG_FORMAT=short \
   LOG_LEVEL=info \
-  PULL_INTERVAL=1800 \
+  PULL_INTERVAL=3600 \
   WEBHOOK_PATH=/webhook \
   ####################
   ###   Required   ###
