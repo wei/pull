@@ -10,10 +10,10 @@ env:
     - secure: mIV68Y693lnpQphSYS2PIdmXe2qpgpCjAQ0M4dwGin9miamB8I5/2dZ5cfOMhevTa6AUxJh1N9PWb1gfzR0aFVIVfRzjIj1E2GpFehMESIghuI6Kq9yqIE2TJsgdArGnUJZCPT9SUTQM5wIfBD/c7m2Zc2XGqXOmtdNhtZJ49n2WbstC3hWsfOJYk1zPrWLk14vJfIhSA0fY3lU14/2xdrde83pxrtEOAj1FbNNqutUtUlxaABT2Zc2pM+tn76JiaLEmP1fvK34Ot2ZK7VPXWqnHrgFZRgoXeagEki0lCiQu0Z0qvTSqlTprxrgjaQeqxEnmmFZfwwD48fXEUJHTe1SGWdhuRKbXjLE8pw55uSxgXPfFjvzP4lyiyLlfmTJNj7UNdIFsGKohgmLhM0XM+hwo17mTYdj/aU1ISX5ztw30HpMuAoqwAItncr64ByA7h38tWgk0VFlrZRw7VV2lyMl8HgJA0YMU3Udswqr3uxqfzKNi0OiH7oyLCQmvNKZMRuYDywvV8WG4b9w1M9o5sHdFc5vOT1lETdhlpsXkQhniloys5gX4tK2V1JeUsLbmHwn8oU9t8Ab+mqNf9+Masuutjw5uasZYTo7xxNGTLQq5SwvZvwcqvYolU6HbsRxF3+0u4uHE2zz50ae9hvsC6o6yKLe1ex4FSwbKKKg580o=
 cache:
   directories:
-    - node_modules
+    - $HOME/.npm
     - $(npm config get prefix)/lib/node_modules
 install:
-  - npm i
+  - npm ci
 script:
   - npm test
 branches:
