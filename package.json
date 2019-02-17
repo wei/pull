@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon --exec \"npm start\"",
     "start": "probot run ./index.js",
-    "now-start": "PRIVATE_KEY=$(echo $PRIVATE_BASE64 | base64 -d) npm start",
+    "now-start": "PRIVATE_KEY=$(echo $PRIVATE_BASE64) npm start",
     "lint:fix": "standard --fix",
     "test": "standard && jest",
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage",
