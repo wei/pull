@@ -6,7 +6,7 @@ test:
   image: node:lts
   stage: test
   before_script:
-    - npm ci
+    - npm i
   script:
     - npm test
   cache:
