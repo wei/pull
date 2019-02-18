@@ -1,5 +1,13 @@
 FROM node:lts-alpine
-LABEL name="wei/pull" maintainer="Wei He <docker@weispot.com>"
+
+LABEL \
+  org.label-schema.schema-version="1.0" \
+  org.label-schema.name="pull" \
+  org.label-schema.description="Keep your forks up-to-date via automated PRs" \
+  org.label-schema.url="https://github.com/wei/pull" \
+  org.label-schema.usage="https://github.com/wei/pull#readme" \
+  org.label-schema.vcs-url="https://github.com/wei/pull" \
+  maintainer="Wei He <docker@weispot.com>"
 
 ENV \
   NODE_ENV=production \
@@ -30,13 +38,19 @@ ENV \
 WORKDIR /app
 COPY package*.json ./
 RUN \
-  apk add --no-cache --virtual build-dependencies build-base gcc wget git && \
+  apk add --no-cache --virtual .build-dependencies build-base gcc wget git && \
   apk add --no-cache python && \
   npm ci --production && \
-  apk del build-dependencies && \
+  apk del .build-dependencies && \
   :
 
 COPY . .
 
 EXPOSE 3000
 CMD ["npm", "start"]
+
+ARG VCS_REF
+ARG BUILD_DATE
+LABEL \
+	org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.build-date=$BUILD_DATE
