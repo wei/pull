@@ -23,8 +23,8 @@ deploy_registry:
     DOCKER_DRIVER: overlay
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build --pull --label "git-ref=$CI_COMMIT_SHORT_SHA" --label "build-date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -t "${CI_REGISTRY_IMAGE}:latest" .
-    - docker tag "${CI_REGISTRY_IMAGE}:latest" "${CI_REGISTRY_IMAGE}:$CI_COMMIT_SHORT_SHA" && docker push "${CI_REGISTRY_IMAGE}:$CI_COMMIT_SHORT_SHA"
-    - docker push "${CI_REGISTRY_IMAGE}:latest"
+    - docker build --pull --label "git-ref=$CI_COMMIT_SHORT_SHA build-date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker tag "$CI_REGISTRY_IMAGE:latest" "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" && docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+    - docker push "$CI_REGISTRY_IMAGE:latest"
   only:
     - master
