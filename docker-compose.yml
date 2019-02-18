@@ -3,7 +3,7 @@ services:
   pull:
     build: ./
     volumes:
-      - ./pk.pem:/home/node/pk.pem:ro
+      - ./pk.pem:/app/pk.pem:ro
     env_file:
       - ./.env
     ports:

@@ -27,7 +27,7 @@ ENV \
   #DISABLE_STATS= \
   _=
 
-WORKDIR /home/node
+WORKDIR /app
 COPY package*.json ./
 RUN \
   apk add --no-cache --virtual build-dependencies build-base gcc wget git && \
