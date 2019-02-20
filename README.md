@@ -137,4 +137,4 @@ rules:
 
 
 ## License
-[MIT](https://wei.mit-license.org)
+[MIT](LICENSE)
