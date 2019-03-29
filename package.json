@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "badgen": "^2.7.0",
-    "bunyan-syslog-udp": "^0.1.0",
+    "bunyan-syslog-udp": "^0.2.0",
     "joi": "^14.3.1",
     "js-yaml": "^3.12.1",
     "probot": "^7.5.0",
