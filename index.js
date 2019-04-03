@@ -61,15 +61,23 @@ module.exports = async (app) => {
       app.managedRepos.push(context.payload.repository.full_name)
     }
 
-    if (!context.payload.repository.fork || context.payload.repository.archived) {
-      app.log.debug(`[${context.payload.repository.full_name}] Not an active fork, unscheduled`)
+    if (context.payload.repository.archived) {
+      app.log.debug(`[${context.payload.repository.full_name}] Not an active repo, unscheduled`)
       scheduler.stop(context.payload.repository)
       return null
     }
 
     let config
     try {
-      config = await getConfig(context, app.CONFIG_FILENAME)
+      config = await getConfig.getLiveConfig(context, app.CONFIG_FILENAME)
+      if (!context.payload.repository.fork && !config) {
+        app.log.debug(`[${context.payload.repository.full_name}] Not a forked repo and has no pull.yml, unscheduled`)
+        scheduler.stop(context.payload.repository)
+        return null
+      }
+      if (!config) {
+        config = getConfig.getDefaultConfig()
+      }
     } catch (e) {
       if (e && e.code >= 500) {
         app.log.warn(e, `[${context.payload.repository.full_name}] Repo access failed with server error ${e.code}`)
