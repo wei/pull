@@ -76,7 +76,7 @@ module.exports = async (app) => {
         return null
       }
       if (!config) {
-        config = getConfig.getDefaultConfig()
+        config = await getConfig.getDefaultConfig(context)
       }
     } catch (e) {
       if (e && e.code >= 500) {
