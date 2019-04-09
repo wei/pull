@@ -24,13 +24,11 @@ beforeEach(() => {
       merge: jest.fn()
     },
     issues: {
-      update: jest.fn()
+      update: jest.fn(),
+      listForRepo: jest.fn()
     },
     git: {
       updateRef: jest.fn()
-    },
-    search: {
-      issuesAndPullRequests: jest.fn()
     }
   }
 
@@ -95,7 +93,7 @@ describe('pull - routineCheck', () => {
       const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, configs[i])
       await pull.routineCheck()
       expect(github.repos.compareCommits).not.toHaveBeenCalled()
-      expect(github.search.issuesAndPullRequests).not.toHaveBeenCalled()
+      expect(github.issues.listForRepo).not.toHaveBeenCalled()
       expect(github.pulls.create).not.toHaveBeenCalled()
       expect(github.issues.update).not.toHaveBeenCalled()
     }
@@ -115,14 +113,14 @@ describe('pull - routineCheck', () => {
     expect(github.repos.compareCommits).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev'
     })
-    expect(github.search.issuesAndPullRequests).not.toHaveBeenCalled()
+    expect(github.issues.listForRepo).not.toHaveBeenCalled()
     expect(github.pulls.create).not.toHaveBeenCalled()
     expect(github.issues.update).not.toHaveBeenCalled()
   })
 
   test('diff too large', async () => {
     github.repos.compareCommits.mockImplementation(() => { throw Error('Server Error: Sorry, this diff is taking too long to generate.') })
-    github.search.issuesAndPullRequests.mockResolvedValue({ data: { total_count: 0 } })
+    github.issues.listForRepo.mockResolvedValue({ data: [] })
     github.pulls.create.mockResolvedValue({ data: {
       number: 12,
       base: { ref: 'master' },
@@ -136,7 +134,7 @@ describe('pull - routineCheck', () => {
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
-    expect(github.search.issuesAndPullRequests).toHaveBeenCalled()
+    expect(github.issues.listForRepo).toHaveBeenCalled()
     expect(github.pulls.create).toHaveBeenCalled()
     expect(github.issues.update).toHaveBeenCalled()
   })
@@ -147,7 +145,7 @@ describe('pull - routineCheck', () => {
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
-    expect(github.search.issuesAndPullRequests).not.toHaveBeenCalled()
+    expect(github.issues.listForRepo).not.toHaveBeenCalled()
     expect(github.pulls.create).not.toHaveBeenCalled()
     expect(github.issues.update).not.toHaveBeenCalled()
   })
@@ -158,7 +156,7 @@ describe('pull - routineCheck', () => {
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
-    expect(github.search.issuesAndPullRequests).not.toHaveBeenCalled()
+    expect(github.issues.listForRepo).not.toHaveBeenCalled()
     expect(github.pulls.create).not.toHaveBeenCalled()
     expect(github.issues.update).not.toHaveBeenCalled()
   })
@@ -169,66 +167,78 @@ describe('pull - routineCheck', () => {
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits.mock.calls.length).toBe(3)
-    expect(github.search.issuesAndPullRequests).not.toHaveBeenCalled()
+    expect(github.issues.listForRepo).not.toHaveBeenCalled()
     expect(github.pulls.create).not.toHaveBeenCalled()
     expect(github.issues.update).not.toHaveBeenCalled()
   })
 
   test('yes diff, already has PR', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
-    github.search.issuesAndPullRequests.mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 12 } ] } })
-      .mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 13 } ] } })
-      .mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 14 } ] } })
-    github.pulls.get.mockResolvedValueOnce({ data: {
-      number: 12,
-      base: { ref: 'master' },
-      head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
-      state: 'open',
-      user: { login: 'pull[bot]' },
-      mergeable: true,
-      rebaseable: true,
-      mergeable_state: 'clean'
-    } }).mockResolvedValueOnce({ data: {
-      number: 13,
-      base: { ref: 'feature/new-1' },
-      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-13' },
-      state: 'open',
-      user: { login: 'pull[bot]' },
-      mergeable: true,
-      rebaseable: true,
-      mergeable_state: 'clean'
-    } }).mockResolvedValueOnce({ data: {
-      number: 14,
-      base: { ref: 'hotfix/bug-1' },
-      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-14' },
-      state: 'open',
-      user: { login: 'pull[bot]' },
-      mergeable: true,
-      rebaseable: true,
-      mergeable_state: 'clean'
-    } })
+    github.issues.listForRepo.mockResolvedValue({ data: [ { number: 13 }, { number: 12 }, { number: 14 } ] })
+    github.pulls.get.mockImplementation(({ number }) => {
+      switch (number) {
+        case 12:
+          return { data: {
+            number: 12,
+            base: { ref: 'master', label: 'wei:master' },
+            head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
+            state: 'open',
+            user: { login: 'pull[bot]' },
+            mergeable: true,
+            rebaseable: true,
+            mergeable_state: 'clean'
+          } }
+        case 13:
+          return { data: {
+            number: 13,
+            base: { ref: 'feature/new-1', label: 'wei:feature/new-1' },
+            head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-13' },
+            state: 'open',
+            user: { login: 'pull[bot]' },
+            mergeable: true,
+            rebaseable: true,
+            mergeable_state: 'clean'
+          } }
+        case 14:
+          return { data: {
+            number: 14,
+            base: { ref: 'hotfix/bug-1', label: 'wei:hotfix/bug-1' },
+            head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-14' },
+            state: 'open',
+            user: { login: 'pull[bot]' },
+            mergeable: true,
+            rebaseable: true,
+            mergeable_state: 'clean'
+          } }
+        default:
+          return { data: null }
+      }
+    })
 
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
     })
-    expect(github.search.issuesAndPullRequests).toHaveBeenCalled()
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
+    expect(github.issues.listForRepo).toHaveBeenCalled()
+    expect(github.pulls.get).nthCalledWith(1, { owner: 'wei', repo: 'fork', number: 13 })
+    expect(github.pulls.get).nthCalledWith(2, { owner: 'wei', repo: 'fork', number: 12 })
     expect(github.pulls.merge).not.toHaveBeenCalledWith()
 
     expect(github.repos.compareCommits).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev'
     })
-    expect(github.search.issuesAndPullRequests).toHaveBeenCalled()
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 13 })
+    expect(github.issues.listForRepo).toHaveBeenCalled()
+    expect(github.pulls.get).nthCalledWith(3, { owner: 'wei', repo: 'fork', number: 13 })
     expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 13, merge_method: 'rebase' })
 
     expect(github.repos.compareCommits).nthCalledWith(3, {
       owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev'
     })
-    expect(github.search.issuesAndPullRequests).toHaveBeenCalled()
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 14 })
+    expect(github.issues.listForRepo).toHaveBeenCalled()
+    expect(github.pulls.get).nthCalledWith(4, { owner: 'wei', repo: 'fork', number: 13 })
+    expect(github.pulls.get).nthCalledWith(5, { owner: 'wei', repo: 'fork', number: 12 })
+    expect(github.pulls.get).nthCalledWith(6, { owner: 'wei', repo: 'fork', number: 14 })
     expect(github.git.updateRef).toHaveBeenCalledWith(
       { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder-14', force: true }
     )
@@ -239,13 +249,13 @@ describe('pull - routineCheck', () => {
 
   test('yes diff, no PR, create PR', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
-    github.search.issuesAndPullRequests
-      .mockResolvedValueOnce({ data: { total_count: 1, items: [ { number: 10 } ] } })
-      .mockResolvedValueOnce({ data: { total_count: 0 } })
-      .mockResolvedValueOnce({ data: { total_count: 0 } })
+    github.issues.listForRepo
+      .mockResolvedValueOnce({ data: [ { number: 10 } ] })
+      .mockResolvedValueOnce({ data: [] })
+      .mockResolvedValueOnce({ data: [] })
     github.pulls.get.mockResolvedValueOnce({ data: {
       number: 10,
-      base: { ref: 'master' },
+      base: { ref: 'master', label: 'wei:master' },
       head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder' },
       state: 'open',
       user: { login: 'pull[bot]' },
@@ -268,7 +278,7 @@ describe('pull - routineCheck', () => {
     expect(github.repos.compareCommits).nthCalledWith(3, {
       owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev'
     })
-    expect(github.search.issuesAndPullRequests).toHaveBeenCalledTimes(3)
+    expect(github.issues.listForRepo).toHaveBeenCalledTimes(3)
     expect(github.pulls.create).toHaveBeenCalledTimes(2)
     expect(github.pulls.create).nthCalledWith(1, {
       owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev', maintainer_can_modify: false, title: helper.getPRTitle('feature/new-1', 'upstream:dev'), body: helper.getPRBody('wei/fork')

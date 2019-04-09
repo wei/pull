@@ -20,7 +20,7 @@ module.exports = async (app) => {
 
   app.on('schedule.repository', routineCheck)
   app.on('push', handlePush)
-  app.on(['pull_request', 'pull_request_review'], checkPRStatus)
+  app.on('pull_request_review', checkPRStatus)
 
   async function handlePush (context) {
     if (context.payload.commits.filter(c => c.message.indexOf(app.CONFIG_FILENAME) > -1).length > 0) {
