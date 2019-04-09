@@ -35,11 +35,6 @@ module.exports = async (app) => {
 
   async function checkPRStatus (context) {
     switch (context.event) {
-      case 'pull_request':
-        if (context.payload.action !== 'opened') {
-          return
-        }
-        break
       case 'pull_request_review':
         if (context.payload.action !== 'submitted' || context.payload.review.state !== 'approved') {
           return
