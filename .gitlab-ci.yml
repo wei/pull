@@ -30,8 +30,6 @@ deploy_registry:
         --build-arg VCS_REF=$CI_COMMIT_SHORT_SHA 
         --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
         -t $CI_REGISTRY_IMAGE .
-    - docker tag $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
-    - docker push $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
     - docker push $CI_REGISTRY_IMAGE
   only:
     - master
