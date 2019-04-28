@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "author": "Wei He <github@weispot.com> (https://whe.me)",
-  "license": "ISC",
+  "license": "MIT",
   "repository": "https://github.com/wei/pull.git",
   "scripts": {
     "dev": "nodemon --exec \"npm start\"",

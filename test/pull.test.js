@@ -175,8 +175,8 @@ describe('pull - routineCheck', () => {
   test('yes diff, already has PR', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
     github.issues.listForRepo.mockResolvedValue({ data: [ { number: 13 }, { number: 12 }, { number: 14 } ] })
-    github.pulls.get.mockImplementation(({ number }) => {
-      switch (number) {
+    github.pulls.get.mockImplementation(({ pr_number }) => {
+      switch (pr_number) {
         case 12:
           return { data: {
             number: 12,
@@ -221,24 +221,24 @@ describe('pull - routineCheck', () => {
       owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
     })
     expect(github.issues.listForRepo).toHaveBeenCalled()
-    expect(github.pulls.get).nthCalledWith(1, { owner: 'wei', repo: 'fork', number: 13 })
-    expect(github.pulls.get).nthCalledWith(2, { owner: 'wei', repo: 'fork', number: 12 })
+    expect(github.pulls.get).nthCalledWith(1, { owner: 'wei', repo: 'fork', pr_number: 13 })
+    expect(github.pulls.get).nthCalledWith(2, { owner: 'wei', repo: 'fork', pr_number: 12 })
     expect(github.pulls.merge).not.toHaveBeenCalledWith()
 
     expect(github.repos.compareCommits).nthCalledWith(2, {
       owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev'
     })
     expect(github.issues.listForRepo).toHaveBeenCalled()
-    expect(github.pulls.get).nthCalledWith(3, { owner: 'wei', repo: 'fork', number: 13 })
-    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 13, merge_method: 'rebase' })
+    expect(github.pulls.get).nthCalledWith(3, { owner: 'wei', repo: 'fork', pr_number: 13 })
+    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 13, merge_method: 'rebase' })
 
     expect(github.repos.compareCommits).nthCalledWith(3, {
       owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev'
     })
     expect(github.issues.listForRepo).toHaveBeenCalled()
-    expect(github.pulls.get).nthCalledWith(4, { owner: 'wei', repo: 'fork', number: 13 })
-    expect(github.pulls.get).nthCalledWith(5, { owner: 'wei', repo: 'fork', number: 12 })
-    expect(github.pulls.get).nthCalledWith(6, { owner: 'wei', repo: 'fork', number: 14 })
+    expect(github.pulls.get).nthCalledWith(4, { owner: 'wei', repo: 'fork', pr_number: 13 })
+    expect(github.pulls.get).nthCalledWith(5, { owner: 'wei', repo: 'fork', pr_number: 12 })
+    expect(github.pulls.get).nthCalledWith(6, { owner: 'wei', repo: 'fork', pr_number: 14 })
     expect(github.git.updateRef).toHaveBeenCalledWith(
       { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder-14', force: true }
     )
@@ -288,11 +288,11 @@ describe('pull - routineCheck', () => {
     })
     expect(github.issues.update).toHaveBeenCalledTimes(1)
     expect(github.issues.update).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', number: 12, assignees: ['tom'], labels: ['pull'], body: helper.getPRBody('wei/fork', 12)
+      owner: 'wei', repo: 'fork', issue_number: 12, assignees: ['tom'], labels: ['pull'], body: helper.getPRBody('wei/fork', 12)
     })
     expect(github.pulls.createReviewRequest).toHaveBeenCalledTimes(1)
     expect(github.pulls.createReviewRequest).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', number: 12, reviewers: ['jerry']
+      owner: 'wei', repo: 'fork', pr_number: 12, reviewers: ['jerry']
     })
   })
 })
@@ -334,8 +334,8 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     })
     expect(github.pulls.get).toHaveBeenCalledTimes(2)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
-    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12, merge_method: 'merge' })
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 12 })
+    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 12, merge_method: 'merge' })
     expect(github.git.updateRef).not.toHaveBeenCalled()
 
     github.pulls.get = jest.fn()
@@ -375,7 +375,7 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     }, { isMergeableMaxRetries: 1 })
     expect(github.pulls.get).toHaveBeenCalledTimes(1)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 12 })
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
@@ -396,7 +396,7 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     }, { isMergeableMaxRetries: 2 })
     expect(github.pulls.get).toHaveBeenCalledTimes(2)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 12 })
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 12 })
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
@@ -437,8 +437,8 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     })
     expect(github.pulls.get).toHaveBeenCalledTimes(1)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16 })
-    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16, merge_method: 'merge' })
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16 })
+    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16, merge_method: 'merge' })
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
@@ -458,8 +458,8 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     })
     expect(github.pulls.get).toHaveBeenCalledTimes(1)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16 })
-    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16, merge_method: 'squash' })
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16 })
+    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16, merge_method: 'squash' })
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
@@ -479,8 +479,8 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     })
     expect(github.pulls.get).toHaveBeenCalledTimes(1)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16 })
-    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16, merge_method: 'rebase' })
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16 })
+    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16, merge_method: 'rebase' })
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
@@ -500,8 +500,8 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unknown'
     })
     expect(github.pulls.get).toHaveBeenCalledTimes(1)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16 })
-    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', number: 16, merge_method: 'merge' })
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16 })
+    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pr_number: 16, merge_method: 'merge' })
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 })
