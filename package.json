@@ -20,7 +20,7 @@
     "js-yaml": "^3.13.0",
     "probot": "^9.2.0",
     "probot-config": "^1.0.1",
-    "probot-scheduler": "wei/probot-scheduler#fixes",
+    "probot-scheduler": "wei/probot-scheduler#b59a3f",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
   },
