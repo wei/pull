@@ -34,17 +34,20 @@ module.exports = async (app) => {
 
   async function routineCheck (context) {
     const jobId = context.payload.repository.full_name
-    if (!app.limiter.jobStatus(jobId)) {
+    if (context.payload.manual || !app.limiter.jobStatus(jobId)) {
       await app.limiter.schedule({
-        expiration: 30000,
-        id: jobId
+        expiration: 60000,
+        id: context.payload.manual ? null : jobId,
+        priority: context.payload.manual ? 1 : 9
       }, () => processRoutineCheck(context))
     }
   }
 
   async function processRoutineCheck (context) {
     const pull = await forRepository(context)
-    if (pull) await pull.routineCheck()
+    if (pull) {
+      await pull.routineCheck()
+    }
   }
 
   async function checkPRStatus (context) {
