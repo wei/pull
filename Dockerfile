@@ -10,12 +10,6 @@ LABEL \
   maintainer="Wei He <docker@weispot.com>"
 
 ENV \
-  NODE_ENV=production \
-  PORT=3000 \
-  LOG_FORMAT=short \
-  LOG_LEVEL=info \
-  PULL_INTERVAL=3600 \
-  WEBHOOK_PATH=/webhook \
   ####################
   ###   Required   ###
   ####################
@@ -32,7 +26,16 @@ ENV \
   #SYSLOG_UDP_PORT= \
   #GHE_HOST= \
   #IGNORED_ACCOUNTS= \
-  #DISABLE_STATS= \
+  NODE_ENV=production \
+  PORT=3000 \
+  LOG_FORMAT=short \
+  LOG_LEVEL=info \
+  WEBHOOK_PATH=/webhook \
+  PULL_INTERVAL=3600 \
+  MAX_CONCURRENT=10 \
+  CONFIG_FILENAME=pull.yml \
+  DISABLE_DELAY=false \
+  DISABLE_STATS=false \
   _=
 
 WORKDIR /app

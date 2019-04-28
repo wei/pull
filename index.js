@@ -1,4 +1,5 @@
 const createScheduler = require('probot-scheduler')
+const Bottleneck = require('bottleneck')
 
 const Pull = require('./lib/pull')
 const getConfig = require('./lib/get-config')
@@ -6,14 +7,17 @@ const configureLogging = require('./lib/logging')
 const configureRoutes = require('./lib/router')
 
 module.exports = async (app) => {
-  app.managedAccounts = []
-  app.managedRepos = []
   app.CONFIG_FILENAME = process.env.CONFIG_FILENAME || 'pull.yml'
+
+  app.limiter = new Bottleneck({
+    maxConcurrent: parseInt(process.env.MAX_CONCURRENT, 10) || 10,
+    trackDoneStatus: false
+  })
 
   configureLogging(app)
   configureRoutes(app)
 
-  const scheduler = createScheduler(app, {
+  app.scheduler = createScheduler(app, {
     delay: !process.env.DISABLE_DELAY,
     interval: (parseInt(process.env.PULL_INTERVAL, 10) || 3600) * 1000
   })
@@ -29,6 +33,16 @@ module.exports = async (app) => {
   }
 
   async function routineCheck (context) {
+    const jobId = context.payload.repository.full_name
+    if (!app.limiter.jobStatus(jobId)) {
+      await app.limiter.schedule({
+        expiration: 30000,
+        id: jobId
+      }, () => processRoutineCheck(context))
+    }
+  }
+
+  async function processRoutineCheck (context) {
     const pull = await forRepository(context)
     if (pull) await pull.routineCheck()
   }
@@ -49,16 +63,9 @@ module.exports = async (app) => {
   }
 
   async function forRepository (context) {
-    if (app.managedAccounts.indexOf(context.payload.repository.owner.login) === -1) {
-      app.managedAccounts.push(context.payload.repository.owner.login)
-    }
-    if (app.managedRepos.indexOf(context.payload.repository.full_name) === -1) {
-      app.managedRepos.push(context.payload.repository.full_name)
-    }
-
     if (context.payload.repository.archived) {
       app.log.debug(`[${context.payload.repository.full_name}] Not an active repo, unscheduled`)
-      scheduler.stop(context.payload.repository)
+      app.scheduler.stop(context.payload.repository)
       return null
     }
 
@@ -67,7 +74,7 @@ module.exports = async (app) => {
       config = await getConfig.getLiveConfig(context, app.CONFIG_FILENAME)
       if (!context.payload.repository.fork && !config) {
         app.log.debug(`[${context.payload.repository.full_name}] Not a forked repo and has no pull.yml, unscheduled`)
-        scheduler.stop(context.payload.repository)
+        app.scheduler.stop(context.payload.repository)
         return null
       }
       if (!config) {
@@ -78,14 +85,14 @@ module.exports = async (app) => {
         app.log.warn(e, `[${context.payload.repository.full_name}] Repo access failed with server error ${e.code}`)
       } else {
         app.log.debug(e, `[${context.payload.repository.full_name}] Repo is blocked, unscheduled`)
-        scheduler.stop(context.payload.repository)
+        app.scheduler.stop(context.payload.repository)
       }
       return null
     }
 
     if (!config) {
       app.log.debug(`[${context.payload.repository.full_name}] Unable to get config, unscheduled`)
-      scheduler.stop(context.payload.repository)
+      app.scheduler.stop(context.payload.repository)
       return null
     }
     return new Pull(context.github, context.repo({ logger: app.log }), config)
