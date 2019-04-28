@@ -175,8 +175,8 @@ describe('pull - routineCheck', () => {
   test('yes diff, already has PR', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
     github.issues.listForRepo.mockResolvedValue({ data: [ { number: 13 }, { number: 12 }, { number: 14 } ] })
-    github.pulls.get.mockImplementation(({ pr_number }) => {
-      switch (pr_number) {
+    github.pulls.get.mockImplementation(({ pr_number: number }) => {
+      switch (number) {
         case 12:
           return { data: {
             number: 12,
