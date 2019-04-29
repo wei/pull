@@ -33,11 +33,11 @@ module.exports = async (app) => {
   }
 
   async function routineCheck (context, opts = {}) {
-    const jobId = context.payload.repository.full_name
-    if (context.payload.manual || !app.limiter.jobStatus(jobId)) {
+    const jobId = `${context.payload.repository.full_name}${context.payload.manual ? '-manual' : ''}`
+    if (!app.limiter.jobStatus(jobId)) {
       await app.limiter.schedule({
         expiration: 60000,
-        id: context.payload.manual ? null : jobId,
+        id: jobId,
         priority: context.payload.manual ? 1 : 9
       }, () => processRoutineCheck(context, opts))
     }
