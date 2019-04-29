@@ -9,13 +9,13 @@
 </p>
 <p align="center">
  <a href="https://github.com/apps/pull">
-   <img alt="Managing" src="https://pull.now.sh/badge/managing" />
+   <img alt="Managing" src="https://pull.git.ci/badge/managing" />
  </a>
  <a href="https://github.com/apps/pull">
-   <img alt="Installations" src="https://pull.now.sh/badge/installed" />
+   <img alt="Installations" src="https://pull.git.ci/badge/installed" />
  </a>
  <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
-   <img alt="Triggered #" src="https://pull.now.sh/badge/triggered" />
+   <img alt="Triggered #" src="https://pull.git.ci/badge/triggered" />
  </a>
 </p>
 
@@ -43,16 +43,16 @@
 [![TravisCI](https://travis-ci.com/wei/pull.svg?branch=master)](https://travis-ci.com/wei/pull)
 [![Codecov](https://codecov.io/gh/wei/pull/branch/master/graph/badge.svg)](https://codecov.io/gh/wei/pull)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=wei/pull)](https://dependabot.com)
-[![Probot](https://pull.now.sh/badge/built_with)](https://probot.github.io/)
-[![JavaScript Style Guide](https://pull.now.sh/badge/code_style)](https://standardjs.com)
+[![Probot](https://pull.git.ci/badge/built_with)](https://probot.github.io/)
+[![JavaScript Style Guide](https://pull.git.ci/badge/code_style)](https://standardjs.com)
 [![jest](https://facebook.github.io/jest/img/jest-badge.svg)](https://github.com/facebook/jest)
-[![MIT License](https://pull.now.sh/badge/license)](https://wei.mit-license.org)
+[![MIT License](https://pull.git.ci/badge/license)](https://wei.mit-license.org)
 
 > 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your forks up-to-date with upstream via automated pull requests.
 
 Incorporate new changes as they happen, not in 6 months. 
 
-Trusted by [![Repository Count](https://pull.now.sh/badge/managing?plain&style=flat)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://pull.now.sh/badge/triggered?plain&style=flat)](https://github.com/issues?q=author%3Aapp%2Fpull) times.
+Trusted by [![Repository Count](https://pull.git.ci/badge/managing?plain&style=flat)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://pull.git.ci/badge/triggered?plain&style=flat)](https://github.com/issues?q=author%3Aapp%2Fpull) times.
 
 ## Features
 
@@ -110,7 +110,7 @@ rules:                      # Array of rules
 label: ":arrow_heading_down: pull"  # Optional
 ```
 
- 4. Go to `https://pull.now.sh/check/${owner}/${repo}` to validate your `.github/pull.yml`.
+ 4. Go to `https://pull.git.ci/check/${owner}/${repo}` to validate your `.github/pull.yml` (Public repos only).
  5. Install **[![<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull](https://prod.download/pull-18h-svg) Pull app](https://github.com/apps/pull)**.
 
 
