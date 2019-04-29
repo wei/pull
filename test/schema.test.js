@@ -1,6 +1,6 @@
 /* eslint-env node, jest */
 
-const schema = require('../lib/schema')
+const schema = require('../lib/schema').schemaWithDeprecation
 
 const validConfigs = [
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }] }],
