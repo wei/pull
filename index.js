@@ -27,24 +27,24 @@ module.exports = async (app) => {
   app.on('pull_request_review', checkPRStatus)
 
   async function handlePush (context) {
-    if (context.payload.commits.filter(c => c.message.indexOf(app.CONFIG_FILENAME) > -1).length > 0) {
-      await routineCheck(context)
+    if (context.payload.commits.filter(c => [...c.added, ...c.removed, ...c.modified].filter(f => f.indexOf(app.CONFIG_FILENAME) > -1).length > 0).length > 0) {
+      await routineCheck(context, { noCache: true })
     }
   }
 
-  async function routineCheck (context) {
+  async function routineCheck (context, opts = {}) {
     const jobId = context.payload.repository.full_name
     if (context.payload.manual || !app.limiter.jobStatus(jobId)) {
       await app.limiter.schedule({
         expiration: 60000,
         id: context.payload.manual ? null : jobId,
         priority: context.payload.manual ? 1 : 9
-      }, () => processRoutineCheck(context))
+      }, () => processRoutineCheck(context, opts))
     }
   }
 
-  async function processRoutineCheck (context) {
-    const pull = await forRepository(context)
+  async function processRoutineCheck (context, opts = {}) {
+    const pull = await forRepository(context, opts)
     if (pull) {
       await pull.routineCheck()
     }
@@ -65,7 +65,7 @@ module.exports = async (app) => {
     if (pull) await pull.checkAutoMerge(context.payload.pull_request)
   }
 
-  async function forRepository (context) {
+  async function forRepository (context, opts = {}) {
     if (context.payload.repository.archived) {
       app.log.debug(`[${context.payload.repository.full_name}] Not an active repo, unscheduled`)
       app.scheduler.stop(context.payload.repository)
@@ -74,14 +74,14 @@ module.exports = async (app) => {
 
     let config
     try {
-      config = await getConfig.getLiveConfig(context, app.CONFIG_FILENAME)
+      config = await getConfig.getLiveConfig(context, app.CONFIG_FILENAME, { noCache: !!opts.noCache })
       if (!context.payload.repository.fork && !config) {
         app.log.debug(`[${context.payload.repository.full_name}] Not a forked repo and has no pull.yml, unscheduled`)
         app.scheduler.stop(context.payload.repository)
         return null
       }
       if (!config) {
-        config = await getConfig.getDefaultConfig(context)
+        config = await getConfig.getDefaultConfig(context, { noCache: !!opts.noCache })
       }
     } catch (e) {
       if (e && e.code >= 500) {
