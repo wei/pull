@@ -31,4 +31,5 @@ action "Push Docker Image" {
   env = {
     CONTAINER_REGISTRY = "registry.gitlab.com"
   }
+  secrets = ["DOCKER_PASSWORD", "DOCKER_USERNAME"]
 }
