@@ -11,7 +11,7 @@ action "Filters for GitHub Actions" {
 action "Build Docker Image" {
   uses = "actions/docker/cli@master"
   needs = ["Filters for GitHub Actions"]
-  args = "build -t $GITHUB_REPOSITORY ."
+  args = "build -t $CONTAINER_REGISTRY/$GITHUB_REPOSITORY ."
 }
 
 action "Login to Docker Registry" {
@@ -23,18 +23,9 @@ action "Login to Docker Registry" {
   secrets = ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
 }
 
-action "Docker Tag" {
-  uses = "actions/docker/tag@master"
-  needs = ["Build Docker Image"]
-  args = "$GITHUB_REPOSITORY $CONTAINER_REGISTRY/$GITHUB_REPOSITORY"
-  env = {
-    CONTAINER_REGISTRY = "registry.gitlab.com"
-  }
-}
-
 action "Push Docker Image" {
   uses = "actions/docker/cli@master"
-  needs = ["Docker Tag", "Login to Docker Registry"]
+  needs = ["Build Docker Image", "Login to Docker Registry"]
   args = "push $CONTAINER_REGISTRY/$GITHUB_REPOSITORY"
   env = {
     CONTAINER_REGISTRY = "registry.gitlab.com"
