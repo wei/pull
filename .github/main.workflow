@@ -12,7 +12,6 @@ action "Test Project" {
 
 action "Filters for GitHub Actions" {
   uses = "actions/bin/filter@master"
-  needs = ["Test Project"]
   args = "branch master"
 }
 
@@ -25,19 +24,10 @@ action "Build Docker Image" {
   }
 }
 
-action "Login to Docker Registry" {
-  uses = "actions/docker/login@master"
-  needs = ["Filters for GitHub Actions"]
-  env = {
-    DOCKER_REGISTRY_URL = "registry.gitlab.com"
-  }
-  secrets = ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
-}
-
 action "Push Docker Image" {
   uses = "actions/docker/cli@master"
-  needs = ["Build Docker Image", "Login to Docker Registry"]
-  args = "push $CONTAINER_REGISTRY/$GITHUB_REPOSITORY"
+  needs = ["Test Project", "Build Docker Image"]
+  args = "login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $CONTAINER_REGISTRY && docker push $CONTAINER_REGISTRY/$GITHUB_REPOSITORY"
   env = {
     CONTAINER_REGISTRY = "registry.gitlab.com"
   }
