@@ -6,7 +6,7 @@ workflow "Build and Push Docker Container" {
 }
 
 action "Test Project" {
-  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
+  uses = "actions/npm@master"
   args = "ci && npm test"
 }
 
@@ -18,7 +18,7 @@ action "Filters for GitHub Actions" {
 action "Build Docker Image" {
   uses = "actions/docker/cli@master"
   needs = ["Filters for GitHub Actions"]
-  args = "build -t $CONTAINER_REGISTRY/$GITHUB_REPOSITORY ."
+  args = "build -t $CONTAINER_REGISTRY/$GITHUB_REPOSITORY . --build-arg VCS_REF=$GITHUB_SHA --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
   env = {
     CONTAINER_REGISTRY = "registry.gitlab.com"
   }
