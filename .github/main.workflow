@@ -36,4 +36,7 @@ action "Push Docker Image" {
   uses = "actions/docker/cli@master"
   needs = ["Docker Tag", "Login to Docker Registry"]
   args = "push $CONTAINER_REGISTRY/$GITHUB_REPOSITORY"
+  env = {
+    CONTAINER_REGISTRY = "registry.gitlab.com"
+  }
 }
