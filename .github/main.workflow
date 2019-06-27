@@ -7,6 +7,7 @@ workflow "Build and Push Docker Container" {
 
 action "Test Project" {
   uses = "actions/npm@master"
+  needs = ["Filters for GitHub Actions"]
   args = "ci && npm test"
 }
 
