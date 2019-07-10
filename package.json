@@ -13,13 +13,13 @@
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "badgen": "^2.7.1",
-    "bottleneck": "^2.19.1",
+    "badgen": "^2.8.2",
+    "bottleneck": "^2.19.2",
     "bunyan-syslog-udp": "^0.2.0",
     "joi": "^14.3.1",
     "js-yaml": "^3.13.1",
-    "probot": "^9.2.13",
-    "probot-config": "^1.0.1",
+    "probot": "^9.2.16",
+    "probot-config": "^1.1.0",
     "probot-scheduler": "wei/probot-scheduler#3b656f7",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
