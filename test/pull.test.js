@@ -174,7 +174,7 @@ describe('pull - routineCheck', () => {
 
   test('yes diff, already has PR', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
-    github.issues.listForRepo.mockResolvedValue({ data: [ { number: 13 }, { number: 12 }, { number: 14 } ] })
+    github.issues.listForRepo.mockResolvedValue({ data: [{ number: 13 }, { number: 12 }, { number: 14 }] })
     github.pulls.get.mockImplementation(({ pull_number: number }) => {
       switch (number) {
         case 12:
@@ -250,7 +250,7 @@ describe('pull - routineCheck', () => {
   test('yes diff, no PR, create PR', async () => {
     github.repos.compareCommits.mockResolvedValue({ data: { total_commits: 1 } })
     github.issues.listForRepo
-      .mockResolvedValueOnce({ data: [ { number: 10 } ] })
+      .mockResolvedValueOnce({ data: [{ number: 10 }] })
       .mockResolvedValueOnce({ data: [] })
       .mockResolvedValueOnce({ data: [] })
     github.pulls.get.mockResolvedValueOnce({ data: {
