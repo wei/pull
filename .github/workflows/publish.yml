@@ -9,24 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Test Project
-      uses: actions/npm@master
+    - uses: actions/setup-node@v1
       with:
-        args: ci && npm test
+        version: '10.x'
+    - run: npm ci
+    - run: npm test
     - name: Build Docker Image
       uses: actions/docker/cli@master
       env:
         CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
-      args: >
-        build -t $CONTAINER_REGISTRY/${{ github.repository }} . 
-          --build-arg VCS_REF=${{ github.sha }} 
-          --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+      with:
+        args: >
+          build -t $CONTAINER_REGISTRY/${{ github.repository }} . 
+            --build-arg VCS_REF=${{ github.sha }} 
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
     - name: Push Docker Image
       uses: actions/docker/cli@master
       env:
         CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      args: >
-        login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $CONTAINER_REGISTRY && 
-          docker push $CONTAINER_REGISTRY/${{ github.repository }}
+      with:
+        args: >
+          login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $CONTAINER_REGISTRY && 
+            docker push $CONTAINER_REGISTRY/${{ github.repository }}
