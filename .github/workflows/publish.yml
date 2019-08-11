@@ -1,0 +1,32 @@
+name: Build and Push
+on: 
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: Filters for GitHub Actions
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Test Project
+      uses: actions/npm@master
+      with:
+        args: ci && npm test
+    - name: Build Docker Image
+      uses: actions/docker/cli@master
+      env:
+        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+      args: >
+        build -t $CONTAINER_REGISTRY/${{ github.repository }} . 
+          --build-arg VCS_REF=${{ github.sha }} 
+          --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+    - name: Push Docker Image
+      uses: actions/docker/cli@master
+      env:
+        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      args: >
+        login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $CONTAINER_REGISTRY && 
+          docker push $CONTAINER_REGISTRY/${{ github.repository }}
