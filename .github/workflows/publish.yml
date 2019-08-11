@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   build:
-    name: Filters for GitHub Actions
+    name: Build and Push
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
