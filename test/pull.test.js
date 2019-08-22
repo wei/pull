@@ -121,15 +121,17 @@ describe('pull - routineCheck', () => {
   test('diff too large', async () => {
     github.repos.compareCommits.mockImplementation(() => { throw Error('Server Error: Sorry, this diff is taking too long to generate.') })
     github.issues.listForRepo.mockResolvedValue({ data: [] })
-    github.pulls.create.mockResolvedValue({ data: {
-      number: 12,
-      base: { ref: 'master' },
-      head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
-      state: 'open',
-      user: { login: 'pull[bot]' },
-      mergeable: true,
-      mergeable_state: 'clean'
-    } })
+    github.pulls.create.mockResolvedValue({
+      data: {
+        number: 12,
+        base: { ref: 'master' },
+        head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
+        state: 'open',
+        user: { login: 'pull[bot]' },
+        mergeable: true,
+        mergeable_state: 'clean'
+      }
+    })
 
     const pull = getPull()
     await pull.routineCheck()
@@ -178,38 +180,44 @@ describe('pull - routineCheck', () => {
     github.pulls.get.mockImplementation(({ pull_number: number }) => {
       switch (number) {
         case 12:
-          return { data: {
-            number: 12,
-            base: { ref: 'master', label: 'wei:master' },
-            head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
-            state: 'open',
-            user: { login: 'pull[bot]' },
-            mergeable: true,
-            rebaseable: true,
-            mergeable_state: 'clean'
-          } }
+          return {
+            data: {
+              number: 12,
+              base: { ref: 'master', label: 'wei:master' },
+              head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
+              state: 'open',
+              user: { login: 'pull[bot]' },
+              mergeable: true,
+              rebaseable: true,
+              mergeable_state: 'clean'
+            }
+          }
         case 13:
-          return { data: {
-            number: 13,
-            base: { ref: 'feature/new-1', label: 'wei:feature/new-1' },
-            head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-13' },
-            state: 'open',
-            user: { login: 'pull[bot]' },
-            mergeable: true,
-            rebaseable: true,
-            mergeable_state: 'clean'
-          } }
+          return {
+            data: {
+              number: 13,
+              base: { ref: 'feature/new-1', label: 'wei:feature/new-1' },
+              head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-13' },
+              state: 'open',
+              user: { login: 'pull[bot]' },
+              mergeable: true,
+              rebaseable: true,
+              mergeable_state: 'clean'
+            }
+          }
         case 14:
-          return { data: {
-            number: 14,
-            base: { ref: 'hotfix/bug-1', label: 'wei:hotfix/bug-1' },
-            head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-14' },
-            state: 'open',
-            user: { login: 'pull[bot]' },
-            mergeable: true,
-            rebaseable: true,
-            mergeable_state: 'clean'
-          } }
+          return {
+            data: {
+              number: 14,
+              base: { ref: 'hotfix/bug-1', label: 'wei:hotfix/bug-1' },
+              head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-14' },
+              state: 'open',
+              user: { login: 'pull[bot]' },
+              mergeable: true,
+              rebaseable: true,
+              mergeable_state: 'clean'
+            }
+          }
         default:
           return { data: null }
       }
@@ -240,7 +248,7 @@ describe('pull - routineCheck', () => {
     expect(github.pulls.get).nthCalledWith(5, { owner: 'wei', repo: 'fork', pull_number: 12 })
     expect(github.pulls.get).nthCalledWith(6, { owner: 'wei', repo: 'fork', pull_number: 14 })
     expect(github.git.updateRef).toHaveBeenCalledWith(
-      { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder-14', force: true }
+      { owner: 'wei', repo: 'fork', ref: 'heads/hotfix/bug-1', sha: 'sha1-placeholder-14', force: true }
     )
 
     expect(github.pulls.create).not.toHaveBeenCalled()
@@ -253,16 +261,18 @@ describe('pull - routineCheck', () => {
       .mockResolvedValueOnce({ data: [{ number: 10 }] })
       .mockResolvedValueOnce({ data: [] })
       .mockResolvedValueOnce({ data: [] })
-    github.pulls.get.mockResolvedValueOnce({ data: {
-      number: 10,
-      base: { ref: 'master', label: 'wei:master' },
-      head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder' },
-      state: 'open',
-      user: { login: 'pull[bot]' },
-      mergeable: true,
-      rebaseable: true,
-      mergeable_state: 'clean'
-    } })
+    github.pulls.get.mockResolvedValueOnce({
+      data: {
+        number: 10,
+        base: { ref: 'master', label: 'wei:master' },
+        head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder' },
+        state: 'open',
+        user: { login: 'pull[bot]' },
+        mergeable: true,
+        rebaseable: true,
+        mergeable_state: 'clean'
+      }
+    })
     github.pulls.create
       .mockResolvedValueOnce({ data: { number: 12 } })
       .mockImplementationOnce(() => { throw Error({ code: 512 }) })
@@ -356,7 +366,7 @@ describe('pull - checkAutoMerge', () => {
     expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pull_number: 16 })
     expect(github.pulls.merge).not.toHaveBeenCalled()
     expect(github.git.updateRef).toHaveBeenCalledWith(
-      { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder', force: true }
+      { owner: 'wei', repo: 'fork', ref: 'heads/hotfix/bug-1', sha: 'sha1-placeholder', force: true }
     )
   })
 
@@ -418,7 +428,7 @@ describe('pull - checkAutoMerge', () => {
     expect(github.pulls.get).toHaveBeenCalledTimes(1)
     expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pull_number: 12 })
     expect(github.git.updateRef).toHaveBeenCalledWith(
-      { owner: 'wei', repo: 'fork', ref: `heads/hotfix/bug-1`, sha: 'sha1-placeholder', force: true }
+      { owner: 'wei', repo: 'fork', ref: 'heads/hotfix/bug-1', sha: 'sha1-placeholder', force: true }
     )
   })
 
