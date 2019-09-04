@@ -18,7 +18,7 @@
     "bunyan-syslog-udp": "^0.2.0",
     "joi": "^14.3.1",
     "js-yaml": "^3.13.1",
-    "probot": "^9.3.2",
+    "probot": "^9.3.3",
     "probot-config": "^1.1.0",
     "probot-scheduler": "wei/probot-scheduler#3b656f7",
     "request": "^2.88.0",
@@ -26,9 +26,9 @@
   },
   "devDependencies": {
     "jest": "^24.9.0",
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.19.2",
     "smee-client": "^1.1.0",
-    "standard": "^14.0.1"
+    "standard": "^14.1.0"
   },
   "engines": {
     "node": ">= 10.2.1",
