@@ -119,7 +119,7 @@ label: ":arrow_heading_down: pull"  # Optional
 ### Trigger manually
 
 Go to `https://pull.git.ci/process/${owner}/${repo}` to manually trigger pull. 
-**Note:** Nothing will happen if your branch is already even with the upstream.
+**Note:** Nothing will happen if your branch is already even with upstream.
 
 
 ## For Repository Owners
