@@ -79,7 +79,7 @@ Want to support this open source service? [Please star it : )](https://github.co
 
  - Just install **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app](https://github.com/apps/pull)**.
 
-Pull app will automatically watch and pull in upstream's default (master) branch to yours using **hard reset**.
+Pull app will automatically watch and pull in upstream's default (master) branch to yours using **hard reset** every hour. You can also manually [trigger](#trigger-manually) it anytime.
 
 ### Advanced Setup (with config)
 
@@ -118,8 +118,9 @@ label: ":arrow_heading_down: pull"  # Optional
 
 ### Trigger manually
 
-Go to `https://pull.git.ci/process/${owner}/${repo}` to manually create a pull request. 
-**Note:** If your branch is already even with the upstream: then no pull request would be created!
+Go to `https://pull.git.ci/process/${owner}/${repo}` to manually trigger pull. 
+**Note:** Nothing will happen if your branch is already even with the upstream.
+
 
 ## For Repository Owners
 
