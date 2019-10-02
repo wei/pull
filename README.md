@@ -116,6 +116,10 @@ label: ":arrow_heading_down: pull"  # Optional
  4. Go to `https://pull.git.ci/check/${owner}/${repo}` to validate your `.github/pull.yml` (Public repos only).
  5. Install **[![<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull](https://prod.download/pull-18h-svg) Pull app](https://github.com/apps/pull)**.
 
+### Trigger manually
+
+Go to `https://pull.git.ci/process/${owner}/${repo}` to manually create a pull request. 
+**Note:** If your branch is already even with the upstream: then no pull request would be created!
 
 ## For Repository Owners
 
