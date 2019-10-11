@@ -16,7 +16,7 @@ jobs:
     - run: npm test
     - name: Build Docker Image
       run: >
-        docker build -t docker.pkg.github.com/${{ github.repository }}/app . \
+        docker build -t docker.pkg.github.com/${{ github.repository }}/app:latest . \
           --build-arg VCS_REF=${{ github.sha }} \
           --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
     - name: Login to Docker Registry
@@ -24,4 +24,4 @@ jobs:
         docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
     - name: Push Docker Image
       run: >
-        docker push docker.pkg.github.com/${{ github.repository }}/app
+        docker push docker.pkg.github.com/${{ github.repository }}/app:latest
