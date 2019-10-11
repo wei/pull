@@ -21,11 +21,15 @@ jobs:
         docker build -t $CONTAINER_REGISTRY/${{ github.repository }} . \
           --build-arg VCS_REF=${{ github.sha }} \
           --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-    - name: Push Docker Image
+    - name: Login to Docker Registry
       env:
         CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       run: >
-        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $CONTAINER_REGISTRY && \
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $CONTAINER_REGISTRY
+    - name: Push Docker Image
+      env:
+        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+      run: >
         docker push $CONTAINER_REGISTRY/${{ github.repository }}
