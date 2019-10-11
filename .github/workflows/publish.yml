@@ -11,25 +11,17 @@ jobs:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
       with:
-        version: '10.x'
+        node-version: '10.x'
     - run: npm ci
     - run: npm test
     - name: Build Docker Image
-      env:
-        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
       run: >
-        docker build -t $CONTAINER_REGISTRY/${{ github.repository }} . \
+        docker build -t docker.pkg.github.com/${{ github.repository }}/app . \
           --build-arg VCS_REF=${{ github.sha }} \
           --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
     - name: Login to Docker Registry
-      env:
-        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       run: >
-        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $CONTAINER_REGISTRY
+        docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
     - name: Push Docker Image
-      env:
-        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
       run: >
-        docker push $CONTAINER_REGISTRY/${{ github.repository }}
+        docker push docker.pkg.github.com/${{ github.repository }}/app
