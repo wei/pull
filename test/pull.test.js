@@ -25,7 +25,8 @@ beforeEach(() => {
     },
     issues: {
       update: jest.fn(),
-      listForRepo: jest.fn()
+      listForRepo: jest.fn(),
+      createLabel: jest.fn()
     },
     git: {
       updateRef: jest.fn()
@@ -404,6 +405,13 @@ describe('pull - checkAutoMerge', () => {
       user: { login: 'pull[bot]' },
       mergeable: false
     }, { conflictReviewers: ['wei', 'saurabh702'] })
+
+    try {
+      expect(github.issues.getLabel).toHaveBeenCalledTimes(1)
+    } catch (e) {
+      expect(pull.addLabel('merge-conflict', 'ff0000', 'Resolve conflicts manually')).resolves.not.toBeNull()
+    }
+
     expect(github.issues.update).toHaveBeenCalledTimes(1)
     expect(pull.addReviewers(12, ['wei', 'saurabh702'])).resolves.not.toBeNull()
   })
@@ -546,6 +554,7 @@ describe('pull - misc', () => {
     await expect(pull.addReviewers()).resolves.toBeNull()
     await expect(pull.addReviewers(12)).resolves.toBeNull()
     await expect(pull.addReviewers(12, [])).resolves.toBeNull()
+    await expect(pull.addLabel()).resolves.toBeNull()
     await expect(pull.mergePR()).resolves.toBeNull()
     await expect(pull.mergePR(12)).resolves.not.toBeNull()
     await expect(pull.hardResetCommit()).resolves.toBeNull()
