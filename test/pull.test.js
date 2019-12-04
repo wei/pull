@@ -47,21 +47,24 @@ const goodConfig = {
       upstream: 'upstream:master',
       mergeMethod: 'none',
       assignees: [],
-      reviewers: []
+      reviewers: [],
+      conflictReviewers: []
     },
     {
       base: 'feature/new-1',
       upstream: 'upstream:dev',
       mergeMethod: 'rebase',
       assignees: ['tom'],
-      reviewers: ['jerry']
+      reviewers: ['jerry'],
+      conflictReviewers: ['spike']
     },
     {
       base: 'hotfix/bug-1',
       upstream: 'upstream:dev',
       mergeMethod: 'hardreset',
       assignees: ['wei'],
-      reviewers: ['wei']
+      reviewers: ['wei'],
+      conflictReviewers: ['saurabh702']
     }
   ],
   label: 'pull'

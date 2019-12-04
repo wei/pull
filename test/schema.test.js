@@ -7,6 +7,7 @@ const validConfigs = [
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true }], label: 'pull' }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, assignees: ['wei'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'] }] }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'squash' }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'hardreset', assignees: ['wei'] }] }],
   [{
@@ -20,7 +21,8 @@ const validConfigs = [
     version: '1',
     rules: [
       { base: 'master', upstream: 'upstream:master', autoMerge: true, autoMergeHardReset: true, assignees: ['wei'] },
-      { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true, reviewers: ['wei'] }
+      { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true, reviewers: ['wei'] },
+      { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }
     ],
     label: 'pull'
   }]
@@ -38,6 +40,7 @@ const invalidConfigs = [
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: '' },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', assignees: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '', conflictReviewers: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: '' }] },
   { version: '1', rules: [{ base: 'master', autoMerge: 1 }] },
   { version: '1', rules: [{ base: 'master', autoMerge: '' }] },
@@ -66,7 +69,8 @@ describe('schema', () => {
           autoMergeHardReset: false,
           mergeMethod: 'none',
           assignees: [],
-          reviewers: []
+          reviewers: [],
+          conflictReviewers: []
         }
       ],
       label: ':arrow_heading_down: pull'
