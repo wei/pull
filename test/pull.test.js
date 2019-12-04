@@ -392,6 +392,22 @@ describe('pull - checkAutoMerge', () => {
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
+  test('should assign conflict reviewer if mergeablity is false', async () => {
+    github.pulls.get.mockResolvedValueOnce({ data: { mergeable: false } })
+
+    const pull = getPull()
+    await pull.checkAutoMerge({
+      number: 12,
+      base: { ref: 'feature/new-1' },
+      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
+      state: 'open',
+      user: { login: 'pull[bot]' },
+      mergeable: false
+    }, { conflictReviewers: ['wei', 'saurabh702'] })
+    expect(github.issues.update).toHaveBeenCalledTimes(1)
+    expect(pull.addReviewers(12, ['wei', 'saurabh702'])).resolves.not.toBeNull()
+  })
+
   test('should not merge if mergeable_status is dirty', async () => {
     github.pulls.get.mockResolvedValueOnce({ data: { mergeable: null, rebaseable: false, mergeable_state: 'unknown' } })
     setTimeout(() => {
@@ -548,7 +564,8 @@ describe('pull - misc', () => {
           upstream: 'upstream:dev',
           autoMerge: true,
           assignees: ['tom'],
-          reviewers: ['jerry']
+          reviewers: ['jerry'],
+          conflictReviewers: ['spike']
         },
         {
           base: 'hotfix/bug-1',
@@ -556,7 +573,8 @@ describe('pull - misc', () => {
           autoMerge: true,
           autoMergeHardReset: true,
           assignees: ['wei'],
-          reviewers: ['wei']
+          reviewers: ['wei'],
+          conflictReviewers: ['saurabh702']
         }
       ],
       label: 'pull'
