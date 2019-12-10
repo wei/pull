@@ -426,7 +426,6 @@ describe('pull - checkAutoMerge', () => {
       mergeable_state: 'unstable'
     })
     expect(github.pulls.get).toHaveBeenCalledTimes(0)
-    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pull_number: 12 })
     expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pull_number: 12, merge_method: 'merge' })
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
