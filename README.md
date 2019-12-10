@@ -104,6 +104,7 @@ rules:                      # Array of rules
   - base: master            # Required. Target branch
     upstream: wei:master    # Required. Must be in the same fork network.
     mergeMethod: hardreset  # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+    mergeUnstable: false    # Optional, merge pull request even when the mergeable_state is not clean. Default: false
   - base: dev
     upstream: master        # Required. Can be a branch in the same forked repo.
     assignees:              # Optional

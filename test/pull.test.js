@@ -410,6 +410,27 @@ describe('pull - checkAutoMerge', () => {
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
+  test('should merge if mergeable_status is unstable and mergeUnstable flag is set to true', async () => {
+    github.pulls.get.mockResolvedValueOnce({ data: { mergeable: true, rebaseable: false, mergeable_state: 'clean' } })
+
+    const config = { version: '1', rules: [{ base: 'dev', upstream: 'master', mergeMethod: 'merge', mergeUnstable: true }] }
+    const pull = new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, config)
+    await pull.checkAutoMerge({
+      number: 12,
+      base: { ref: 'dev' },
+      head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
+      state: 'open',
+      user: { login: 'pull[bot]' },
+      mergeable: true,
+      rebaseable: false,
+      mergeable_state: 'unstable'
+    })
+    expect(github.pulls.get).toHaveBeenCalledTimes(0)
+    expect(github.pulls.get).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pull_number: 12 })
+    expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pull_number: 12, merge_method: 'merge' })
+    expect(github.git.updateRef).not.toHaveBeenCalled()
+  })
+
   test('hard reset failed', async () => {
     github.pulls.get.mockResolvedValueOnce({ data: { mergeable: true, rebaseable: true, mergeable_state: 'clean' } })
     github.git.updateRef.mockRejectedValue(new Error('Update reference failed'))
