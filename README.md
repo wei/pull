@@ -79,7 +79,7 @@ Want to support this open source service? [Please star it : )](https://github.co
 
  - Just install **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app](https://github.com/apps/pull)**.
 
-Pull app will automatically watch and pull in upstream's default (master) branch to yours using **hard reset** every hour. You can also manually [trigger](#trigger-manually) it anytime.
+Pull app will automatically watch and pull in upstream's default (master) branch to yours using **hard reset** every couple of hours. You can also manually [trigger](#trigger-manually) it anytime.
 
 ### Advanced Setup (with config)
 
