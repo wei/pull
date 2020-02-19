@@ -8,7 +8,7 @@ const validConfigs = [
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, assignees: ['wei'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }] }],
-  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'squash' }] }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'squash', mergeUnstable: true }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'hardreset', assignees: ['wei'] }] }],
   [{
     version: '1',
@@ -68,6 +68,7 @@ describe('schema', () => {
           autoMerge: false,
           autoMergeHardReset: false,
           mergeMethod: 'none',
+          mergeUnstable: false,
           assignees: [],
           reviewers: [],
           conflictReviewers: []
