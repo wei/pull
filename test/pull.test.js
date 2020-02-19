@@ -25,7 +25,8 @@ beforeEach(() => {
     },
     issues: {
       update: jest.fn(),
-      listForRepo: jest.fn()
+      listForRepo: jest.fn(),
+      createLabel: jest.fn()
     },
     git: {
       updateRef: jest.fn()
@@ -47,21 +48,24 @@ const goodConfig = {
       upstream: 'upstream:master',
       mergeMethod: 'none',
       assignees: [],
-      reviewers: []
+      reviewers: [],
+      conflictReviewers: []
     },
     {
       base: 'feature/new-1',
       upstream: 'upstream:dev',
       mergeMethod: 'rebase',
       assignees: ['tom'],
-      reviewers: ['jerry']
+      reviewers: ['jerry'],
+      conflictReviewers: ['spike']
     },
     {
       base: 'hotfix/bug-1',
       upstream: 'upstream:dev',
       mergeMethod: 'hardreset',
       assignees: ['wei'],
-      reviewers: ['wei']
+      reviewers: ['wei'],
+      conflictReviewers: ['saurabh702']
     }
   ],
   label: 'pull'
@@ -389,6 +393,29 @@ describe('pull - checkAutoMerge', () => {
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
+  test('should assign conflict reviewer if mergeablity is false', async () => {
+    github.pulls.get.mockResolvedValueOnce({ data: { mergeable: false } })
+
+    const pull = getPull()
+    await pull.checkAutoMerge({
+      number: 12,
+      base: { ref: 'feature/new-1' },
+      head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
+      state: 'open',
+      user: { login: 'pull[bot]' },
+      mergeable: false
+    }, { conflictReviewers: ['wei', 'saurabh702'] })
+
+    try {
+      expect(github.issues.getLabel).toHaveBeenCalledTimes(1)
+    } catch (e) {
+      expect(pull.addLabel('merge-conflict', 'ff0000', 'Resolve conflicts manually')).resolves.not.toBeNull()
+    }
+
+    expect(github.issues.update).toHaveBeenCalledTimes(1)
+    expect(pull.addReviewers(12, ['wei', 'saurabh702'])).resolves.not.toBeNull()
+  })
+
   test('should not merge if mergeable_status is dirty', async () => {
     github.pulls.get.mockResolvedValueOnce({ data: { mergeable: null, rebaseable: false, mergeable_state: 'unknown' } })
     setTimeout(() => {
@@ -527,6 +554,7 @@ describe('pull - misc', () => {
     await expect(pull.addReviewers()).resolves.toBeNull()
     await expect(pull.addReviewers(12)).resolves.toBeNull()
     await expect(pull.addReviewers(12, [])).resolves.toBeNull()
+    await expect(pull.addLabel()).resolves.toBeNull()
     await expect(pull.mergePR()).resolves.toBeNull()
     await expect(pull.mergePR(12)).resolves.not.toBeNull()
     await expect(pull.hardResetCommit()).resolves.toBeNull()
@@ -545,7 +573,8 @@ describe('pull - misc', () => {
           upstream: 'upstream:dev',
           autoMerge: true,
           assignees: ['tom'],
-          reviewers: ['jerry']
+          reviewers: ['jerry'],
+          conflictReviewers: ['spike']
         },
         {
           base: 'hotfix/bug-1',
@@ -553,7 +582,8 @@ describe('pull - misc', () => {
           autoMerge: true,
           autoMergeHardReset: true,
           assignees: ['wei'],
-          reviewers: ['wei']
+          reviewers: ['wei'],
+          conflictReviewers: ['saurabh702']
         }
       ],
       label: 'pull'
