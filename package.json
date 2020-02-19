@@ -13,22 +13,22 @@
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "badgen": "^2.8.2",
+    "badgen": "^3.0.1",
     "bottleneck": "^2.19.5",
     "bunyan-syslog-udp": "^0.2.0",
     "joi": "^14.3.1",
     "js-yaml": "^3.13.1",
-    "probot": "^9.3.3",
+    "probot": "^9.9.4",
     "probot-config": "^1.1.0",
     "probot-scheduler": "wei/probot-scheduler#3b656f7",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {
-    "jest": "^24.9.0",
-    "nodemon": "^1.19.2",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2",
     "smee-client": "^1.1.0",
-    "standard": "^14.1.0"
+    "standard": "^14.3.1"
   },
   "engines": {
     "node": ">= 10.2.1",
