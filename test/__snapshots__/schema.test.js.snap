@@ -24,6 +24,8 @@ exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:ma
 
 exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master","autoMerge":true,"autoMergeHardReset":1}]} is invalid 1`] = `"ValidationError: child \\"rules\\" fails because [\\"rules\\" at position 0 fails because [child \\"autoMergeHardReset\\" fails because [\\"autoMergeHardReset\\" must be a boolean]]]"`;
 
+exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master","reviewers":"","conflictReviewers":""}]} is invalid 1`] = `"ValidationError: child \\"rules\\" fails because [\\"rules\\" at position 0 fails because [child \\"reviewers\\" fails because [\\"reviewers\\" must be an array]]]"`;
+
 exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master","reviewers":""}]} is invalid 1`] = `"ValidationError: child \\"rules\\" fails because [\\"rules\\" at position 0 fails because [child \\"reviewers\\" fails because [\\"reviewers\\" must be an array]]]"`;
 
 exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master"}],"label":""} is invalid 1`] = `"ValidationError: child \\"label\\" fails because [\\"label\\" is not allowed to be empty]"`;
