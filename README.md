@@ -111,6 +111,8 @@ rules:                      # Array of rules
       - wei
     reviewers:              # Optional
       - wei
+    conflictReviewers:      # Optional, on merge conflict assign a reviewer
+      - wei
 label: ":arrow_heading_down: pull"  # Optional
 ```
 
