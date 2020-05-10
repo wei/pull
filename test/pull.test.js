@@ -374,7 +374,7 @@ describe('pull - checkAutoMerge', () => {
     )
   })
 
-  test('should not merge if mergeablity is null', async () => {
+  test('should not merge if mergeability is null', async () => {
     github.pulls.get.mockResolvedValueOnce({ data: { mergeable: null, mergeable_state: 'unknown' } })
 
     const pull = getPull()
@@ -393,7 +393,7 @@ describe('pull - checkAutoMerge', () => {
     expect(github.git.updateRef).not.toHaveBeenCalled()
   })
 
-  test('should assign conflict reviewer if mergeablity is false', async () => {
+  test('should assign conflict reviewer if mergeability is false', async () => {
     github.pulls.get.mockResolvedValueOnce({ data: { mergeable: false } })
 
     const pull = getPull()
