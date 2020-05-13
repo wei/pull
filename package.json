@@ -7,7 +7,7 @@
   "repository": "https://github.com/wei/pull.git",
   "scripts": {
     "dev": "nodemon --exec \"npm start\"",
-    "start": "NODE_OPTIONS=--max-old-space-size=5120 probot run ./index.js",
+    "start": "probot run ./index.js",
     "lint:fix": "standard --fix",
     "test": "standard && jest",
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage"
