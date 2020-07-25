@@ -12,7 +12,7 @@ module.exports = async (app) => {
   app.limiter = new Bottleneck({
     maxConcurrent: parseInt(process.env.MAX_CONCURRENT, 10) || 10,
     highWater: parseInt(process.env.MAX_IN_QUEUE, 10) || 1000,
-    strategy: Bottleneck.strategy.OVERFLOW,
+    strategy: Bottleneck.strategy.BLOCK,
     trackDoneStatus: false
   })
 
