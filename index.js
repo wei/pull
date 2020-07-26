@@ -12,7 +12,7 @@ module.exports = async (app) => {
   app.limiter = new Bottleneck({
     maxConcurrent: parseInt(process.env.MAX_CONCURRENT, 10) || 10,
     highWater: parseInt(process.env.MAX_IN_QUEUE, 10) || 1000,
-    strategy: Bottleneck.strategy.BLOCK,
+    strategy: Bottleneck.strategy.OVERFLOW,
     trackDoneStatus: false
   })
 
@@ -38,7 +38,7 @@ module.exports = async (app) => {
     const jobId = `${context.payload.repository.full_name}${context.payload.manual ? '-manual' : ''}`
     if (!app.limiter.jobStatus(jobId)) {
       await app.limiter.schedule({
-        expiration: 60000,
+        expiration: 30000,
         id: jobId,
         priority: context.payload.manual ? 1 : 9
       }, () => processRoutineCheck(context, opts))
