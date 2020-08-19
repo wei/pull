@@ -100,6 +100,12 @@ module.exports = async (app) => {
       app.scheduler.stop(context.payload.repository)
       return null
     }
-    return new Pull(context.github, context.repo({ logger: app.log }), config)
+    try {
+      return new Pull(context.github, context.repo({ logger: app.log }), config)
+    } catch (e) {
+      app.log.warn(e, `[${context.payload.repository.full_name}] Pull initialization failed`)
+      app.scheduler.stop(context.payload.repository)
+      return null
+    }
   }
 }
