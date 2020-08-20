@@ -3,7 +3,6 @@
    <img alt="Pull App" src="https://prod.download/pull-social-svg" />
  </a>
 </p>
-<hr />
 <p align="center">
  <a href="https://github.com/apps/pull">
    <img alt="Managing" src="https://pull.git.ci/badge/managing" />
