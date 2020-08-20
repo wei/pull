@@ -81,7 +81,7 @@ describe('schema', () => {
   validConfigs.forEach(([example, expected = example]) => {
     test(`${JSON.stringify(example)} is valid`, () => {
       const { error, value } = schema.validate(example)
-      expect(error).toBe(null)
+      expect(error).toBe(undefined)
       expect(value).toMatchObject(expected)
     })
   })
