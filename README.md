@@ -1,21 +1,25 @@
 <p align="center">
- <a href="https://github.com/apps/pull">
-   <img alt="Pull App" src="https://prod.download/pull-social-svg" />
- </a>
+  <a href="https://github.com/apps/pull">
+    <img alt="Pull App" src="https://prod.download/pull-social-svg" />
+  </a>
 </p>
 <p align="center">
- <a href="https://github.com/wei/pull">
-   <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?icon=github&cache=600" />
- </a>
- <a href="https://github.com/apps/pull">
-   <img alt="Managing" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.json?cache=600" />
- </a>
- <a href="https://github.com/apps/pull">
-   <img alt="Installations" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/installed.json?cache=600" />
- </a>
- <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
-   <img alt="Triggered #" src="https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?cache=600" />
- </a>
+  <a href="https://probot.github.io">
+    <img alt="Probot #1 Most Installed" src="https://badgen.net/badge/probot/%231%20most%20installed/orange?icon=dependabot&style=flat&cache=86400" />
+  </a>
+  <a href="https://github.com/wei/pull">
+    <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?icon=github&cache=600" />
+  </a>
+  <br/>
+  <a href="https://github.com/apps/pull">
+    <img alt="Managing" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.json?cache=600" />
+  </a>
+  <a href="https://github.com/apps/pull">
+    <img alt="Installations" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/installed.json?cache=600" />
+  </a>
+  <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
+    <img alt="Triggered #" src="https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?cache=600" />
+  </a>
 </p>
 
 <h2>Table of Contents</h2>
@@ -76,7 +80,7 @@ Want to support this open source service? [Please star it : )](https://github.co
 
  - Just install **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app](https://github.com/apps/pull)**.
 
-Pull app will automatically watch and pull in upstream's default (master) branch to yours using **hard reset** every couple of hours. You can also manually [trigger](#trigger-manually) it anytime.
+Pull app will automatically watch and pull in upstream's default (master) branch to yours using **hard reset** every few hours. You can also manually [trigger](#trigger-manually) it anytime.
 
 ### Advanced Setup (with config)
 
