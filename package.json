@@ -24,7 +24,7 @@
     "request-promise": "^4.2.6"
   },
   "devDependencies": {
-    "jest": "^26.1.0",
+    "jest": "^26.4.1",
     "nodemon": "^2.0.4",
     "smee-client": "^1.1.0",
     "standard": "^14.3.4"
