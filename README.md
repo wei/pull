@@ -4,11 +4,14 @@
  </a>
 </p>
 <p align="center">
- <a href="https://github.com/apps/pull">
-   <img alt="Managing" src="https://pull.git.ci/badge/managing" />
+ <a href="https://github.com/wei/pull">
+   <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?icon=github&cache=600" />
  </a>
  <a href="https://github.com/apps/pull">
-   <img alt="Installations" src="https://pull.git.ci/badge/installed" />
+   <img alt="Managing" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.json?cache=600" />
+ </a>
+ <a href="https://github.com/apps/pull">
+   <img alt="Installations" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/installed.json?cache=600" />
  </a>
  <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
    <img alt="Triggered #" src="https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?cache=600" />
@@ -36,17 +39,18 @@
 
 ## Introduction
 
-[![TravisCI](https://travis-ci.com/wei/pull.svg?branch=master)](https://travis-ci.com/wei/pull)
-[![Codecov](https://codecov.io/gh/wei/pull/branch/master/graph/badge.svg)](https://codecov.io/gh/wei/pull)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=wei/pull)](https://dependabot.com)
-[![Probot](https://pull.git.ci/badge/built_with)](https://probot.github.io/)
-[![JavaScript Style Guide](https://pull.git.ci/badge/code_style)](https://standardjs.com)
+[![GitHub Status](https://badgen.net/github/status/wei/pull?icon=github)](https://github.com/wei/pull)
+[![TravisCI](https://badgen.net/travis/wei/pull?icon=travis&label=build)](https://travis-ci.com/wei/pull)
+[![Codecov](https://badgen.net/codecov/c/github/wei/pull?icon=codecov)](https://codecov.io/gh/wei/pull)
+[![Dependabot Status](https://badgen.net/badge/dependabot/enabled/green?icon=dependabot&cache=86400)](https://dependabot.com)
+[![Probot](https://badgen.net/badge/built%20with/probot/orange?icon=dependabot&cache=86400)](https://probot.github.io/)
+[![JavaScript Style Guide](https://badgen.net/badge/code%20style/standard/f2a?cache=86400)](https://standardjs.com)
 [![jest](https://facebook.github.io/jest/img/jest-badge.svg)](https://github.com/facebook/jest)
-[![MIT License](https://pull.git.ci/badge/license)](https://wei.mit-license.org)
+[![MIT License](https://badgen.net/badge/license/MIT/blue?cache=86400)](https://wei.mit-license.org)
 
 > 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your forks up-to-date with upstream via automated pull requests.
 
-Trusted by [![Repository Count](https://pull.git.ci/badge/managing?plain&style=flat)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?style=flat&label=&cache=600)](https://github.com/issues?q=author%3Aapp%2Fpull).
+Trusted by [![Repository Count](https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.plain.json?style=flat&cache=600)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?style=flat&label=&cache=600)](https://github.com/issues?q=author%3Aapp%2Fpull).
 
 Want to support this open source service? [Please star it : )](https://github.com/wei/pull)
 

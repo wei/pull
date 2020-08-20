@@ -13,7 +13,6 @@
     "test:watch": "jest --watchAll --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "badgen": "^3.2.1",
     "bottleneck": "^2.19.5",
     "bunyan-syslog-udp": "^0.2.0",
     "joi": "^14.3.1",
