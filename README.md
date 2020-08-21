@@ -5,7 +5,7 @@
 </p>
 <p align="center">
   <a href="https://probot.github.io">
-    <img alt="Probot #1 Most Installed" src="https://badgen.net/badge/probot/%231%20most%20installed/orange?icon=dependabot&style=flat&cache=86400" />
+    <img alt="Probot Featured" src="https://badgen.net/badge/probot/featured/orange?icon=dependabot&style=flat&cache=86400" />
   </a>
   <a href="https://github.com/wei/pull">
     <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?icon=github&cache=600" />
