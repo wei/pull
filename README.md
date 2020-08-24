@@ -5,20 +5,20 @@
 </p>
 <p align="center">
   <a href="https://probot.github.io">
-    <img alt="Probot Featured" src="https://badgen.net/badge/probot/featured/orange?icon=dependabot&style=flat&cache=86400" />
+    <img alt="Probot Featured" src="https://badgen.net/badge/probot/featured/orange?icon=dependabot&cache=86400" />
   </a>
   <a href="https://github.com/wei/pull">
-    <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?icon=github&cache=600" />
+    <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?icon=github" />
   </a>
   <br/>
   <a href="https://github.com/apps/pull">
-    <img alt="Managing" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.json?cache=600" />
+    <img alt="Managing" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.json" />
   </a>
   <a href="https://github.com/apps/pull">
-    <img alt="Installations" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/installed.json?cache=600" />
+    <img alt="Installations" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/installed.json" />
   </a>
   <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
-    <img alt="Triggered #" src="https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?cache=600" />
+    <img alt="Triggered #" src="https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid" />
   </a>
 </p>
 
@@ -53,7 +53,7 @@
 
 > 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your forks up-to-date with upstream via automated pull requests.
 
-Trusted by [![Repository Count](https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.plain.json?style=flat&cache=600)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?style=flat&label=&cache=600)](https://github.com/issues?q=author%3Aapp%2Fpull).
+Trusted by [![Repository Count](https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.plain.json?style=flat)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?style=flat&label=)](https://github.com/issues?q=author%3Aapp%2Fpull).
 
 Want to support this open source service? [Please star it : )](https://github.com/wei/pull)
 
