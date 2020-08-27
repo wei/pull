@@ -88,36 +88,36 @@ Pull app will automatically watch and pull in upstream's default (master) branch
  2. Setup the new branch as default branch under repository Settings > Branches.
  3. Add `.github/pull.yml` to your default branch.
 
-#### Most Common
-(behaves the same as Basic Setup)
-```yaml
-version: "1"
-rules:
-  - base: master
-    upstream: wei:master    # change `wei` to the owner of upstream repo
-    mergeMethod: hardreset
-```
+    #### Most Common
+    (behaves the same as Basic Setup)
+    ```yaml
+    version: "1"
+    rules:
+      - base: master
+        upstream: wei:master    # change `wei` to the owner of upstream repo
+        mergeMethod: hardreset
+    ```
 
-#### Advanced usage
-```yaml
-version: "1"
-rules:                      # Array of rules
-  - base: master            # Required. Target branch
-    upstream: wei:master    # Required. Must be in the same fork network.
-    mergeMethod: hardreset  # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
-    mergeUnstable: false    # Optional, merge pull request even when the mergeable_state is not clean. Default: false
-  - base: dev
-    upstream: master        # Required. Can be a branch in the same forked repo.
-    assignees:              # Optional
-      - wei
-    reviewers:              # Optional
-      - wei
-    conflictReviewers:      # Optional, on merge conflict assign a reviewer
-      - wei
-label: ":arrow_heading_down: pull"  # Optional
-```
+    #### Advanced usage
+    ```yaml
+    version: "1"
+    rules:                      # Array of rules
+      - base: master            # Required. Target branch
+        upstream: wei:master    # Required. Must be in the same fork network.
+        mergeMethod: hardreset  # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+        mergeUnstable: false    # Optional, merge pull request even when the mergeable_state is not clean. Default: false
+      - base: dev
+        upstream: master        # Required. Can be a branch in the same forked repo.
+        assignees:              # Optional
+          - wei
+        reviewers:              # Optional
+          - wei
+        conflictReviewers:      # Optional, on merge conflict assign a reviewer
+          - wei
+    label: ":arrow_heading_down: pull"  # Optional
+    ```
 
- 4. Go to `https://pull.git.ci/check/${owner}/${repo}` to validate your `.github/pull.yml` (Public repos only).
+ 4. Go to `https://pull.git.ci/check/${owner}/${repo}` to validate your `.github/pull.yml` (Public repos only). See [#234](https://github.com/wei/pull/issues/234) for another way to validate it.
  5. Install **[![<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull](https://prod.download/pull-18h-svg) Pull app](https://github.com/apps/pull)**.
 
 ### Trigger manually
