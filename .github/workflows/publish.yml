@@ -19,7 +19,7 @@ jobs:
         echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
     - name: Build Docker Image
       run: |
-        docker pull ghcr.io/${{ github.repository }}:latest
+        docker pull ghcr.io/${{ github.repository }}:latest || :
         docker build -t ghcr.io/${{ github.repository }}:latest . \
           --cache-from ghcr.io/${{ github.repository }}:latest
           --build-arg VCS_REF=${{ github.sha }} \
