@@ -21,7 +21,7 @@ jobs:
       run: |
         docker pull ghcr.io/${{ github.repository }}:latest || :
         docker build -t ghcr.io/${{ github.repository }}:latest . \
-          --cache-from ghcr.io/${{ github.repository }}:latest
+          --cache-from ghcr.io/${{ github.repository }}:latest \
           --build-arg VCS_REF=${{ github.sha }} \
           --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
     - name: Push Docker Image
