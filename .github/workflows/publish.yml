@@ -14,7 +14,7 @@ jobs:
         node-version: '10.x'
     - run: npm ci
     - run: npm test
-    - name: Login to Docker Registry
+    - name: Login to GitHub Container Registry
       run: |
         echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
     - name: Build Docker Image
@@ -24,6 +24,13 @@ jobs:
           --cache-from ghcr.io/${{ github.repository }}:latest \
           --build-arg VCS_REF=${{ github.sha }} \
           --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-    - name: Push Docker Image
+    - name: Push Docker Image to GitHub Container Registry
       run: |
         docker push ghcr.io/${{ github.repository }}:latest
+    - name: Login to GitHub Package Registry
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+    - name: Push Docker Image to GitHub Package Registry
+      run: |
+        docker tag ghcr.io/${{ github.repository }}:latest docker.pkg.github.com/${{ github.repository }}/pull:latest
+        docker push docker.pkg.github.com/${{ github.repository }}/pull:latest
