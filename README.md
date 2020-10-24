@@ -72,9 +72,10 @@ _Can you help keep this open source service alive? **[💖 Please sponsor : )](h
 ### Prerequisites
  - Upstream must be in the same fork network.
  - :warning: _Make a backup if you've made changes._
-- **[⭐ Star this project](https://github.com/wei/pull)** (Highly recommended, starred users may receive priority over regular users)
 
 ## Getting Started
+
+**[⭐ Star this project](https://github.com/wei/pull)** (Highly recommended, starred users may receive priority over regular users)
 
 ### Basic Setup
 
