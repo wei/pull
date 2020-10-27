@@ -68,7 +68,8 @@ const goodConfig = {
       conflictReviewers: ['saurabh702']
     }
   ],
-  label: 'pull'
+  label: 'pull',
+  conflictLabel: 'merge-conflict'
 }
 const getPull = () => new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, goodConfig)
 
@@ -409,7 +410,7 @@ describe('pull - checkAutoMerge', () => {
     try {
       expect(github.issues.getLabel).toHaveBeenCalledTimes(1)
     } catch (e) {
-      expect(pull.addLabel('merge-conflict', 'ff0000', 'Resolve conflicts manually')).resolves.not.toBeNull()
+      expect(pull.addLabel(pull.config.conflictLabel, 'ff0000', 'Resolve conflicts manually')).resolves.not.toBeNull()
     }
 
     expect(github.issues.update).toHaveBeenCalledTimes(1)
@@ -606,7 +607,8 @@ describe('pull - misc', () => {
           conflictReviewers: ['saurabh702']
         }
       ],
-      label: 'pull'
+      label: 'pull',
+      conflictLabel: 'merge-conflict'
     })
 
     expect(pull.config.rules[0].mergeMethod).toBe('merge')
