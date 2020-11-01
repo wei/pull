@@ -30,6 +30,10 @@ exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:ma
 
 exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master"}],"label":"","conflictLabel":""} is invalid 1`] = `"ValidationError: \\"label\\" is not allowed to be empty"`;
 
+exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master"}],"label":"pull","conflictLabel":""} is invalid 1`] = `"ValidationError: \\"conflictLabel\\" is not allowed to be empty"`;
+
+exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master"}],"label":"pull","conflictLabel":1} is invalid 1`] = `"ValidationError: \\"conflictLabel\\" must be a string"`;
+
 exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master"}],"label":1,"conflictLabel":2} is invalid 1`] = `"ValidationError: \\"label\\" must be a string"`;
 
 exports[`schema {"version":"1","rules":[{"base":"master","upstream":"upstream:master"}],"label":1} is invalid 1`] = `"ValidationError: \\"label\\" must be a string"`;
