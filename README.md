@@ -116,6 +116,7 @@ Pull app will automatically watch and pull in upstream's default (master) branch
         conflictReviewers:      # Optional, on merge conflict assign a reviewer
           - wei
     label: ":arrow_heading_down: pull"  # Optional
+    conflictLabel: "merge-conflict"     # Optional, on merge conflict assign a custom label, Default: merge-conflict
     ```
 
  4. Go to `https://pull.git.ci/check/${owner}/${repo}` to validate your `.github/pull.yml` (Public repos only). See [#234](https://github.com/wei/pull/issues/234) for another way to validate it.
