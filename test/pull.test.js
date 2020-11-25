@@ -56,7 +56,7 @@ const goodConfig = {
       upstream: 'upstream:dev',
       mergeMethod: 'rebase',
       assignees: ['tom'],
-      reviewers: ['jerry'],
+      reviewers: ['jerry', 'org/team-1'],
       conflictReviewers: ['spike']
     },
     {
@@ -307,7 +307,7 @@ describe('pull - routineCheck', () => {
     })
     expect(github.pulls.createReviewRequest).toHaveBeenCalledTimes(1)
     expect(github.pulls.createReviewRequest).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', pull_number: 12, reviewers: ['jerry']
+      owner: 'wei', repo: 'fork', pull_number: 12, reviewers: ['jerry'], team_reviewers: ['team-1']
     })
   })
 })
