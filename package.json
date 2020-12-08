@@ -16,7 +16,7 @@
     "bottleneck": "^2.19.5",
     "bunyan-syslog-udp": "^0.2.0",
     "joi": "^17.3.0",
-    "js-yaml": "^3.14.0",
+    "js-yaml": "^3.14.1",
     "probot": "^9.14.1",
     "probot-config": "^1.1.0",
     "probot-scheduler": "wei/probot-scheduler#3b656f7",
