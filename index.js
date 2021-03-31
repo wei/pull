@@ -38,7 +38,7 @@ module.exports = async (app) => {
     const jobId = `${context.payload.repository.full_name}${context.payload.manual ? '-manual' : ''}`
     if (!app.limiter.jobStatus(jobId)) {
       await app.limiter.schedule({
-        expiration: 30000,
+        expiration: (parseInt(process.env.JOB_TIMEOUT, 10) || 60) * 1000,
         id: jobId,
         priority: context.payload.manual ? 1 : 9
       }, () => processRoutineCheck(context, opts))
