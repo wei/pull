@@ -12,16 +12,25 @@ App:
 - Pull requests - **Read & Write**
   - [x] Check the box for **Pull request** events
 - Content - **Read and write**
+  - The app only requires this to check mergibility for base and target
+branches and automatically merge them for you (if conflicts are not found
+and also hard resets by default), 
 
-## With Docker, locally
+## With Docker Compose, locally
 
 ```sh
-# Build our Docker image first
-docker build . -t wei/pull
+# duplicate the .env.example file as .env
+cp .env.example .env
+# then edit it (assuming you use nano, but you can replace it
+# with vi or code for VS Code if you don't like using GNU nano)
+nano .env
 
-# run it, remember to duplicate .env.example as .env and fill up
-# required variables + any optional fields if needed.
-docker run
+# optionally move your app's secret key into the current working
+# directory as pm.pem unless you copied the contents into .env
+mv /path/to/your-app-name-here.private-key.pem pk.pem
+
+# Hit the road!
+docker-compose up
 ```
 
 ## With any PaaS that supports Dockerfiles
@@ -60,11 +69,14 @@ heroku config:set APP_ID=1234abcd \
 # Divio, assuming you set your APP_ID and WEBHOOK_SECRET in
 # your project's env vars setting page.
 divio project env-vars \
-    --set PRIVATE_KEY $(cat /path/to/your-app-name-here.private-key.pem)" \
+    --set PRIVATE_KEY "$(cat /path/to/your-app-name-here.private-key.pem)" \
     --stage live
 
 # Railway
 railway variables APP_ID=1234abcd \
     WEBHOOK_SECRET=your-secret-here \
-    PRIVATE_KEY=$(cat /path/to/your-app-name-here.private-key.pem
+    PRIVATE_KEY="$(cat /path/to/your-app-name-here.private-key.pem)"
 ```
+
+Done! Don't forget to deploy your app and give it a shot if it's
+working.
