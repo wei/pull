@@ -14,7 +14,23 @@ App:
 - Content - **Read and write**
   - The app only requires this to check mergibility for base and target
 branches and automatically merge them for you (if conflicts are not found
-and also hard resets by default), 
+and also hard resets by default).
+
+For the webhook, the URL should be like these:
+
+```js
+// public URL + process.env.WEBHOOK_PATH
+let ghAppWebhookUrl = "https://ghpullapp-example-demo-thepinsteam.up.railway.app/installations";
+
+// Smee.io URL for development, where WEBHOOK_PROXY_URL is either one of the following:
+// a. the offical instance: https://smee.io/dvWOdT5wpw7APcfs
+// b. or your publicly-available self-hosted instance: https://my-smeedotio.instance.dev/someRandomMathGoeshere
+// tl;dr before using Smee.io: npm i -g smee-client
+let ghAppWebhookUrl = process.env.WEBHOOK_PROXY_URL
+
+// if things goes hur durr, try either / or /installations as the webhook endpoint, but
+// process at your own risk
+```
 
 ## With Docker Compose, locally
 
@@ -73,7 +89,7 @@ divio project env-vars \
     --stage live
 
 # Railway
-railway variables APP_ID=1234abcd \
+railway variables set APP_ID=1234abcd \
     WEBHOOK_SECRET=your-secret-here \
     PRIVATE_KEY="$(cat /path/to/your-app-name-here.private-key.pem)"
 ```
