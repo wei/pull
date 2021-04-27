@@ -32,9 +32,9 @@
 - [Getting Started](#getting-started)
   - [Basic Setup](#basic-setup)
   - [Advanced Setup (with config)](#advanced-setup-with-config)
-    - [Most Common](#most-common)
-    - [Advanced usage](#advanced-usage)
+  - [Trigger manually](#trigger-manually)
 - [For Repository Owners](#for-repository-owners)
+- [Self-hosting](#self-hosting)
 - [Author](#author)
 - [License](#license)
 
@@ -145,10 +145,14 @@ rules:
     mergeMethod: hardreset
 ```
 
+## Self-hosting
+
+If you want to self-host the app, see the instructions [here](docs/Deployment.md). If using
+internally, remember to visit your app's settings, navigate to **Advanced** and press
+`Make internal`.
 
 ## Author
 [Wei He](https://github.com/wei) _github@weispot.com_
-
 
 ## License
 [MIT](LICENSE)
