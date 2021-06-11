@@ -152,3 +152,4 @@ rules:
 
 ## License
 [MIT](LICENSE)
+.
