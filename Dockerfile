@@ -45,10 +45,7 @@ ENV \
 WORKDIR /app
 COPY package*.json ./
 RUN \
-  apk add --no-cache --virtual .build-dependencies build-base gcc wget git && \
-  apk add --no-cache python && \
   npm ci --production && \
-  apk del .build-dependencies && \
   :
 
 COPY . .
