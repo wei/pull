@@ -15,7 +15,7 @@
   "dependencies": {
     "bottleneck": "^2.19.5",
     "bunyan-syslog-udp": "^0.2.0",
-    "joi": "^17.5.0",
+    "joi": "^17.6.0",
     "js-yaml": "^4.1.0",
     "probot": "^9.14.1",
     "probot-config": "^1.1.0",
@@ -24,7 +24,7 @@
     "request-promise": "^4.2.6"
   },
   "devDependencies": {
-    "jest": "^27.4.7",
+    "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "smee-client": "^1.2.2",
     "standard": "^16.0.4"
