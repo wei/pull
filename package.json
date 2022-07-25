@@ -26,7 +26,7 @@
   "devDependencies": {
     "jest": "^27.4.7",
     "nodemon": "^2.0.15",
-    "smee-client": "^1.2.2",
+    "smee-client": "^1.2.3",
     "standard": "^16.0.4"
   },
   "engines": {
