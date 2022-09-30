@@ -2,7 +2,7 @@
 
 process.env.LOG_LEVEL = 'fatal'
 
-const { Application } = require('probot')
+const { Probot } = require('probot')
 const Pull = require('../lib/pull')
 const helper = require('../lib/helper')
 
@@ -10,7 +10,10 @@ let app
 let github
 
 beforeEach(() => {
-  app = new Application()
+  app = new Probot({
+    appId: 1,
+    privateKey: 'secret'
+  })
 
   // Mock out the GitHub API
   github = {
