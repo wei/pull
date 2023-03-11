@@ -1,0 +1,184 @@
+*ci/CI
+!index.js
+!lib/*.js
+!package*.json
+From 559d6eca9c080afa8db722783b891bec4a0bb6a9 Mon Sep 17 00:00:00 2001
+From: mowjoejoejoejoe <124041561+mowjoejoejoejoe@users.noreply.github.com>
+Date: Sat, 11 Mar 2023 06:45:40 -0600
+Subject: [PATCH 1/2] Update README.md
+
+---
+ README.md => clerk.yml | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename README.md => clerk.yml (100%)
+
+diff --git a/README.md b/clerk.yml
+similarity index 100%
+rename from README.md
+rename to clerk.yml
+
+From ae437f1e0f5a134a7695f6f9a818f41447e094f9 Mon Sep 17 00:00:00 2001
+From: mowjoejoejoejoe <124041561+mowjoejoejoejoe@users.noreply.github.com>
+Date: Sat, 11 Mar 2023 06:47:08 -0600
+Subject: [PATCH 2/2] Create README.md
+
+---
+ README.md | 149 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 149 insertions(+)
+ create mode 100644 README.md
+
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..805e4a7
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,149 @@
++# clerk
++Verify PRs have release notes
++
++Translation types
++Text translation
++English - Detected
++English
++Source text
++From 2dee76baf09f3f72c8a192a6483f23aec527e057 Mon Sep 17 00:00:00 2001
++From: mowjoejoejoejoe <124041561+mowjoejoejoejoe@users.noreply.github.com>
++Date: Sat, 11 Mar 2023 06:36:43 -0600
++Subject: [PATCH] Revert "Update CODEOWNERS (#5)"
++
++This reverts commit dcf4311198ce8e5eddd2d24cd5f2d0add289b8e8.
++---
++ .github/CODEOWNERS | 41 ++++++++---------------------------------
++ 1 file changed, 8 insertions(+), 33 deletions(-)
++
++diff --git a/.github/CODEOWNERS b/.github/CODEOWNERS
++index cdfa200a9efa..756c713d556c 100644
++--- a/.github/CODEOWNERS
+++++ b/.github/CODEOWNERS
++@@ -2,43 +2,18 @@
++ # gitignore style patterns are used, not globs.
++ # https://help.github.com/articles/about-codeowners
++ # https://git-scm.com/docs/gitignore
++-repo:mowjoejoejoejoe/repo-1
+++
++ # Upgrades WG
++ /patches/                               @electron/patch-owners
++ DEPS                                    @electron/wg-upgrades
++-Map your QuickBooks contractor payments to 1099 boxes
++-First select the checkbox for each type of contractor payment you recorded last year. Each payment type corresponds to a box on the IRS forms 1099-NEC or 1099-MISC. (Non-employee compensation and rents are the two most common types.)
++-Then for each payment type selected, select all the QuickBooks expense accounts you used last year. Need more help with this page?
++-If you’re not sure which expense accounts you used, you can run a report of all last year’s expenses marked for 1099.
++-Something’s not quite right
++-You can't add data to QuickBooks Online Ecosystem because your trial or subscription period ended, you canceled your subscription, or there was a billing problem. To update your subscription, click the gear icon and view your account information.
++-Common payment types
++-  
++-  
++-Direct sales
++-  
++-  
++-Other payment types
++-  
++-  
++-  
++-  
++-  
++-  
++-  
++-  
++-Federal tax withheld (very uncommon) 
++-When should I withhold taxes?
++ 
++-  
++-  
++- 
++ # Releases WG
++ /npm/                                   @electron/wg-releases
++ /script/release                         @electron/wg-releases
++-# Security.md
++-*/lib/browser/devtools.ts                @electron/wg-security
++-*/lib/browser/guest-view-manager.ts      @electron/wg-security
++-*/lib/browser/guest-window-proxy.ts      @electron/wg-security
++-*/lib/browser/rpc-server.ts              @electron/wg-security
++-**/*traceback*.cache*/src*/code.dir*/.dist/lib/renderer/security-warnings.ts      @electron/wg-security
+++
+++# Security WG
+++/lib/browser/devtools.ts                @electron/wg-security
+++/lib/browser/guest-view-manager.ts      @electron/wg-security
+++/lib/browser/guest-window-proxy.ts      @electron/wg-security
+++/lib/browser/rpc-server.ts              @electron/wg-security
+++/lib/renderer/security-warnings.ts      @electron/wg-security
++
++2,747 / 5,000
++Translation results
++Translation result
++From 2dee76baf09f3f72c8a192a6483f23aec527e057 Mon Sep 17 00:00:00 2001
++From: mowjoejoejoejoe <124041561+mowjoejoejoejoe@users.noreply.github.com>
++Date: Sat, 11 Mar 2023 06:36:43 -0600
++Subject: [PATCH] Revert "Update CODEOWNERS (#5)"
++
++This reverts commit dcf4311198ce8e5eddd2d24cd5f2d0add289b8e8.
++---
++ .github/CODEOWNERS | 41 ++++++++---------------------------------
++ 1 file changed, 8 insertions(+), 33 deletions(-)
++
++diff --git a/.github/CODEOWNERS b/.github/CODEOWNERS
++index cdfa200a9efa..756c713d556c 100644
++--- a/.github/CODEOWNERS
+++++ b/.github/CODEOWNERS
++@@ -2,43 +2,18 @@
++ # gitignore style patterns are used, not globs.
++ # https://help.github.com/articles/about-codeowners
++ # https://git-scm.com/docs/gitignore
++-repo:mowjoejoejoejoe/repo-1
+++
++ # Upgrades WG
++ /patches/                               @electron/patch-owners
++ DEPS                                    @electron/wg-upgrades
++-Map your QuickBooks contractor payments to 1099 boxes
++-First select the checkbox for each type of contractor payment you recorded last year. Each payment type corresponds to a box on the IRS forms 1099-NEC or 1099-MISC. (Non-employee compensation and rents are the two most common types.)
++-Then for each payment type selected, select all the QuickBooks expense accounts you used last year. Need more help with this page?
++-If you’re not sure which expense accounts you used, you can run a report of all last year’s expenses marked for 1099.
++-Something’s not quite right
++-You can't add data to QuickBooks Online Ecosystem because your trial or subscription period ended, you canceled your subscription, or there was a billing problem. To update your subscription, click the gear icon and view your account information.
++-Common payment types
++-  
++-  
++-Direct sales
++-  
++-  
++-Other payment types
++-  
++-  
++-  
++-  
++-  
++-  
++-  
++-  
++-Federal tax withheld (very uncommon) 
++-When should I withhold taxes?
++ 
++-  
++-  
++- 
++ # Releases WG
++ /npm/                                   @electron/wg-releases
++ /script/release                         @electron/wg-releases
++-# Security.md
++-*/lib/browser/devtools.ts                @electron/wg-security
++-*/lib/browser/guest-view-manager.ts      @electron/wg-security
++-*/lib/browser/guest-window-proxy.ts      @electron/wg-security
++-*/lib/browser/rpc-server.ts              @electron/wg-security
++-**/*traceback*.cache*/src*/code.dir*/.dist/lib/renderer/security-warnings.ts      @electron/wg-security
+++
+++# Security WG
+++/lib/browser/devtools.ts                @electron/wg-security
+++/lib/browser/guest-view-manager.ts      @electron/wg-security
+++/lib/browser/guest-window-proxy.ts      @electron/wg-security
+++/lib/browser/rpc-server.ts              @electron/wg-security
+++/lib/renderer/security-warnings.ts      @electron/wg-security
++
++More about this source textSource text required for additional translation information
++Send feedback
++Side panels
++#save :translations longer than 300 characters 
