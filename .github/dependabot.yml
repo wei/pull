@@ -1,6 +1,7 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: "npc
+  "
     directory: "/"
     schedule:
       interval: "daily"
