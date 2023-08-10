@@ -132,7 +132,7 @@ describe('pull - routineCheck', () => {
         base: { ref: 'master' },
         head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
         state: 'open',
-        user: { login: 'pull[bot]' },
+        user: { login: `${process.env.APP_NAME}[bot]` },
         mergeable: true,
         mergeable_state: 'clean'
       }
@@ -191,7 +191,7 @@ describe('pull - routineCheck', () => {
               base: { ref: 'master', label: 'wei:master' },
               head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder-12' },
               state: 'open',
-              user: { login: 'pull[bot]' },
+              user: { login: `${process.env.APP_NAME}[bot]` },
               mergeable: true,
               rebaseable: true,
               mergeable_state: 'clean'
@@ -204,7 +204,7 @@ describe('pull - routineCheck', () => {
               base: { ref: 'feature/new-1', label: 'wei:feature/new-1' },
               head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-13' },
               state: 'open',
-              user: { login: 'pull[bot]' },
+              user: { login: `${process.env.APP_NAME}[bot]` },
               mergeable: true,
               rebaseable: true,
               mergeable_state: 'clean'
@@ -217,7 +217,7 @@ describe('pull - routineCheck', () => {
               base: { ref: 'hotfix/bug-1', label: 'wei:hotfix/bug-1' },
               head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder-14' },
               state: 'open',
-              user: { login: 'pull[bot]' },
+              user: { login: `${process.env.APP_NAME}[bot]` },
               mergeable: true,
               rebaseable: true,
               mergeable_state: 'clean'
@@ -272,7 +272,7 @@ describe('pull - routineCheck', () => {
         base: { ref: 'master', label: 'wei:master' },
         head: { ref: 'master', label: 'upstream:master', sha: 'sha1-placeholder' },
         state: 'open',
-        user: { login: 'pull[bot]' },
+        user: { login: `${process.env.APP_NAME}[bot]` },
         mergeable: true,
         rebaseable: true,
         mergeable_state: 'clean'
@@ -325,7 +325,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'master', label: 'wei:master' },
       head: { ref: 'master', label: 'upstream:master' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: true,
       rebaseable: true,
       mergeable_state: 'clean'
@@ -341,7 +341,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       rebaseable: false,
       mergeable_state: 'unknown'
@@ -363,7 +363,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'hotfix/bug-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       mergeable_state: 'unknown'
     })
@@ -384,7 +384,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       rebaseable: false,
       mergeable_state: 'unknown'
@@ -403,7 +403,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: false
     }, { conflictReviewers: ['wei', 'saurabh702'] })
 
@@ -429,7 +429,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'feature/new-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       mergeable_state: 'unknown'
     }, { isMergeableMaxRetries: 2 })
@@ -448,7 +448,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'dev' },
       head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: true,
       rebaseable: false,
       mergeable_state: 'unstable'
@@ -468,7 +468,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'hotfix/bug-1' },
       head: { ref: 'dev', label: 'upstream:dev', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       rebaseable: false,
       mergeable_state: 'unknown'
@@ -490,7 +490,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'dev' },
       head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       rebaseable: false,
       mergeable_state: 'unknown'
@@ -511,7 +511,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'dev' },
       head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       rebaseable: false,
       mergeable_state: 'unknown'
@@ -532,7 +532,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'dev' },
       head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       rebaseable: false,
       mergeable_state: 'unknown'
@@ -553,7 +553,7 @@ describe('pull - checkAutoMerge', () => {
       base: { ref: 'dev' },
       head: { ref: 'master', label: 'wei:master', sha: 'sha1-placeholder' },
       state: 'open',
-      user: { login: 'pull[bot]' },
+      user: { login: `${process.env.APP_NAME}[bot]` },
       mergeable: null,
       rebaseable: false,
       mergeable_state: 'unknown'
