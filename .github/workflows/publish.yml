@@ -1,36 +1,51 @@
+---
 name: Build and Push
+
 on:
   push:
     branches:
       - master
+    paths:
+      - lib/*.js
+      - Dockerfile
+      - test/**
+
+permissions:
+  packages: write
+  actions: write
+
 jobs:
-  build:
+  release:
     name: Build and Push
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '16.x'
-    - run: npm ci
-    - run: npm test
-    - name: Login to GitHub Container Registry
-      run: |
-        echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-    - name: Build Docker Image
-      run: |
-        docker pull ghcr.io/${{ github.repository }}:latest || :
-        docker build -t ghcr.io/${{ github.repository }}:latest . \
-          --cache-from ghcr.io/${{ github.repository }}:latest \
-          --build-arg VCS_REF=${{ github.sha }} \
-          --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-    - name: Push Docker Image to GitHub Container Registry
-      run: |
-        docker push ghcr.io/${{ github.repository }}:latest
-    - name: Login to GitHub Package Registry
-      run: |
-        echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-    - name: Push Docker Image to GitHub Package Registry
-      run: |
-        docker tag ghcr.io/${{ github.repository }}:latest docker.pkg.github.com/${{ github.repository }}/pull:latest
-        docker push docker.pkg.github.com/${{ github.repository }}/pull:latest
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - run: npm ci
+
+      - run: npm test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push the image to GitHub Registry
+        uses: docker/build-push-action@v4
+        with:
+          context: "."
+          push: true
+          tags: ghcr.io/${{ github.repository }}/pull:latest
+          build-args: |
+            VCS_REF=${{ github.sha }}
+            BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          github-token: ${{ secrets.GITHUB_TOKEN }}
