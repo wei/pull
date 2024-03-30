@@ -18,7 +18,7 @@
     <img alt="Installations" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/installed.json" />
   </a>
   <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
-    <img alt="Triggered #" src="https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid" />
+    <img alt="Triggered #" src="https://badgen.net/https/pull.git.ci/badge/triggered" />
   </a>
 </p>
 
