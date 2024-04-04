@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     volumes:
@@ -21,10 +21,25 @@ services:
     volumes:
       - mongodb-data:/data/db
     environment:
-     MONGO_INITDB_ROOT_USERNAME: root
-     MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      # Connect using mongodb://root:example@mongodb:27017/
 
     # Add "forwardPorts": ["mongodb:27017"] to **devcontainer.json** to forward MongoDB locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    networks:
+      - devcontainer-network
+
+  activemq:
+    image: apache/activemq-artemis:2.33.0-alpine
+    restart: unless-stopped
+    volumes:
+      - artemis-data:/var/lib/artemis-instance
+    environment:
+      ARTEMIS_USERNAME: artemis
+      ARTEMIS_PASSWORD: artemis
+
+    # Add "forwardPorts": ["activemq:8161"] to **devcontainer.json** to forward ActiveMQ Artemis locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
     networks:
       - devcontainer-network
@@ -34,3 +49,4 @@ networks:
 
 volumes:
   mongodb-data:
+  artemis-data:
