@@ -14,23 +14,26 @@ jobs:
         node-version: '16.x'
     - run: npm ci
     - run: npm test
+    - name: Compute repo name
+      id: repo
+      run: echo name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_OUTPUT
     - name: Login to GitHub Container Registry
       run: |
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
     - name: Build Docker Image
       run: |
-        docker pull ghcr.io/${{ github.repository }}:latest || :
-        docker build -t ghcr.io/${{ github.repository }}:latest . \
-          --cache-from ghcr.io/${{ github.repository }}:latest \
+        docker pull ghcr.io/${{ steps.repo.outputs.name }}:latest || :
+        docker build -t ghcr.io/${{ steps.repo.outputs.name }}:latest . \
+          --cache-from ghcr.io/${{ steps.repo.outputs.name }}:latest \
           --build-arg VCS_REF=${{ github.sha }} \
           --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
     - name: Push Docker Image to GitHub Container Registry
       run: |
-        docker push ghcr.io/${{ github.repository }}:latest
+        docker push ghcr.io/${{ steps.repo.outputs.name }}:latest
     - name: Login to GitHub Package Registry
       run: |
         echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
     - name: Push Docker Image to GitHub Package Registry
       run: |
-        docker tag ghcr.io/${{ github.repository }}:latest docker.pkg.github.com/${{ github.repository }}/pull:latest
-        docker push docker.pkg.github.com/${{ github.repository }}/pull:latest
+        docker tag ghcr.io/${{ steps.repo.outputs.name }}:latest docker.pkg.github.com/${{ steps.repo.outputs.name }}/pull:latest
+        docker push docker.pkg.github.com/${{ steps.repo.outputs.name }}/pull:latest
