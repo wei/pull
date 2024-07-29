@@ -16,7 +16,7 @@ jobs:
     - run: npm test
     - name: Login to GitHub Container Registry
       run: |
-        echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
     - name: Build Docker Image
       run: |
         docker pull ghcr.io/${{ github.repository }}:latest || :
