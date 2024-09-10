@@ -30,7 +30,7 @@
     "smee-client": "^2.0.0",
 
     "nodemon": "^3.1.4",
-    "smee-client": "^2.0.1",
+    "smee-client": "^2.0.3",
 
     "standard": "^17.1.0"
   },
