@@ -18,7 +18,7 @@
     <img alt="Installations" src="https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/installed.json" />
   </a>
   <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
-    <img alt="Triggered #" src="https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid" />
+    <img alt="Triggered #" src="https://badgen.net/https/pull.git.ci/badge/triggered?cache=600" />
   </a>
 </p>
 
@@ -43,17 +43,17 @@
 
 ## Introduction
 
-[![GitHub Status](https://badgen.net/github/status/wei/pull?icon=github)](https://github.com/wei/pull)
+[![GitHub Status](https://badgen.net/github/checks/wei/pull?icon=github)](https://github.com/wei/pull)
 [![TravisCI](https://badgen.net/travis/wei/pull?icon=travis&label=build)](https://travis-ci.com/wei/pull)
 [![Codecov](https://badgen.net/codecov/c/github/wei/pull?icon=codecov)](https://codecov.io/gh/wei/pull)
 [![Probot](https://badgen.net/badge/built%20with/probot/orange?icon=dependabot&cache=86400)](https://probot.github.io/)
 [![JavaScript Style Guide](https://badgen.net/badge/code%20style/standard/f2a?cache=86400)](https://standardjs.com)
-[![jest](https://facebook.github.io/jest/img/jest-badge.svg)](https://github.com/facebook/jest)
+[![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
 [![MIT License](https://badgen.net/badge/license/MIT/blue?cache=86400)](https://wei.mit-license.org)
 
 > 🤖 a GitHub App built with [probot](https://github.com/probot/probot) that keeps your forks up-to-date with upstream via automated pull requests.
 
-Trusted by [![Repository Count](https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.plain.json?style=flat)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://badgen.net/runkit/pull-triggered-badge-5e55hqhkhmid?style=flat&label=)](https://github.com/issues?q=author%3Aapp%2Fpull).
+Trusted by [![Repository Count](https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.plain.json?style=flat)](https://probot.github.io/apps/pull/) repositories, triggered [![Triggered #](https://badgen.net/https/pull.git.ci/badge/triggered?style=flat&label=&cache=600)](https://github.com/issues?q=author%3Aapp%2Fpull).
 
 _Can you help keep this open source service alive? **[💖 Please sponsor : )](https://prod.download/pull-readme-sponsor)**_
 
