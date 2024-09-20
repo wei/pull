@@ -38,7 +38,7 @@ module.exports = async (app) => {
     const jobId = `${context.payload.repository.full_name}${context.payload.manual ? '-manual' : ''}`
     if (!app.limiter.jobStatus(jobId)) {
       await app.limiter.schedule({
-        expiration: 60000,
+        expiration: (parseInt(process.env.JOB_TIMEOUT, 10) || 60) * 1000,
         id: jobId,
         priority: context.payload.manual ? 1 : 9
       }, () => processRoutineCheck(context, opts))
@@ -100,6 +100,12 @@ module.exports = async (app) => {
       app.scheduler.stop(context.payload.repository)
       return null
     }
-    return new Pull(context.github, context.repo({ logger: app.log }), config)
+    try {
+      return new Pull(context.github, context.repo({ logger: app.log }), config)
+    } catch (e) {
+      app.log.warn(e, `[${context.payload.repository.full_name}] Pull initialization failed`)
+      app.scheduler.stop(context.payload.repository)
+      return null
+    }
   }
 }

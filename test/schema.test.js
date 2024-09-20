@@ -5,6 +5,7 @@ const schema = require('../lib/schema').schemaWithDeprecation
 const validConfigs = [
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true }], label: 'pull' }],
+  [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true }], label: 'pull', conflictLabel: 'merge-conflict' }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, assignees: ['wei'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'] }] }],
   [{ version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }] }],
@@ -24,7 +25,8 @@ const validConfigs = [
       { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true, reviewers: ['wei'] },
       { base: 'development', upstream: 'upstream:development', autoMerge: false, autoMergeHardReset: true, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }
     ],
-    label: 'pull'
+    label: 'pull',
+    conflictLabel: 'merge-conflict'
   }]
 ]
 
@@ -37,7 +39,10 @@ const invalidConfigs = [
   { version: '1', rules: [{ base: 'master' }] },
   { version: 1, rules: [{ base: 'master', upstream: 'upstream:master' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: 1 },
-  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: '' },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: 1, conflictLabel: 2 },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: '', conflictLabel: '' },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: 'pull', conflictLabel: 1 },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master' }], label: 'pull', conflictLabel: '' },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', assignees: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '', conflictReviewers: '' }] },
@@ -74,14 +79,15 @@ describe('schema', () => {
           conflictReviewers: []
         }
       ],
-      label: ':arrow_heading_down: pull'
+      label: ':arrow_heading_down: pull',
+      conflictLabel: 'merge-conflict'
     })
   })
 
   validConfigs.forEach(([example, expected = example]) => {
     test(`${JSON.stringify(example)} is valid`, () => {
       const { error, value } = schema.validate(example)
-      expect(error).toBe(null)
+      expect(error).toBe(undefined)
       expect(value).toMatchObject(expected)
     })
   })

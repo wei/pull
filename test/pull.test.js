@@ -56,7 +56,7 @@ const goodConfig = {
       upstream: 'upstream:dev',
       mergeMethod: 'rebase',
       assignees: ['tom'],
-      reviewers: ['jerry'],
+      reviewers: ['jerry', 'org/team-1'],
       conflictReviewers: ['spike']
     },
     {
@@ -68,7 +68,8 @@ const goodConfig = {
       conflictReviewers: ['saurabh702']
     }
   ],
-  label: 'pull'
+  label: 'pull',
+  conflictLabel: 'merge-conflict'
 }
 const getPull = () => new Pull(github, { owner: 'wei', repo: 'fork', logger: app.log }, goodConfig)
 
@@ -109,13 +110,13 @@ describe('pull - routineCheck', () => {
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
+      owner: 'wei', repo: 'fork', base: 'master', head: 'upstream%3Amaster'
     })
     expect(github.repos.compareCommits).nthCalledWith(3, {
-      owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev'
+      owner: 'wei', repo: 'fork', base: 'hotfix%2Fbug-1', head: 'upstream%3Adev'
     })
     expect(github.repos.compareCommits).nthCalledWith(2, {
-      owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev'
+      owner: 'wei', repo: 'fork', base: 'feature%2Fnew-1', head: 'upstream%3Adev'
     })
     expect(github.issues.listForRepo).not.toHaveBeenCalled()
     expect(github.pulls.create).not.toHaveBeenCalled()
@@ -230,7 +231,7 @@ describe('pull - routineCheck', () => {
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
+      owner: 'wei', repo: 'fork', base: 'master', head: 'upstream%3Amaster'
     })
     expect(github.issues.listForRepo).toHaveBeenCalled()
     expect(github.pulls.get).nthCalledWith(1, { owner: 'wei', repo: 'fork', pull_number: 13 })
@@ -238,14 +239,14 @@ describe('pull - routineCheck', () => {
     expect(github.pulls.merge).not.toHaveBeenCalledWith()
 
     expect(github.repos.compareCommits).nthCalledWith(2, {
-      owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev'
+      owner: 'wei', repo: 'fork', base: 'feature%2Fnew-1', head: 'upstream%3Adev'
     })
     expect(github.issues.listForRepo).toHaveBeenCalled()
     expect(github.pulls.get).nthCalledWith(3, { owner: 'wei', repo: 'fork', pull_number: 13 })
     expect(github.pulls.merge).toHaveBeenCalledWith({ owner: 'wei', repo: 'fork', pull_number: 13, merge_method: 'rebase' })
 
     expect(github.repos.compareCommits).nthCalledWith(3, {
-      owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev'
+      owner: 'wei', repo: 'fork', base: 'hotfix%2Fbug-1', head: 'upstream%3Adev'
     })
     expect(github.issues.listForRepo).toHaveBeenCalled()
     expect(github.pulls.get).nthCalledWith(4, { owner: 'wei', repo: 'fork', pull_number: 13 })
@@ -284,13 +285,13 @@ describe('pull - routineCheck', () => {
     const pull = getPull()
     await pull.routineCheck()
     expect(github.repos.compareCommits).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', base: 'master', head: 'upstream:master'
+      owner: 'wei', repo: 'fork', base: 'master', head: 'upstream%3Amaster'
     })
     expect(github.repos.compareCommits).nthCalledWith(2, {
-      owner: 'wei', repo: 'fork', base: 'feature/new-1', head: 'upstream:dev'
+      owner: 'wei', repo: 'fork', base: 'feature%2Fnew-1', head: 'upstream%3Adev'
     })
     expect(github.repos.compareCommits).nthCalledWith(3, {
-      owner: 'wei', repo: 'fork', base: 'hotfix/bug-1', head: 'upstream:dev'
+      owner: 'wei', repo: 'fork', base: 'hotfix%2Fbug-1', head: 'upstream%3Adev'
     })
     expect(github.issues.listForRepo).toHaveBeenCalledTimes(3)
     expect(github.pulls.create).toHaveBeenCalledTimes(2)
@@ -306,7 +307,7 @@ describe('pull - routineCheck', () => {
     })
     expect(github.pulls.createReviewRequest).toHaveBeenCalledTimes(1)
     expect(github.pulls.createReviewRequest).nthCalledWith(1, {
-      owner: 'wei', repo: 'fork', pull_number: 12, reviewers: ['jerry']
+      owner: 'wei', repo: 'fork', pull_number: 12, reviewers: ['jerry'], team_reviewers: ['team-1']
     })
   })
 })
@@ -409,7 +410,7 @@ describe('pull - checkAutoMerge', () => {
     try {
       expect(github.issues.getLabel).toHaveBeenCalledTimes(1)
     } catch (e) {
-      expect(pull.addLabel('merge-conflict', 'ff0000', 'Resolve conflicts manually')).resolves.not.toBeNull()
+      expect(pull.addLabel(pull.config.conflictLabel, 'ff0000', 'Resolve conflicts manually')).resolves.not.toBeNull()
     }
 
     expect(github.issues.update).toHaveBeenCalledTimes(1)
@@ -606,7 +607,8 @@ describe('pull - misc', () => {
           conflictReviewers: ['saurabh702']
         }
       ],
-      label: 'pull'
+      label: 'pull',
+      conflictLabel: 'merge-conflict'
     })
 
     expect(pull.config.rules[0].mergeMethod).toBe('merge')
