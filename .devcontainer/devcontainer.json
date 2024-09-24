@@ -27,10 +27,12 @@
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": ["app:3000", "mongodb:27017", "activemq:8161"]
+	"forwardPorts": ["app:3000", "mongodb:27017", "mongo-express:8081", "activemq:8161"],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "yarn install",
+
+	"postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}"
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
