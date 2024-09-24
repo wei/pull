@@ -32,10 +32,8 @@ services:
 
   mongo-express:
     image: mongo-express
-    restart: always
+    restart: unless-stopped
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongodb:27017/
       ME_CONFIG_BASICAUTH: false
 
@@ -45,15 +43,17 @@ services:
       - devcontainer-network
 
   activemq:
-    image: apache/activemq-artemis:2.37.0-alpine
+    image: apache/activemq-classic:6.1.2
     restart: unless-stopped
     volumes:
-      - artemis-data:/var/lib/artemis-instance
+      - activemq-data:/opt/apache-activemq/data
     environment:
-      ARTEMIS_USERNAME: artemis
-      ARTEMIS_PASSWORD: artemis
+      ACTIVEMQ_CONNECTION_USER: activemq
+      ACTIVEMQ_CONNECTION_PASSWORD: activemq
+      ACTIVEMQ_WEB_USER: admin
+      ACTIVEMQ_WEB_PASSWORD: admin
 
-    # Add "forwardPorts": ["activemq:8161"] to **devcontainer.json** to forward ActiveMQ Artemis locally.
+    # Add "forwardPorts": ["activemq:8161"] to **devcontainer.json** to forward ActiveMQ Classic locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
     networks:
       - devcontainer-network
@@ -63,4 +63,4 @@ networks:
 
 volumes:
   mongodb-data:
-  artemis-data:
+  activemq-data:
