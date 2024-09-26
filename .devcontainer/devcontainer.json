@@ -1,9 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node-mongo
 {
-	"name": "Pull Dev",
+	"name": "Pull Development Environment",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
+	"service": "dev",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
 	// Configure tool-specific properties.
@@ -13,6 +13,7 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"github.copilot",
+				"denoland.vscode-deno",
 				"mongodb.mongodb-vscode"
 			]
 		}
