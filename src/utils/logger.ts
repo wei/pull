@@ -34,10 +34,12 @@ export const createLogger = (
   return log;
 };
 
-export default createLogger({
+export const logger = createLogger({
   name: appConfig.name,
   logFormat: appConfig.logFormat,
   logLevel: appConfig.logLevel,
   logLevelInString: appConfig.logLevelInString,
   logMessageKey: appConfig.logMessageKey,
 });
+
+export default logger;

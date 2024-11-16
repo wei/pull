@@ -6,7 +6,7 @@ import {
 } from "@/src/utils/schema.ts";
 import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 import { appConfig } from "@/src/configs/app-config.ts";
-import { createLogger } from "@/src/utils/logger.ts";
+import { logger as pullLogger } from "@/src/utils/logger.ts";
 import { getPRBody, getPRTitle, timeout } from "@/src/utils/helpers.ts";
 
 interface PullOptions {
@@ -18,68 +18,62 @@ interface PullOptions {
 type PullRequestData =
   RestEndpointMethodTypes["pulls"]["create"]["response"]["data"];
 
-type ExtendedPullConfig = PullConfig & {
-  owner: string;
-  repo: string;
-  repoFullName: string;
-};
-
 export class Pull {
   private github: ProbotOctokit;
+  private owner: string;
+  private repo: string;
+  private fullName: string;
   private logger: Logger;
-  private config: ExtendedPullConfig;
+  private config: PullConfig;
 
   constructor(
     github: ProbotOctokit,
-    { owner, repo, logger = createLogger({ name: appConfig.name }) }:
-      PullOptions,
+    { owner, repo, logger = pullLogger }: PullOptions,
     config: PullConfig,
   ) {
     this.github = github;
-    this.logger = logger;
+    this.owner = owner;
+    this.repo = repo;
+    this.fullName = `${owner}/${repo}`;
+    this.logger = logger.child({
+      owner,
+      repo,
+      full_name: this.fullName,
+    });
 
     const result = pullConfigSchema.safeParse(config);
     if (!result.success) {
       throw new Error("Invalid config");
     }
 
-    this.config = {
-      ...result.data,
-      owner,
-      repo,
-      repoFullName: `${owner}/${repo}`,
-    };
-
-    // Handle deprecated config
-    // this.config.rules = this.config.rules.map((r) => {
-    //   if (r.mergeMethod === "none" && "autoMerge" in r) {
-    //     r.mergeMethod = ("autoMergeHardReset" in r) ? "hardreset" : "merge";
-    //   }
-    //   return r;
-    // });
+    this.config = result.data;
   }
 
   async routineCheck(): Promise<void> {
-    this.logger.info(`[${this.config.repoFullName}] Routine Check`);
+    this.logger.info(
+      { config: this.config },
+      `Routine Check - ${this.config.rules.length} rules`,
+    );
 
     for (const rule of this.config.rules) {
+      this.logger.debug({ rule }, `Routine Check for rule`);
       const { base, upstream, assignees, reviewers } = rule;
       const normalizedBase = base.toLowerCase();
       const normalizedUpstream = upstream.toLowerCase().replace(
-        `${this.config.owner.toLowerCase()}:`,
+        `${this.owner.toLowerCase()}:`,
         "",
       );
 
       if (normalizedBase === normalizedUpstream) {
         this.logger.debug(
-          `[${this.config.repoFullName}] ${base} is same as ${upstream}`,
+          `${base} is same as ${upstream}`,
         );
         continue;
       }
 
       if (!(await this.hasDiff(base, upstream))) {
         this.logger.debug(
-          `[${this.config.repoFullName}] ${base} is in sync with ${upstream}`,
+          `${base} is in sync with ${upstream}`,
         );
         continue;
       }
@@ -87,12 +81,12 @@ export class Pull {
       const openPR = await this.getOpenPR(base, upstream);
       if (openPR) {
         this.logger.debug(
-          `[${this.config.repoFullName}] Found a PR from ${upstream} to ${base}`,
+          `Found a PR from ${upstream} to ${base}`,
         );
         await this.checkAutoMerge(openPR);
       } else {
         this.logger.info(
-          `[${this.config.repoFullName}] Creating PR from ${upstream} to ${base}`,
+          `Creating PR from ${upstream} to ${base}`,
         );
         const newPR = await this.createPR(base, upstream, assignees, reviewers);
         await this.checkAutoMerge(newPR);
@@ -108,7 +102,7 @@ export class Pull {
 
     const prNumber = incomingPR.number;
     this.logger.debug(
-      `[${this.config.repoFullName}]#${prNumber} Checking auto merged pull request`,
+      `#${prNumber} Checking auto merged pull request`,
     );
 
     const rule: PullRule | undefined = this.config.rules.find((r) =>
@@ -119,7 +113,7 @@ export class Pull {
 
     if (!rule) {
       this.logger.debug(
-        `[${this.config.repoFullName}]#${prNumber} No rule found`,
+        `#${prNumber} No rule found`,
       );
       return false;
     }
@@ -132,13 +126,13 @@ export class Pull {
     if (
       rule.mergeMethod !== "none" &&
       incomingPR.state === "open" &&
-      incomingPR.user.login === "pull[bot]"
+      incomingPR.user.login === appConfig.botName
     ) {
       return await this.processMerge(prNumber, incomingPR, rule, config);
     }
 
     this.logger.debug(
-      `[${this.config.repoFullName}]#${prNumber} Skip processing`,
+      `#${prNumber} Skip processing`,
     );
     return false;
   }
@@ -148,13 +142,13 @@ export class Pull {
     rule?: PullRule,
   ): Promise<void> {
     this.logger.debug(
-      `[${this.config.repoFullName}]#${prNumber} mergeable:false`,
+      `#${prNumber} mergeable:false`,
     );
 
     try {
       await this.github.issues.getLabel({
-        owner: this.config.owner,
-        repo: this.config.repo,
+        owner: this.owner,
+        repo: this.repo,
         name: this.config.conflictLabel,
       });
     } catch {
@@ -166,11 +160,11 @@ export class Pull {
     }
 
     await this.github.issues.update({
-      owner: this.config.owner,
-      repo: this.config.repo,
+      owner: this.owner,
+      repo: this.repo,
       issue_number: prNumber,
       labels: [this.config.label, this.config.conflictLabel],
-      body: getPRBody(this.config.repoFullName, prNumber),
+      body: getPRBody(this.fullName, prNumber),
     });
 
     if (rule?.conflictReviewers?.length) {
@@ -196,23 +190,23 @@ export class Pull {
     if (rule.mergeMethod === "hardreset") {
       try {
         this.logger.debug(
-          `[${this.config.repoFullName}]#${prNumber} Performing hard reset`,
+          `#${prNumber} Performing hard reset`,
         );
         await this.hardResetCommit(incomingPR.base.ref, incomingPR.head.sha);
         this.logger.info(
-          `[${this.config.repoFullName}]#${prNumber} Hard reset successful`,
+          `#${prNumber} Hard reset successful`,
         );
         return true;
-      } catch (e) {
-        this.logger.info(
-          { e },
-          `[${this.config.repoFullName}]#${prNumber} Hard reset failed`,
+      } catch (err) {
+        this.logger.error(
+          { err },
+          `#${prNumber} Hard reset failed`,
         );
         return false;
       }
     } else if (rule.mergeMethod === "none") {
-      this.logger.info(
-        `[${this.config.repoFullName}]#${prNumber} Merge method is none, skip merging`,
+      this.logger.debug(
+        `#${prNumber} Merge method is none, skip merging`,
       );
       return true;
     } else {
@@ -222,7 +216,7 @@ export class Pull {
       }
       await this.mergePR(prNumber, mergeMethod);
       this.logger.info(
-        `[${this.config.repoFullName}]#${prNumber} Auto merged pull request using ${mergeMethod}`,
+        `#${prNumber} Auto merged pull request using ${mergeMethod}`,
       );
       return true;
     }
@@ -250,10 +244,11 @@ export class Pull {
   private async hasDiff(base: string, upstream: string): Promise<boolean> {
     try {
       const comparison = await this.github.repos.compareCommits({
-        owner: this.config.owner,
-        repo: this.config.repo,
-        head: encodeURIComponent(upstream),
-        base: encodeURIComponent(base),
+        owner: this.owner,
+        repo: this.repo,
+        head: upstream,
+        base,
+        per_page: 1,
       });
       return comparison.data.total_commits > 0;
     } catch (e) {
@@ -262,24 +257,22 @@ export class Pull {
           return true;
         } else if (e.message.match(/not found/i)) {
           this.logger.debug(
-            `[${this.config.repoFullName}] ${this.config.owner}:${base}...${upstream} Not found`,
+            `${this.owner}:${base}...${upstream} Not found`,
           );
           return false;
         } else if (e.message.match(/no common ancestor/i)) {
           this.logger.debug(
-            `[${this.config.repoFullName}] ${this.config.owner}:${base}...${upstream} No common ancestor`,
+            `${this.owner}:${base}...${upstream} No common ancestor`,
           );
           return false;
         }
       }
-      this.logger.warn(
+      this.logger.error(
         {
           err: e,
-          owner: this.config.owner,
-          repo: this.config.repo,
           head: upstream,
         },
-        `[${this.config.repoFullName}] Unable to fetch diff`,
+        `Unable to fetch diff`,
       );
       return false;
     }
@@ -287,9 +280,9 @@ export class Pull {
 
   private async getOpenPR(base: string, head: string) {
     const res = await this.github.issues.listForRepo({
-      owner: this.config.owner,
-      repo: this.config.repo,
-      creator: "pull[bot]",
+      owner: this.owner,
+      repo: this.repo,
+      creator: appConfig.botName,
       per_page: 100,
     });
 
@@ -297,17 +290,17 @@ export class Pull {
 
     for (const issue of res.data) {
       const pr = await this.github.pulls.get({
-        owner: this.config.owner,
-        repo: this.config.repo,
+        owner: this.owner,
+        repo: this.repo,
         pull_number: issue.number,
       });
 
       if (
-        pr.data.user.login === "pull[bot]" &&
-        pr.data.base.label.replace(`${this.config.owner}:`, "") ===
-          base.replace(`${this.config.owner}:`, "") &&
-        pr.data.head.label.replace(`${this.config.owner}:`, "") ===
-          head.replace(`${this.config.owner}:`, "")
+        pr.data.user.login === appConfig.botName &&
+        pr.data.base.label.replace(`${this.owner}:`, "") ===
+          base.replace(`${this.owner}:`, "") &&
+        pr.data.head.label.replace(`${this.owner}:`, "") ===
+          head.replace(`${this.owner}:`, "")
       ) {
         return pr.data;
       }
@@ -323,45 +316,45 @@ export class Pull {
   ) {
     try {
       const createdPR = await this.github.pulls.create({
-        owner: this.config.owner,
-        repo: this.config.repo,
+        owner: this.owner,
+        repo: this.repo,
         head: upstream,
         base,
         maintainer_can_modify: false,
         title: getPRTitle(base, upstream),
-        body: getPRBody(this.config.repoFullName),
+        body: getPRBody(this.fullName),
       });
 
       const prNumber = createdPR.data.number;
       this.logger.debug(
-        `[${this.config.repoFullName}]#${prNumber} Created pull request`,
+        `#${prNumber} Created pull request`,
       );
 
       await this.github.issues.update({
-        owner: this.config.owner,
-        repo: this.config.repo,
+        owner: this.owner,
+        repo: this.repo,
         issue_number: prNumber,
         assignees,
         labels: [this.config.label],
-        body: getPRBody(this.config.repoFullName, prNumber),
+        body: getPRBody(this.fullName, prNumber),
       });
 
       await this.addReviewers(prNumber, reviewers);
       this.logger.debug(
-        `[${this.config.repoFullName}]#${prNumber} Updated pull request`,
+        `#${prNumber} Updated pull request`,
       );
 
       const pr = await this.github.pulls.get({
-        owner: this.config.owner,
-        repo: this.config.repo,
+        owner: this.owner,
+        repo: this.repo,
         pull_number: prNumber,
       });
 
       return pr.data;
-    } catch (e) {
-      this.logger.info(
-        e,
-        `[${this.config.repoFullName}] Create PR from ${upstream} failed`,
+    } catch (err) {
+      this.logger.error(
+        { err },
+        `Create PR from ${upstream} failed`,
       );
       return null;
     }
@@ -376,13 +369,13 @@ export class Pull {
 
     while (attempts++ < maxRetries) {
       const pr = await this.github.pulls.get({
-        owner: this.config.owner,
-        repo: this.config.repo,
+        owner: this.owner,
+        repo: this.repo,
         pull_number: prNumber,
       });
 
       this.logger.debug(
-        `[${this.config.repoFullName}]#${prNumber} Mergeability is ${pr.data.mergeable_state}`,
+        `#${prNumber} Mergeability is ${pr.data.mergeable_state}`,
       );
 
       if (
@@ -412,8 +405,8 @@ export class Pull {
       .map((r) => r.split("/")[1]);
 
     await this.github.pulls.requestReviewers({
-      owner: this.config.owner,
-      repo: this.config.repo,
+      owner: this.owner,
+      repo: this.repo,
       pull_number: prNumber,
       team_reviewers: teamReviewers,
       reviewers,
@@ -428,8 +421,8 @@ export class Pull {
     if (!label) return;
 
     await this.github.issues.createLabel({
-      owner: this.config.owner,
-      repo: this.config.repo,
+      owner: this.owner,
+      repo: this.repo,
       name: label,
       color,
       description,
@@ -443,8 +436,8 @@ export class Pull {
     if (!prNumber) return;
 
     await this.github.pulls.merge({
-      owner: this.config.owner,
-      repo: this.config.repo,
+      owner: this.owner,
+      repo: this.repo,
       pull_number: prNumber,
       merge_method: mergeMethod,
     });
@@ -457,8 +450,8 @@ export class Pull {
     if (!baseRef || !sha) return;
 
     await this.github.git.updateRef({
-      owner: this.config.owner,
-      repo: this.config.repo,
+      owner: this.owner,
+      repo: this.repo,
       ref: `heads/${baseRef}`,
       sha,
       force: true,
