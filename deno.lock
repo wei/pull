@@ -14,6 +14,7 @@
     "jsr:@wei/pluralize@^8.0.1": "8.0.2",
     "jsr:@wei/probot-scheduler@0.1.0-alpha.8": "0.1.0-alpha.8",
     "npm:@octokit/auth-app@^7.1.1": "7.1.3",
+    "npm:@octokit/plugin-rest-endpoint-methods@^13.2.6": "13.2.6_@octokit+core@6.1.2",
     "npm:@probot/pino@^2.5.0": "2.5.0",
     "npm:bullmq@^5.21.2": "5.26.2",
     "npm:express@^4.21.1": "4.21.1",
@@ -204,6 +205,9 @@
     "@octokit/auth-token@4.0.0": {
       "integrity": "sha512-tY/msAuJo6ARbK6SPIxZrPBms3xPbfwBrulZe0Wtr/DIY9lje2HeV1uoebShn6mx7SjCHif6EjMvoREj+gZ+SA=="
     },
+    "@octokit/auth-token@5.1.1": {
+      "integrity": "sha512-rh3G3wDO8J9wSjfI436JUKzHIxq8NaiL0tVeB2aXmG6p/9859aUOAjA9pmSPNGGZxfwmaJ9ozOJImuNVJdpvbA=="
+    },
     "@octokit/auth-unauthenticated@5.0.1": {
       "integrity": "sha512-oxeWzmBFxWd+XolxKTc4zr+h3mt+yofn4r7OfoIkR/Cj/o70eEGmPsFbueyJE2iBAGpjgTnEOKM3pnuEGVmiqg==",
       "dependencies": [
@@ -214,13 +218,25 @@
     "@octokit/core@5.2.0": {
       "integrity": "sha512-1LFfa/qnMQvEOAdzlQymH0ulepxbxnCYAKJZfMci/5XJyIHWgEYnDmgnKakbTh7CH2tFQ5O60oYDvns4i9RAIg==",
       "dependencies": [
-        "@octokit/auth-token",
-        "@octokit/graphql",
+        "@octokit/auth-token@4.0.0",
+        "@octokit/graphql@7.1.0",
         "@octokit/request@8.4.0",
         "@octokit/request-error@5.1.0",
         "@octokit/types@13.6.1",
-        "before-after-hook",
+        "before-after-hook@2.2.3",
         "universal-user-agent@6.0.1"
+      ]
+    },
+    "@octokit/core@6.1.2": {
+      "integrity": "sha512-hEb7Ma4cGJGEUNOAVmyfdB/3WirWMg5hDuNFVejGEDFqupeOysLc2sG6HJxY2etBp5YQu5Wtxwi020jS9xlUwg==",
+      "dependencies": [
+        "@octokit/auth-token@5.1.1",
+        "@octokit/graphql@8.1.1",
+        "@octokit/request@9.1.3",
+        "@octokit/request-error@6.1.5",
+        "@octokit/types@13.6.1",
+        "before-after-hook@3.0.2",
+        "universal-user-agent@7.0.2"
       ]
     },
     "@octokit/endpoint@10.1.1": {
@@ -243,6 +259,14 @@
         "@octokit/request@8.4.0",
         "@octokit/types@13.6.1",
         "universal-user-agent@6.0.1"
+      ]
+    },
+    "@octokit/graphql@8.1.1": {
+      "integrity": "sha512-ukiRmuHTi6ebQx/HFRCXKbDlOh/7xEV6QUXaE7MJEKGNAncGI/STSbOkl12qVXZrfZdpXctx5O9X1AIaebiDBg==",
+      "dependencies": [
+        "@octokit/request@9.1.3",
+        "@octokit/types@13.6.1",
+        "universal-user-agent@7.0.2"
       ]
     },
     "@octokit/oauth-authorization-url@6.0.2": {
@@ -286,21 +310,28 @@
     "@octokit/plugin-paginate-rest@9.2.1_@octokit+core@5.2.0": {
       "integrity": "sha512-wfGhE/TAkXZRLjksFXuDZdmGnJQHvtU/joFQdweXUgzo1XwvBCD4o4+75NtFfjfLK5IwLf9vHTfSiU3sLRYpRw==",
       "dependencies": [
-        "@octokit/core",
+        "@octokit/core@5.2.0",
         "@octokit/types@12.6.0"
       ]
     },
     "@octokit/plugin-rest-endpoint-methods@10.4.1_@octokit+core@5.2.0": {
       "integrity": "sha512-xV1b+ceKV9KytQe3zCVqjg+8GTGfDYwaT1ATU5isiUyVtlVAO3HNdzpS4sr4GBx4hxQ46s7ITtZrAsxG22+rVg==",
       "dependencies": [
-        "@octokit/core",
+        "@octokit/core@5.2.0",
         "@octokit/types@12.6.0"
+      ]
+    },
+    "@octokit/plugin-rest-endpoint-methods@13.2.6_@octokit+core@6.1.2": {
+      "integrity": "sha512-wMsdyHMjSfKjGINkdGKki06VEkgdEldIGstIEyGX0wbYHGByOwN/KiM+hAAlUwAtPkP3gvXtVQA9L3ITdV2tVw==",
+      "dependencies": [
+        "@octokit/core@6.1.2",
+        "@octokit/types@13.6.1"
       ]
     },
     "@octokit/plugin-retry@6.0.1_@octokit+core@5.2.0": {
       "integrity": "sha512-SKs+Tz9oj0g4p28qkZwl/topGcb0k0qPNX/i7vBKmDsjoeqnVfFUquqrE/O9oJY7+oLzdCtkiWSXLpLjvl6uog==",
       "dependencies": [
-        "@octokit/core",
+        "@octokit/core@5.2.0",
         "@octokit/request-error@5.1.0",
         "@octokit/types@12.6.0",
         "bottleneck"
@@ -309,7 +340,7 @@
     "@octokit/plugin-throttling@8.2.0_@octokit+core@5.2.0": {
       "integrity": "sha512-nOpWtLayKFpgqmgD0y3GqXafMFuKcA4tRPZIfu7BArd2lEZeb1988nhWhwx4aZWmjDmUfdgVf7W+Tt4AmvRmMQ==",
       "dependencies": [
-        "@octokit/core",
+        "@octokit/core@5.2.0",
         "@octokit/types@12.6.0",
         "bottleneck"
       ]
@@ -379,7 +410,7 @@
     "@probot/octokit-plugin-config@2.0.1_@octokit+core@5.2.0": {
       "integrity": "sha512-aWQYzPY2xiKscTVTKveghtbglqZ+W4eBLIdK1C/cNiFIofy3AxKogWgEZj29PjIe5ZRYx0sRHAPc/pkcXyOmTQ==",
       "dependencies": [
-        "@octokit/core",
+        "@octokit/core@5.2.0",
         "js-yaml"
       ]
     },
@@ -561,6 +592,9 @@
     },
     "before-after-hook@2.2.3": {
       "integrity": "sha512-NzUnlZexiaH/46WDhANlyR2bXRopNg4F/zuSA3OpZnllCUgRaOF2znDioDWrmbNVsuZk6l9pMquQB38cfBZwkQ=="
+    },
+    "before-after-hook@3.0.2": {
+      "integrity": "sha512-Nik3Sc0ncrMK4UUdXQmAnRtzmNQTAAXmXIopizwZ1W1t8QmfJj+zL4OA2I7XPTPW5z5TDqv4hRo/JzouDJnX3A=="
     },
     "body-parser@1.20.3": {
       "integrity": "sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==",
@@ -1131,9 +1165,9 @@
       "integrity": "sha512-HzOJ4EPC5OJN6oZEoKTMYtqUQ2ZSKHmDWbLHfFB7JYpho9Zb+aJmDfRShd5a/eGvmIzbZ0NRIWjmnvspDp8JAQ==",
       "dependencies": [
         "@octokit/auth-app@6.1.3",
-        "@octokit/auth-token",
+        "@octokit/auth-token@4.0.0",
         "@octokit/auth-unauthenticated",
-        "@octokit/core",
+        "@octokit/core@5.2.0",
         "@octokit/types@12.6.0"
       ]
     },
@@ -1247,10 +1281,10 @@
     "probot@13.4.0_@octokit+core@5.2.0_dotenv@16.4.5": {
       "integrity": "sha512-W+6KHMXVZtOo0bPw1RwyQS74AqExY87t675w42l/FZSZAu8gF7vAyFw7fIaBfwbHwdvzW0ysSg2xo391oy6PJw==",
       "dependencies": [
-        "@octokit/core",
+        "@octokit/core@5.2.0",
         "@octokit/plugin-enterprise-compatibility",
         "@octokit/plugin-paginate-rest",
-        "@octokit/plugin-rest-endpoint-methods",
+        "@octokit/plugin-rest-endpoint-methods@10.4.1_@octokit+core@5.2.0",
         "@octokit/plugin-retry",
         "@octokit/plugin-throttling",
         "@octokit/request@8.4.0",
@@ -1542,6 +1576,7 @@
       "jsr:@std/assert@1",
       "jsr:@std/http@1",
       "jsr:@wei/probot-scheduler@0.1.0-alpha.8",
+      "npm:@octokit/plugin-rest-endpoint-methods@^13.2.6",
       "npm:@probot/pino@^2.5.0",
       "npm:bullmq@^5.21.2",
       "npm:express@^4.21.1",

@@ -10,6 +10,7 @@
   },
   "imports": {
     "@/": "./",
+    "@octokit/plugin-rest-endpoint-methods": "npm:@octokit/plugin-rest-endpoint-methods@^13.2.6",
     "@probot/pino": "npm:@probot/pino@^2.5.0",
     "@std/assert": "jsr:@std/assert@1",
     "@std/http": "jsr:@std/http@1",
