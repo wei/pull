@@ -1,0 +1,43 @@
+{
+  "name": "[Pull App] Full Dev Environment (amd64)",
+  "dockerComposeFile": [
+    "../pull-base/docker-compose.yml",
+    "docker-compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.copilot",
+        "denoland.vscode-deno",
+        "mongodb.mongodb-vscode"
+      ]
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "installDirectlyFromGitHubRelease": true,
+      "version": "latest"
+    },
+    "ghcr.io/jckimble/devcontainer-features/ngrok:3": {
+      "version": "stable"
+    }
+  },
+
+  "forwardPorts": [
+    "app:3000",
+    "mongodb:27017",
+    "redis:6379",
+    "mongo-express:8081",
+    "redis-commander:8081",
+    "bullboard:8083"
+  ],
+
+  "postStartCommand": {
+    "git-config": "git config --global --add safe.directory /workspaces/${localWorkspaceFolderBasename}; git config --global core.autocrlf true; git config --global core.editor nano",
+    "deno-hooks": "deno task install-hooks"
+  }
+}

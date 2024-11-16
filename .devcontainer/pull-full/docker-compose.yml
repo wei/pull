@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:mongodb_password@mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+
+    # Add "forwardPorts": ["mongo-express:8081"] to **devcontainer.json** to forward Mongo-express locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    networks:
+      - devcontainer-network
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: redis
+
+    # Add "forwardPorts": ["redis-commander:8081"] to **devcontainer.json** to forward Redis-commander locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    networks:
+      - devcontainer-network
+
+  bullboard:
+    image: addono/bull-board:latest
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      PORT: 8083
+
+    # Add "forwardPorts": ["redis-commander:8081"] to **devcontainer.json** to forward Redis-commander locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    networks:
+      - devcontainer-network

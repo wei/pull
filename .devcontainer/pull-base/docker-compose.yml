@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    volumes:
+      - ../../..:/workspaces:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Create a network and connect the app container to it
+    networks:
+      - devcontainer-network
+
+  mongodb:
+    image: mongo:8
+    restart: unless-stopped
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongodb_password
+      # Connect using mongodb://root:mongodb_password@mongodb:27017/
+
+    # Add "forwardPorts": ["mongodb:27017"] to **devcontainer.json** to forward MongoDB locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    networks:
+      - devcontainer-network
+
+  redis:
+    image: redis:7.4
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+    # Add "forwardPorts": ["redis:6379"] to **devcontainer.json** to forward Redis locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    networks:
+      - devcontainer-network
+
+networks:
+  devcontainer-network:
+
+volumes:
+  mongodb-data:
+  redis-data:
