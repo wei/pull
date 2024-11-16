@@ -2,15 +2,18 @@ import express from "express";
 import { createNodeMiddleware, createProbot } from "probot";
 import { JobPriority } from "@wei/probot-scheduler";
 import createSchedulerApp from "@/src/app.ts";
-import { connectMongoDB, disconnectMongoDB } from "@/src/configs/database.ts";
 import { appConfig } from "@/src/configs/app-config.ts";
 import log from "@/src/utils/logger.ts";
+import { connectMongoDB, disconnectMongoDB } from "@/src/configs/database.ts";
 import { getRandomCronSchedule } from "@/src/utils/helpers.ts";
+import { getRedisClient } from "@/src/configs/redis.ts";
 
 const args = Deno.args;
 const skipFullSync = args.includes("--skip-full-sync");
 
 await connectMongoDB();
+
+const redisClient = getRedisClient();
 
 const probot = createProbot({
   overrides: {
@@ -20,6 +23,8 @@ const probot = createProbot({
 const schedulerApp = createSchedulerApp.bind(null, probot, {
   // Optional: Skip the initial full sync
   skipFullSync,
+
+  redisClient,
 
   // Define custom repository scheduling
   // deno-lint-ignore require-await
