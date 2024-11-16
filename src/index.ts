@@ -7,6 +7,7 @@ import log from "@/src/utils/logger.ts";
 import { connectMongoDB, disconnectMongoDB } from "@/src/configs/database.ts";
 import { getRandomCronSchedule } from "@/src/utils/helpers.ts";
 import { getRedisClient } from "@/src/configs/redis.ts";
+import createRouter from "@/src/router/index.ts";
 
 const args = Deno.args;
 const skipFullSync = args.includes("--skip-full-sync");
@@ -46,6 +47,7 @@ server.use(
     webhooksPath: "/",
   }),
 );
+server.use("/", createRouter(probot));
 
 server.listen(appConfig.port, () => {
   log.info(`[Express] Server is running on port ${appConfig.port}`);
