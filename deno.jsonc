@@ -1,6 +1,8 @@
 {
   "tasks": {
-    "dev": "deno serve --watch -R main.ts",
+    "dev": "deno run --env-file --allow-all src/index.ts",
+    "dev:skip-full-sync": "deno task dev --skip-full-sync",
+    "worker": "deno run --env-file --allow-all src/worker.ts",
     "hook": "deno run --allow-read --allow-run --allow-write https://deno.land/x/deno_hooks@0.1.1/mod.ts",
     "install-hooks": "deno task hook install",
     "test": "deno test --allow-net --allow-env --allow-read",
@@ -8,7 +10,15 @@
   },
   "imports": {
     "@/": "./",
+    "@probot/pino": "npm:@probot/pino@^2.5.0",
     "@std/assert": "jsr:@std/assert@1",
-    "@std/http": "jsr:@std/http@1"
+    "@std/http": "jsr:@std/http@1",
+    "@wei/probot-scheduler": "jsr:@wei/probot-scheduler@0.1.0-alpha.6",
+    "bullmq": "npm:bullmq@^5.21.2",
+    "express": "npm:express@^4.21.1",
+    "ioredis": "npm:ioredis@^5.4.1",
+    "mongoose": "npm:mongoose@^8.7.2",
+    "pino": "npm:pino@^9.5.0",
+    "probot": "npm:probot@^13.3.8"
   }
 }
