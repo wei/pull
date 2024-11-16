@@ -3,6 +3,8 @@
     "dev": "deno run --env-file --allow-all src/index.ts",
     "dev:skip-full-sync": "deno task dev --skip-full-sync",
     "worker": "deno run --env-file --allow-all src/worker.ts",
+    "full-sync": "deno run --env-file --allow-all scripts/full-sync.ts",
+    "manual-process": "deno run --env-file --allow-all scripts/manual-process.ts",
     "hook": "deno run --allow-read --allow-run --allow-write https://deno.land/x/deno_hooks@0.1.1/mod.ts",
     "install-hooks": "deno task hook install",
     "test": "deno test --allow-net --allow-env --allow-read",
