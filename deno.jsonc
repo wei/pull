@@ -19,6 +19,7 @@
     "ioredis": "npm:ioredis@^5.4.1",
     "mongoose": "npm:mongoose@^8.7.2",
     "pino": "npm:pino@^9.5.0",
-    "probot": "npm:probot@^13.3.8"
+    "probot": "npm:probot@^13.3.8",
+    "zod": "npm:zod@^3.23.8"
   }
 }

@@ -20,7 +20,8 @@
     "npm:ioredis@^5.4.1": "5.4.1",
     "npm:mongoose@^8.7.2": "8.8.1",
     "npm:pino@^9.5.0": "9.5.0",
-    "npm:probot@^13.3.8": "13.4.0_@octokit+core@5.2.0_dotenv@16.4.5"
+    "npm:probot@^13.3.8": "13.4.0_@octokit+core@5.2.0_dotenv@16.4.5",
+    "npm:zod@^3.23.8": "3.23.8"
   },
   "jsr": {
     "@std/assert@1.0.6": {
@@ -1531,6 +1532,9 @@
     },
     "wrappy@1.0.2": {
       "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="
+    },
+    "zod@3.23.8": {
+      "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g=="
     }
   },
   "workspace": {
@@ -1544,7 +1548,8 @@
       "npm:ioredis@^5.4.1",
       "npm:mongoose@^8.7.2",
       "npm:pino@^9.5.0",
-      "npm:probot@^13.3.8"
+      "npm:probot@^13.3.8",
+      "npm:zod@^3.23.8"
     ]
   }
 }
