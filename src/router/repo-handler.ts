@@ -2,12 +2,19 @@ import type { Request, Response } from "express";
 import type { Probot } from "probot";
 import { appConfig } from "@/src/configs/app-config.ts";
 import { getPullConfig } from "@/src/utils/get-pull-config.ts";
-import { JobPriority, RepositoryModel } from "@wei/probot-scheduler";
+import {
+  createSchedulerService,
+  JobPriority,
+  RepositoryModel,
+} from "@wei/probot-scheduler";
 
-function getRepoHandlers(app: Probot) {
+function getRepoHandlers(
+  app: Probot,
+  schedulerService: ReturnType<typeof createSchedulerService>,
+) {
   async function checkHandler(req: Request, res: Response) {
     const full_name = `${req.params.owner}/${req.params.repo}`;
-    app.log.info(`[${full_name}] Checking ${appConfig.configFilename}`);
+    app.log.info({ full_name }, `Checking ${appConfig.configFilename}`);
 
     try {
       // Get Octokit
@@ -57,8 +64,18 @@ function getRepoHandlers(app: Probot) {
     }
   }
 
+  async function processHandler(req: Request, res: Response) {
+    const full_name = `${req.params.owner}/${req.params.repo}`;
+    app.log.info({ full_name }, `Processing`);
+
+    await schedulerService.processRepository({ fullName: full_name }, true);
+
+    res.json({ status: "queued" });
+  }
+
   return {
     checkHandler,
+    processHandler,
   };
 }
 

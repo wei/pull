@@ -1,4 +1,4 @@
-import { createWorker } from "@wei/probot-scheduler";
+import { createSchedulerWorker } from "@wei/probot-scheduler";
 import { Redis } from "ioredis";
 import { appConfig } from "@/src/configs/app-config.ts";
 import RepoJobProcessor from "@/src/processor/index.ts";
@@ -7,7 +7,7 @@ const redisClient = new Redis(appConfig.redisConfig!, {
   maxRetriesPerRequest: null,
 });
 
-const worker = createWorker(
+const worker = createSchedulerWorker(
   RepoJobProcessor,
   {
     connection: redisClient,

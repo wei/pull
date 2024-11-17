@@ -1,10 +1,14 @@
 import type { Request, Response } from "express";
 import type { Probot } from "probot";
 import express from "express";
+import { createSchedulerService } from "@wei/probot-scheduler";
 import getStatsHandlers from "@/src/router/stats.ts";
 import getRepoHandlers from "@/src/router/repo-handler.ts";
 
-const createRouter = (app: Probot) => {
+const createRouter = (
+  app: Probot,
+  schedulerService: ReturnType<typeof createSchedulerService>,
+) => {
   const router = express.Router();
 
   router.get("/", (_req: Request, res: Response) => {
@@ -18,9 +22,12 @@ const createRouter = (app: Probot) => {
   const { probotStatsHandler } = getStatsHandlers(app);
   router.get("/probot/stats", probotStatsHandler);
 
-  const { checkHandler } = getRepoHandlers(app);
+  const { checkHandler, processHandler } = getRepoHandlers(
+    app,
+    schedulerService,
+  );
   router.get("/check/:owner/:repo", checkHandler);
-  // TODO Add process route
+  router.get("/process/:owner/:repo", processHandler);
 
   return router;
 };

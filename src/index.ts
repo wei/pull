@@ -1,6 +1,11 @@
 import express from "express";
 import { createNodeMiddleware, createProbot } from "probot";
-import { JobPriority } from "@wei/probot-scheduler";
+import {
+  createSchedulerService,
+  JobPriority,
+  RepositoryMetadataSchemaType,
+  RepositorySchemaType,
+} from "@wei/probot-scheduler";
 import createSchedulerApp from "@/src/app.ts";
 import { appConfig } from "@/src/configs/app-config.ts";
 import log from "@/src/utils/logger.ts";
@@ -21,6 +26,17 @@ const probot = createProbot({
     log,
   },
 });
+// deno-lint-ignore require-await
+async function getRepositorySchedule(
+  repository: RepositorySchemaType,
+  currentMetadata?: RepositoryMetadataSchemaType,
+) {
+  return {
+    repository_id: repository.id,
+    cron: currentMetadata?.cron ?? getRandomCronSchedule(),
+    job_priority: currentMetadata?.job_priority ?? JobPriority.Normal,
+  };
+}
 const schedulerApp = createSchedulerApp.bind(null, probot, {
   // Optional: Skip the initial full sync
   skipFullSync,
@@ -28,14 +44,11 @@ const schedulerApp = createSchedulerApp.bind(null, probot, {
   redisClient,
 
   // Define custom repository scheduling
-  // deno-lint-ignore require-await
-  getRepositorySchedule: async (repository, currentMetadata) => {
-    return {
-      repository_id: repository.id,
-      cron: currentMetadata?.cron ?? getRandomCronSchedule(),
-      job_priority: currentMetadata?.job_priority ?? JobPriority.Normal,
-    };
-  },
+  getRepositorySchedule,
+});
+const schedulerService = createSchedulerService(probot, {
+  redisClient,
+  getRepositorySchedule,
 });
 
 const server = express();
@@ -47,7 +60,7 @@ server.use(
     webhooksPath: "/",
   }),
 );
-server.use("/", createRouter(probot));
+server.use("/", createRouter(probot, schedulerService));
 
 server.listen(appConfig.port, () => {
   log.info(`[Express] Server is running on port ${appConfig.port}`);
