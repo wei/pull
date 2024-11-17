@@ -10,8 +10,8 @@
 > 🤖 a GitHub App built with [Probot][probot-url] that keeps your forks
 > up-to-date with upstream via automated pull requests.
 
-Trusted by [![Repository Count][pull-stats-badge]][pull-website] repositories,
-triggered [![Triggered #][pull-triggered-badge]][pull-triggered-url].
+Trusted by [![Repository Count][pull-stats-badge]][pull-website], triggered
+[![Triggered #][pull-triggered-badge]][pull-triggered-url].
 
 ## Features
 
@@ -136,6 +136,6 @@ Made with ❤️ by [@wei](https://github.com/wei)
 [pull-website]: https://wei.github.io/pull
 [pull-repo]: https://github.com/wei/pull
 [pull-sponsor]: https://prod.download/pull-readme-sponsor
-[pull-stats-badge]: https://badgen.net/https/raw.githack.com/pull-app/stats/master/badges/managing.plain.json?style=flat
-[pull-triggered-badge]: https://badgen.net/https/pull.git.ci/badge/triggered?style=flat&label=&cache=600
+[pull-stats-badge]: https://badgen.net/https/pull.git.ci/badge/managing?style=flat&label=&cache=300
+[pull-triggered-badge]: https://badgen.net/https/pull.git.ci/badge/triggered?style=flat&label=&cache=300
 [pull-triggered-url]: https://github.com/issues?q=author%3Aapp%2Fpull
