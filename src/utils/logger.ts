@@ -35,7 +35,7 @@ export const createLogger = (
 };
 
 export const logger = createLogger({
-  name: appConfig.name,
+  name: appConfig.appName,
   logFormat: appConfig.logFormat,
   logLevel: appConfig.logLevel,
   logLevelInString: appConfig.logLevelInString,

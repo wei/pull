@@ -1,22 +1,13 @@
 ARG DENO_VERSION=2.0.6
 FROM denoland/deno:alpine-${DENO_VERSION}
 
-LABEL \
-  org.opencontainers.image.title="pull" \
-  org.opencontainers.image.description="Keep your forks up-to-date via automated PRs" \
-  org.opencontainers.image.url="https://github.com/wei/pull" \
-  org.opencontainers.image.documentation="https://github.com/wei/pull#readme" \
-  org.opencontainers.image.source="https://github.com/wei/pull" \
-  org.opencontainers.image.licenses="MIT" \
-  org.opencontainers.image.authors="Wei He <docker@weispot.com>" \
-  maintainer="Wei He <docker@weispot.com>"
-
 ENV \
   ####################
   ###   Required   ###
   ####################
   APP_ID= \
   APP_NAME= \
+  APP_SLUG= \
   WEBHOOK_SECRET= \
   PRIVATE_KEY= \
   ####################
