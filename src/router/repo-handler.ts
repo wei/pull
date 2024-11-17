@@ -68,9 +68,19 @@ function getRepoHandlers(
     const full_name = `${req.params.owner}/${req.params.repo}`;
     app.log.info({ full_name }, `Processing`);
 
-    await schedulerService.processRepository({ fullName: full_name }, true);
+    try {
+      await schedulerService.processRepository({ fullName: full_name }, true);
 
-    res.json({ status: "queued" });
+      res.json({ status: "queued" });
+    } catch (error) {
+      app.log.error(error);
+      res.status(500).json({
+        status: "error",
+        message: error instanceof Error
+          ? error.message
+          : "Unknown error occurred",
+      });
+    }
   }
 
   return {

@@ -12,6 +12,10 @@ services:
     # volumes:
     #   - .:/app
     command: deno task dev
+    ## Skip full-sync on startup:
+    # command: deno task dev:skip-full-sync
+    ## Run full-sync manually:
+    # > docker exec -it <CONTAINER_NAME> deno task full-sync
 
   worker:
     build: .
@@ -25,6 +29,11 @@ services:
     # volumes:
     #   - .:/app
     command: deno task worker
+    deploy:
+      mode: replicated
+      replicas: 3
+    # If running without swarm mode, you can use the following command to scale the worker:
+    # > docker compose up -d --scale worker=3
 
   mongodb:
     image: mongo:8
@@ -44,6 +53,38 @@ services:
       - redis-data:/data
     # ports:
     #   - "6379:6379"
+
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - mongodb
+  #   environment:
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:mongodb_password@mongodb:27017/
+  #     ME_CONFIG_BASICAUTH: false
+  #   ports:
+  #     - "8081:8081"
+
+  # redis-commander:
+  #   image: rediscommander/redis-commander:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     REDIS_HOSTS: redis
+  #   depends_on:
+  #     - redis
+  #   ports:
+  #     - "8082:8081"
+
+  # bullboard:
+  #   image: addono/bull-board:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     REDIS_HOST: redis
+  #     PORT: 8083
+  #   depends_on:
+  #     - redis
+  #   ports:
+  #     - "8083:8083"
 
 volumes:
   mongodb-data:
