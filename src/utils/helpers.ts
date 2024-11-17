@@ -1,3 +1,5 @@
+import denoJson from "@/deno.json" with { type: "json" };
+
 export const getRandomCronSchedule = () => {
   // Every 8 hours at a random minute
   const randomMinute = Math.floor(Math.random() * 60);
@@ -13,8 +15,9 @@ export const timeout = (ms: number): Promise<void> =>
 export const getPRTitle = (ref: string, upstream: string): string =>
   `[pull] ${ref} from ${upstream}`;
 
-export const getPRBody = (repoPath: string, prNumber?: number): string =>
+export const getPRBody = (fullName: string, prNumber?: number): string =>
   (prNumber
-    ? `See [Commits](/${repoPath}/pull/${prNumber}/commits) and [Changes](/${repoPath}/pull/${prNumber}/files) for more details.\n\n-----\nCreated by [<img src="https://prod.download/pull-18h-svg" valign="bottom"/> **pull[bot]**](https://github.com/wei/pull)`
-    : 'See Commits and Changes for more details.\n\n-----\nCreated by [<img src="https://prod.download/pull-18h-svg" valign="bottom"/> **pull[bot]**](https://github.com/wei/pull)') +
+    ? `See [Commits](/${fullName}/pull/${prNumber}/commits) and [Changes](/${fullName}/pull/${prNumber}/files) for more details.`
+    : `See Commits and Changes for more details.`) +
+  `\n\n-----\nCreated by [<img src="https://prod.download/pull-18h-svg" valign="bottom"/> **pull[bot]** (v${denoJson.version})](https://github.com/wei/pull)` +
   "\n\n_Can you help keep this open source service alive? **[💖 Please sponsor : )](https://prod.download/pull-pr-sponsor)**_";
