@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import type { Probot } from "probot";
 import express from "express";
-import getProbotStats from "@/src/router/probot-stats.ts";
+import getStatsHandlers from "@/src/router/stats.ts";
 import getRepoHandlers from "@/src/router/repo-handler.ts";
 
 const createRouter = (app: Probot) => {
@@ -15,7 +15,8 @@ const createRouter = (app: Probot) => {
     res.json({ status: "pong" });
   });
 
-  router.get("/probot/stats", getProbotStats);
+  const { probotStatsHandler } = getStatsHandlers(app);
+  router.get("/probot/stats", probotStatsHandler);
 
   const { checkHandler } = getRepoHandlers(app);
   router.get("/check/:owner/:repo", checkHandler);
