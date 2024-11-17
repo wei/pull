@@ -1,0 +1,50 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
+    depends_on:
+      - mongodb
+      - redis
+    # volumes:
+    #   - .:/app
+    command: deno task dev
+
+  worker:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    depends_on:
+      - mongodb
+      - redis
+      - app
+    # volumes:
+    #   - .:/app
+    command: deno task worker
+
+  mongodb:
+    image: mongo:8
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongodb_password
+    volumes:
+      - mongodb-data:/data/db
+    # ports:
+    #   - "27017:27017"
+
+  redis:
+    image: redis:7.4
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    # ports:
+    #   - "6379:6379"
+
+volumes:
+  mongodb-data:
+  redis-data:
