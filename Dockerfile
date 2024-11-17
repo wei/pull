@@ -27,8 +27,9 @@ ENV \
 WORKDIR /app
 
 # Copy dependency files
-# COPY deno.jsonc .
-# COPY import_map.json* .
+COPY deno.jsonc .
+COPY deno.lock .
+RUN deno install
 
 # Copy source code
 COPY . .

@@ -78,6 +78,7 @@
         "npm:bullmq",
         "npm:ioredis",
         "npm:mongoose",
+        "npm:pino",
         "npm:probot"
       ]
     }
