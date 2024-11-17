@@ -7,6 +7,10 @@ import getRepoHandlers from "@/src/router/repo-handler.ts";
 const createRouter = (app: Probot) => {
   const router = express.Router();
 
+  router.get("/", (_req: Request, res: Response) => {
+    res.redirect("https://wei.github.io/pull");
+  });
+
   router.get("/ping", (_req: Request, res: Response) => {
     res.json({ status: "pong" });
   });
