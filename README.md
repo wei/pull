@@ -4,14 +4,41 @@
   </a>
 </p>
 
-[![Probot][probot-badge]][probot-url] ![TypeScript][typescript-badge]
-![Deno][deno-badge] [![License: MIT][license-badge]][license-url]
+<p align="center">
+ <a href="https://probot.github.io">
+   <img alt="Probot Featured" src="https://badgen.net/badge/Probot/Featured/red?icon=dependabot&cache=86400" />
+ </a>
+ <a href="https://deno.com">
+    <img alt="Deno 2.0" src="https://img.shields.io/badge/Deno%202.0-000000?logo=Deno&logoColor=ffffff" />
+ </a>
+ <a href="https://www.typescriptlang.org">
+    <img alt="TypeScript" src="https://badgen.net/badge/_/TypeScript/blue?&label=&icon=typescript&cache=86400" />
+ </a>
+ <a href="https://github.com/wei/pull">
+   <img alt="Version" src="https://badgen.net/https/pull.git.ci/badges/version?label=Version&color=orange&cache=300" />
+ </a>
+ <a href="https://github.com/wei/pull">
+   <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?label=Stars&icon=github&color=pink&cache=600" />
+ </a>
+ <a href="https://wei.mit-license.org">
+   <img alt="License" src="https://badgen.net/badge/License/MIT/grey?cache=86400" />
+ </a>
+</p>
 
-> 🤖 a GitHub App built with [Probot][probot-url] that keeps your forks
-> up-to-date with upstream via automated pull requests.
+> 🤖 a GitHub App that keeps your forks up-to-date with upstream via automated
+> pull requests.
 
-Trusted by [![Repository Count][pull-stats-badge]][pull-website], triggered
-[![Triggered #][pull-triggered-badge]][pull-triggered-url].
+<p>
+ <a href="https://github.com/apps/pull">
+   <img alt="Installations" src="https://badgen.net/https/pull.git.ci/badges/installations?labelColor=yellow&cache=600" />
+ </a>
+ <a href="https://github.com/apps/pull">
+   <img alt="Repositories" src="https://badgen.net/https/pull.git.ci/badges/repos?labelColor=orange&cache=600" />
+ </a>
+ <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
+   <img alt="Triggered #" src="https://badgen.net/https/pull.git.ci/badges/triggers?labelColor=pink&cache=600" />
+ </a>
+</p>
 
 ## Features
 
@@ -31,7 +58,7 @@ Trusted by [![Repository Count][pull-stats-badge]][pull-website], triggered
 ### Prerequisites
 
 - Upstream must be in the same fork network.
-- :warning: _Make a backup if you've made changes._
+- ⚠️ _Make a backup if you've made changes._
 
 ## Getting Started
 
@@ -126,16 +153,9 @@ _Can you help keep this open source service alive?
 
 Made with ❤️ by [@wei](https://github.com/wei)
 
-[probot-badge]: https://badgen.net/badge/built%20with/probot/orange?icon=dependabot&cache=86400
 [probot-url]: https://probot.github.io/
-[typescript-badge]: https://img.shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square
-[deno-badge]: https://img.shields.io/badge/Deno-000000?logo=Deno&logoColor=FFF&style=flat-square
-[license-badge]: https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square
 [license-url]: https://wei.mit-license.org
 [pull-app]: https://github.com/apps/pull
 [pull-website]: https://wei.github.io/pull
 [pull-repo]: https://github.com/wei/pull
 [pull-sponsor]: https://prod.download/pull-readme-sponsor
-[pull-stats-badge]: https://badgen.net/https/pull.git.ci/badge/managing?style=flat&label=&cache=300
-[pull-triggered-badge]: https://badgen.net/https/pull.git.ci/badge/triggered?style=flat&label=&cache=300
-[pull-triggered-url]: https://github.com/issues?q=author%3Aapp%2Fpull
