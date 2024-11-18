@@ -15,7 +15,7 @@ services:
     ## Skip full-sync on startup:
     # command: deno task dev:skip-full-sync
     ## Run full-sync manually:
-    # > docker exec -it <CONTAINER_NAME> deno task full-sync
+    # > docker exec -it pull-app-1 deno task full-sync
 
   worker:
     build: .

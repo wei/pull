@@ -1,18 +1,13 @@
 import express from "express";
 import { createNodeMiddleware, createProbot } from "probot";
-import {
-  createSchedulerService,
-  JobPriority,
-  RepositoryMetadataSchemaType,
-  RepositorySchemaType,
-} from "@wei/probot-scheduler";
+import { createSchedulerService } from "@wei/probot-scheduler";
 import createSchedulerApp from "@/src/app.ts";
 import { appConfig } from "@/src/configs/app-config.ts";
 import log from "@/src/utils/logger.ts";
 import { connectMongoDB, disconnectMongoDB } from "@/src/configs/database.ts";
-import { getRandomCronSchedule } from "@/src/utils/helpers.ts";
 import { getRedisClient } from "@/src/configs/redis.ts";
 import createRouter from "@/src/router/index.ts";
+import { getRepositorySchedule } from "@/src/utils/get-repository-schedule.ts";
 
 const args = Deno.args;
 const skipFullSync = args.includes("--skip-full-sync");
@@ -26,17 +21,6 @@ const probot = createProbot({
     log,
   },
 });
-// deno-lint-ignore require-await
-async function getRepositorySchedule(
-  repository: RepositorySchemaType,
-  currentMetadata?: RepositoryMetadataSchemaType,
-) {
-  return {
-    repository_id: repository.id,
-    cron: currentMetadata?.cron ?? getRandomCronSchedule(),
-    job_priority: currentMetadata?.job_priority ?? JobPriority.Normal,
-  };
-}
 const schedulerApp = createSchedulerApp.bind(null, probot, {
   // Optional: Skip the initial full sync
   skipFullSync,
