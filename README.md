@@ -1,44 +1,23 @@
-<p align="center">
-  <a href="https://github.com/apps/pull">
-    <img alt="Pull App" src="https://prod.download/pull-social-svg" />
-  </a>
-</p>
+<!-- deno-fmt-ignore-start -->
 
-<p align="center">
- <a href="https://probot.github.io">
-   <img alt="Probot Featured" src="https://badgen.net/badge/Probot/Featured/red?icon=dependabot&cache=86400" />
- </a>
- <a href="https://deno.com">
-    <img alt="Deno 2.0" src="https://img.shields.io/badge/Deno%202.0-000000?logo=Deno&logoColor=ffffff" />
- </a>
- <a href="https://www.typescriptlang.org">
-    <img alt="TypeScript" src="https://badgen.net/badge/_/TypeScript/blue?&label=&icon=typescript&cache=86400" />
- </a>
- <a href="https://github.com/wei/pull">
-   <img alt="Version" src="https://badgen.net/https/pull.git.ci/badges/version?label=Version&color=orange&cache=300" />
- </a>
- <a href="https://github.com/wei/pull">
-   <img alt="GitHub Stars" src="https://badgen.net/github/stars/wei/pull?label=Stars&icon=github&color=pink&cache=600" />
- </a>
- <a href="https://wei.mit-license.org">
-   <img alt="License" src="https://badgen.net/badge/License/MIT/grey?cache=86400" />
- </a>
-</p>
+<div align="center">
+
+[![Pull App][pull-social]][pull-website]
+
+[![Probot Featured][probot-badge]][probot-url] [![Deno 2.0][deno-badge]][deno-url] [![TypeScript][ts-badge]][ts-url] [![Version][version-badge]][version-url] [![GitHub Stars][stars-badge]][pull-repo] [![License][license-badge]][license-url]
+
+</div>
 
 > 🤖 a GitHub App that keeps your forks up-to-date with upstream via automated
 > pull requests.
 
-<p>
- <a href="https://github.com/apps/pull">
-   <img alt="Installations" src="https://badgen.net/https/pull.git.ci/badges/installations?labelColor=yellow&cache=600" />
- </a>
- <a href="https://github.com/apps/pull">
-   <img alt="Repositories" src="https://badgen.net/https/pull.git.ci/badges/repos?labelColor=orange&cache=600" />
- </a>
- <a href="https://github.com/issues?q=author%3Aapp%2Fpull">
-   <img alt="Triggered #" src="https://badgen.net/https/pull.git.ci/badges/triggers?labelColor=pink&cache=600" />
- </a>
-</p>
+<div align="center">
+
+[![Installations][installations-badge]][pull-app] [![Repositories][repos-badge]][pull-app] [![Triggered #][triggers-badge]][pull-app]
+
+</div>
+
+<!-- deno-fmt-ignore-end -->
 
 ## Features
 
@@ -153,9 +132,22 @@ _Can you help keep this open source service alive?
 
 Made with ❤️ by [@wei](https://github.com/wei)
 
-[probot-url]: https://probot.github.io/
+[probot-url]: https://probot.github.io
 [license-url]: https://wei.mit-license.org
 [pull-app]: https://github.com/apps/pull
 [pull-website]: https://wei.github.io/pull
 [pull-repo]: https://github.com/wei/pull
 [pull-sponsor]: https://prod.download/pull-readme-sponsor
+[pull-social]: https://prod.download/pull-social-svg
+[probot-badge]: https://badgen.net/badge/Probot/Featured/red?icon=dependabot&cache=86400
+[deno-badge]: https://img.shields.io/badge/Deno%202.0-000000?logo=Deno&logoColor=ffffff
+[ts-badge]: https://badgen.net/badge/_/TypeScript/blue?&label=&icon=typescript&cache=86400
+[version-badge]: https://badgen.net/https/pull.git.ci/badges/version?label=Version&color=orange&cache=300
+[stars-badge]: https://badgen.net/github/stars/wei/pull?label=Stars&icon=github&color=pink&cache=600
+[license-badge]: https://badgen.net/badge/License/MIT/grey?cache=86400
+[installations-badge]: https://badgen.net/https/pull.git.ci/badges/installations?labelColor=yellow&cache=600
+[repos-badge]: https://badgen.net/https/pull.git.ci/badges/repos?labelColor=orange&cache=600
+[triggers-badge]: https://badgen.net/https/pull.git.ci/badges/triggers?labelColor=pink&cache=600
+[deno-url]: https://deno.com
+[ts-url]: https://www.typescriptlang.org
+[version-url]: https://pull.git.ci/version
