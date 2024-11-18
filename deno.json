@@ -17,7 +17,7 @@
     "@probot/pino": "npm:@probot/pino@^2.5.0",
     "@std/assert": "jsr:@std/assert@1",
     "@std/http": "jsr:@std/http@1",
-    "@wei/probot-scheduler": "jsr:@wei/probot-scheduler@0.1.0-alpha.12",
+    "@wei/probot-scheduler": "jsr:@wei/probot-scheduler@0.1.0-alpha.13",
     "bullmq": "npm:bullmq@^5.26.2",
     "express": "npm:express@^4.21.1",
     "ioredis": "npm:ioredis@^5.4.1",

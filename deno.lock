@@ -12,7 +12,7 @@
     "jsr:@std/path@^1.0.6": "1.0.6",
     "jsr:@std/streams@^1.0.6": "1.0.6",
     "jsr:@wei/pluralize@^8.0.1": "8.0.2",
-    "jsr:@wei/probot-scheduler@0.1.0-alpha.12": "0.1.0-alpha.12",
+    "jsr:@wei/probot-scheduler@0.1.0-alpha.13": "0.1.0-alpha.13",
     "npm:@octokit/auth-app@^7.1.3": "7.1.3",
     "npm:@octokit/plugin-rest-endpoint-methods@^13.2.6": "13.2.6_@octokit+core@6.1.2",
     "npm:@probot/pino@^2.5.0": "2.5.0",
@@ -20,6 +20,7 @@
     "npm:express@^4.21.1": "4.21.1",
     "npm:ioredis@^5.4.1": "5.4.1",
     "npm:mongoose@^8.8.1": "8.8.1",
+    "npm:p-limit@^6.1.0": "6.1.0",
     "npm:pino@^9.5.0": "9.5.0",
     "npm:probot@^13.4.0": "13.4.0_@octokit+core@5.2.0_dotenv@16.4.5",
     "npm:zod@^3.23.8": "3.23.8"
@@ -70,14 +71,15 @@
     "@wei/pluralize@8.0.2": {
       "integrity": "098d520ff80f35013aeb1f71964856c5d60eb9cacab1add21a981c32ace72bae"
     },
-    "@wei/probot-scheduler@0.1.0-alpha.12": {
-      "integrity": "1973223108ab086d99d0204689dc1df99ffbb3e14e03d8de03062e1770c0b6a0",
+    "@wei/probot-scheduler@0.1.0-alpha.13": {
+      "integrity": "41c2a4ef0a5b286bfd99a5ea672076b7f34f1d551fbf86081e20d41d3cda842b",
       "dependencies": [
         "jsr:@wei/pluralize",
         "npm:@octokit/auth-app",
         "npm:bullmq",
         "npm:ioredis",
         "npm:mongoose",
+        "npm:p-limit",
         "npm:probot"
       ]
     }
@@ -1191,10 +1193,16 @@
         "p-try"
       ]
     },
+    "p-limit@6.1.0": {
+      "integrity": "sha512-H0jc0q1vOzlEk0TqAKXKZxdl7kX3OFUzCnNVUnq5Pc3DGo0kpeaMuPqxQn235HibwBEb0/pm9dgKTjXy66fBkg==",
+      "dependencies": [
+        "yocto-queue"
+      ]
+    },
     "p-locate@3.0.0": {
       "integrity": "sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==",
       "dependencies": [
-        "p-limit"
+        "p-limit@2.3.0"
       ]
     },
     "p-try@2.2.0": {
@@ -1566,6 +1574,9 @@
     "wrappy@1.0.2": {
       "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="
     },
+    "yocto-queue@1.1.1": {
+      "integrity": "sha512-b4JR1PFR10y1mKjhHY9LaGo6tmrgjit7hxVIeAmyMw3jegXR4dhYqLaQF5zMXZxY7tLpMyJeLjr1C4rLmkVe8g=="
+    },
     "zod@3.23.8": {
       "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g=="
     }
@@ -1574,7 +1585,7 @@
     "dependencies": [
       "jsr:@std/assert@1",
       "jsr:@std/http@1",
-      "jsr:@wei/probot-scheduler@0.1.0-alpha.12",
+      "jsr:@wei/probot-scheduler@0.1.0-alpha.13",
       "npm:@octokit/plugin-rest-endpoint-methods@^13.2.6",
       "npm:@probot/pino@^2.5.0",
       "npm:bullmq@^5.26.2",
