@@ -17,13 +17,13 @@
     "@probot/pino": "npm:@probot/pino@^2.5.0",
     "@std/assert": "jsr:@std/assert@1",
     "@std/http": "jsr:@std/http@1",
-    "@wei/probot-scheduler": "jsr:@wei/probot-scheduler@0.1.0-alpha.10",
-    "bullmq": "npm:bullmq@^5.21.2",
+    "@wei/probot-scheduler": "jsr:@wei/probot-scheduler@0.1.0-alpha.11",
+    "bullmq": "npm:bullmq@^5.26.2",
     "express": "npm:express@^4.21.1",
     "ioredis": "npm:ioredis@^5.4.1",
-    "mongoose": "npm:mongoose@^8.7.2",
+    "mongoose": "npm:mongoose@^8.8.1",
     "pino": "npm:pino@^9.5.0",
-    "probot": "npm:probot@^13.3.8",
+    "probot": "npm:probot@^13.4.0",
     "zod": "npm:zod@^3.23.8"
   }
 }
