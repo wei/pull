@@ -12,7 +12,7 @@
     "jsr:@std/path@^1.0.6": "1.0.6",
     "jsr:@std/streams@^1.0.6": "1.0.6",
     "jsr:@wei/pluralize@^8.0.1": "8.0.2",
-    "jsr:@wei/probot-scheduler@0.1.0-alpha.11": "0.1.0-alpha.11",
+    "jsr:@wei/probot-scheduler@0.1.0-alpha.12": "0.1.0-alpha.12",
     "npm:@octokit/auth-app@^7.1.3": "7.1.3",
     "npm:@octokit/plugin-rest-endpoint-methods@^13.2.6": "13.2.6_@octokit+core@6.1.2",
     "npm:@probot/pino@^2.5.0": "2.5.0",
@@ -70,15 +70,14 @@
     "@wei/pluralize@8.0.2": {
       "integrity": "098d520ff80f35013aeb1f71964856c5d60eb9cacab1add21a981c32ace72bae"
     },
-    "@wei/probot-scheduler@0.1.0-alpha.11": {
-      "integrity": "d45b105c10b218ab70ba2331775ac09ca61839cc7e50ae7d8e5233e31f36273f",
+    "@wei/probot-scheduler@0.1.0-alpha.12": {
+      "integrity": "1973223108ab086d99d0204689dc1df99ffbb3e14e03d8de03062e1770c0b6a0",
       "dependencies": [
         "jsr:@wei/pluralize",
         "npm:@octokit/auth-app",
         "npm:bullmq",
         "npm:ioredis",
         "npm:mongoose",
-        "npm:pino",
         "npm:probot"
       ]
     }
@@ -1575,7 +1574,7 @@
     "dependencies": [
       "jsr:@std/assert@1",
       "jsr:@std/http@1",
-      "jsr:@wei/probot-scheduler@0.1.0-alpha.11",
+      "jsr:@wei/probot-scheduler@0.1.0-alpha.12",
       "npm:@octokit/plugin-rest-endpoint-methods@^13.2.6",
       "npm:@probot/pino@^2.5.0",
       "npm:bullmq@^5.26.2",
