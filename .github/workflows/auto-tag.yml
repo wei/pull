@@ -1,6 +1,7 @@
 name: Auto Tag Release on Version Change
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
