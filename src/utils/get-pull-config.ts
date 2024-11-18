@@ -2,6 +2,7 @@ import type { Logger, ProbotOctokit } from "probot";
 import { appConfig } from "@/src/configs/app-config.ts";
 import { SchedulerJobData } from "@wei/probot-scheduler";
 import { PullConfig, pullConfigSchema } from "@/src/utils/schema.ts";
+import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 
 async function getLivePullConfig(
   octokit: ProbotOctokit,
@@ -34,24 +35,16 @@ async function getLivePullConfig(
   return result.data;
 }
 
-async function getDefaultPullConfig(
-  octokit: ProbotOctokit,
+function getDefaultPullConfig(
+  repository: RestEndpointMethodTypes["repos"]["get"]["response"]["data"],
   log: Logger,
-  jobData: SchedulerJobData,
-): Promise<PullConfig | null> {
+): PullConfig | null {
   log.debug(`⚙️ Fetching default config`);
 
-  const { owner, repo } = jobData;
-
-  const repoInfo = await octokit.repos.get({
-    owner,
-    repo,
-  });
-
-  if (repoInfo.data && repoInfo.data.fork && repoInfo.data.parent) {
-    const upstreamOwner = repoInfo.data.parent.owner &&
-      repoInfo.data.parent.owner.login;
-    const defaultBranch = repoInfo.data.parent.default_branch;
+  if (repository.fork && repository.parent) {
+    const upstreamOwner = repository.parent.owner &&
+      repository.parent.owner.login;
+    const defaultBranch = repository.parent.default_branch;
 
     if (upstreamOwner && defaultBranch) {
       log.debug(
@@ -101,7 +94,7 @@ export async function getPullConfig(
   if (!config && !repository.fork) {
     return null; // TODO Cancel scheduled job
   } else if (!config) {
-    config = await getDefaultPullConfig(octokit, log, jobData);
+    config = getDefaultPullConfig(repository, log);
   }
 
   return config;

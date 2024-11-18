@@ -4,3 +4,8 @@ npm-debug.log
 *.pem
 .env
 .*
+docker-compose.yml
+Dockerfile
+*.md
+.gitignore
+.dockerignore
