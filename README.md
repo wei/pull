@@ -20,8 +20,8 @@ Trusted by [![Repository Count][pull-stats-badge]][pull-website], triggered
 - ⚙️ **Flexible Configuration**: Customize sync behavior through
   `.github/pull.yml` configuration to accommodate different merge strategies,
   including merge, squash, rebase, and hard reset
-- 🕒 **Scheduled Updates**: Regularly checks for upstream changes every few
-  hours to ensure forks are always up-to-date
+- 🕒 **Scheduled Updates**: Regularly checks for upstream changes periodically
+  to ensure forks are always up-to-date
 - 👥 **Team Integration**: Facilitates collaboration by automatically adding
   assignees and reviewers to pull requests, honoring branch protection rules and
   working seamlessly with pull request checks and reviews
@@ -44,7 +44,7 @@ receive priority over other users)
   **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app][pull-app]**.
 
 Pull app will automatically watch and pull in upstream's default (master) branch
-to yours using **hard reset** every few hours. You can also manually
+to yours using **hard reset** periodically. You can also manually
 [trigger](#trigger-manually) it anytime.
 
 ### Advanced Configuration (with config file)
