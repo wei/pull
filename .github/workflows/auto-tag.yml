@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CR_PAT }}
 
       - name: Get version from deno.json
         id: get_version
