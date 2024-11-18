@@ -1,0 +1,47 @@
+name: Auto Tag Release on Version Change
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "deno.json"
+
+jobs:
+  auto-tag:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version from deno.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version deno.json)
+          if ! git ls-remote --tags origin | grep -q "refs/tags/v${VERSION}"; then
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Version found: $VERSION"
+          else
+            echo "Version already exists: $VERSION"
+          fi
+
+      - name: Create Git Tag
+        if: steps.get_version.outputs.version != ''
+        run: |
+          git tag v${{ steps.get_version.outputs.version }}
+          git push origin v${{ steps.get_version.outputs.version }}
+
+      - name: Create GitHub Release
+        if: steps.get_version.outputs.version != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body: |
+            🤖 GitHub App: [Pull](https://github.com/apps/pull)
+          draft: false
+          prerelease: ${{ contains(steps.get_version.outputs.version, 'alpha') || contains(steps.get_version.outputs.version, 'beta') || contains(steps.get_version.outputs.version, 'rc') }}
