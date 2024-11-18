@@ -4,18 +4,20 @@
 
 [![Pull App][pull-social]][pull-website]
 
-[![Probot Featured][probot-badge]][probot-url] [![Deno 2.0][deno-badge]][deno-url] [![TypeScript][ts-badge]][ts-url] [![Version][version-badge]][version-url] [![GitHub Stars][stars-badge]][pull-repo] [![License][license-badge]][license-url]
+[![Probot Featured][probot-badge]][probot-url] [![GitHub Stars][stars-badge]][pull-repo]
+
+[![Repositories][repos-badge]][pull-app] [![Installations][installations-badge]][pull-app] [![Triggered #][triggers-badge]][triggers-url]
 
 </div>
+
+## Introduction
+
+[![Version][version-badge]][version-url] [![Deno 2.0][deno-badge]][deno-url] [![TypeScript][ts-badge]][ts-url] [![License][license-badge]][license-url]
 
 > 🤖 a GitHub App that keeps your forks up-to-date with upstream via automated
 > pull requests.
 
-<div align="center">
-
-[![Installations][installations-badge]][pull-app] [![Repositories][repos-badge]][pull-app] [![Triggered #][triggers-badge]][pull-app]
-
-</div>
+_Can you help keep this open source service alive? **[💖 Please sponsor : )][pull-sponsor]**_
 
 <!-- deno-fmt-ignore-end -->
 
@@ -142,12 +144,13 @@ Made with ❤️ by [@wei](https://github.com/wei)
 [probot-badge]: https://badgen.net/badge/Probot/Featured/red?icon=dependabot&cache=86400
 [deno-badge]: https://img.shields.io/badge/Deno%202.0-000000?logo=Deno&logoColor=ffffff
 [ts-badge]: https://badgen.net/badge/_/TypeScript/blue?&label=&icon=typescript&cache=86400
-[version-badge]: https://badgen.net/https/pull.git.ci/badges/version?label=Version&color=orange&cache=300
-[stars-badge]: https://badgen.net/github/stars/wei/pull?label=Stars&icon=github&color=pink&cache=600
-[license-badge]: https://badgen.net/badge/License/MIT/grey?cache=86400
-[installations-badge]: https://badgen.net/https/pull.git.ci/badges/installations?labelColor=yellow&cache=600
-[repos-badge]: https://badgen.net/https/pull.git.ci/badges/repos?labelColor=orange&cache=600
-[triggers-badge]: https://badgen.net/https/pull.git.ci/badges/triggers?labelColor=pink&cache=600
+[version-badge]: https://badgen.net/https/pull.git.ci/badges/version?label=Version&color=green&cache=300
+[stars-badge]: https://badgen.net/github/stars/wei/pull?label=Stars&icon=github&color=pink&cache=300
+[license-badge]: https://badgen.net/badge/License/MIT/black?cache=86400
+[repos-badge]: https://badgen.net/https/pull.git.ci/badges/repos?color=cyan&cache=600
+[installations-badge]: https://badgen.net/https/pull.git.ci/badges/installations?color=blue&cache=600
+[triggers-badge]: https://badgen.net/https/pull.git.ci/badges/triggers?color=purple&cache=600
+[triggers-url]: https://github.com/issues?q=author:app/pull
 [deno-url]: https://deno.com
 [ts-url]: https://www.typescriptlang.org
 [version-url]: https://pull.git.ci/version
