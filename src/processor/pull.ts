@@ -1,4 +1,5 @@
 import { type Logger, ProbotOctokit } from "probot";
+import pluralize from "@wei/pluralize";
 import {
   type PullConfig,
   pullConfigSchema,
@@ -52,7 +53,7 @@ export class Pull {
   async routineCheck(): Promise<void> {
     this.logger.info(
       { config: this.config },
-      `Routine Check - ${this.config.rules.length} rules`,
+      `Routine Check - ${pluralize("rule", this.config.rules.length, true)}`,
     );
 
     for (const rule of this.config.rules) {
