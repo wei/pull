@@ -14,7 +14,7 @@ const skipFullSync = args.includes("--skip-full-sync");
 
 await connectMongoDB();
 
-const redisClient = getRedisClient();
+const redisClient = getRedisClient(`${appConfig.appSlug}-app`);
 
 const probot = createProbot({
   overrides: {
