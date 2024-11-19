@@ -1,9 +1,12 @@
 import { appConfig } from "@/src/configs/app-config.ts";
 
 export const getRandomCronSchedule = () => {
+  // Every 8 hours at a random minute
   const randomMinute = Math.floor(Math.random() * 60);
-  const randomHour = Math.floor(Math.random() * 24);
-  return `${randomMinute} ${randomHour} * * *`;
+  const randomHour1 = Math.floor(Math.random() * 8);
+  const randomHour2 = randomHour1 + 8;
+  const randomHour3 = randomHour2 + 8;
+  return `${randomMinute} ${randomHour1},${randomHour2},${randomHour3} * * *`;
 };
 
 export const timeout = (ms: number): Promise<void> =>
