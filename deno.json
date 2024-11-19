@@ -18,7 +18,7 @@
     "@std/assert": "jsr:@std/assert@1",
     "@std/http": "jsr:@std/http@1",
     "@wei/pluralize": "jsr:@wei/pluralize@^8.0.2",
-    "@wei/probot-scheduler": "jsr:@wei/probot-scheduler@0.1.0-alpha.15",
+    "@wei/probot-scheduler": "jsr:@wei/probot-scheduler@0.1.0-alpha.16",
     "bullmq": "npm:bullmq@^5.26.2",
     "express": "npm:express@^4.21.1",
     "ioredis": "npm:ioredis@^5.4.1",

@@ -29,7 +29,7 @@ worker.on("failed", (job, err) => {
 });
 
 const gracefulShutdown = async (signal: string) => {
-  console.log(`Received ${signal}, closing server...`);
+  console.log(`Received ${signal}, closing worker...`);
   await worker.close();
   Deno.exit(0);
 };
