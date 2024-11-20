@@ -2,11 +2,34 @@
 
 <div align="center">
 
-[![Pull App][pull-social]][pull-website]
+<a href="https://wei.github.io/pull">
+  <img src="https://prod.download/pull-social-svg" alt="Pull App">
+</a>
 
-[![Probot Featured][probot-badge]][probot-url] [![GitHub Stars][stars-badge]][pull-repo]
+</div>
 
-[![Repositories][repos-badge]][pull-app] [![Installations][installations-badge]][pull-app] [![Triggered #][triggers-badge]][triggers-url]
+<div align="center">
+
+<a href="https://probot.github.io">
+  <img src="https://badgen.net/badge/Probot/Featured/orange?icon=dependabot&cache=86400" alt="Probot Featured">
+</a>
+<a href="https://github.com/wei/pull">
+  <img src="https://badgen.net/github/stars/wei/pull?label=Stars&icon=github&color=pink&cache=300" alt="GitHub Stars">
+</a>
+
+</div>
+
+<div align="center">
+
+<a href="https://github.com/apps/pull">
+  <img src="https://badgen.net/https/pull.git.ci/badges/repos?color=cyan&cache=600" alt="Repositories">
+</a>
+<a href="https://github.com/apps/pull">
+  <img src="https://badgen.net/https/pull.git.ci/badges/installations?color=blue&cache=600" alt="Installations">
+</a>
+<a href="https://github.com/issues?q=author:app/pull">
+  <img src="https://badgen.net/https/pull.git.ci/badges/triggers?color=purple&cache=600" alt="Triggered #">
+</a>
 
 </div>
 
@@ -94,7 +117,12 @@ to yours using **hard reset** periodically. You can also manually
 4. Go to `https://pull.git.ci/check/${owner}/${repo}` to validate your
    `.github/pull.yml`.
 5. Install
-   **[![<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull](https://prod.download/pull-18h-svg) Pull app][pull-app]**.
+   **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app][pull-app]**.
+
+### Trigger Manually
+
+You can manually trigger Pull by going to
+`https://pull.git.ci/process/${owner}/${repo}`.
 
 ### For Upstream Repository Owners
 
@@ -134,23 +162,14 @@ _Can you help keep this open source service alive?
 
 Made with ❤️ by [@wei](https://github.com/wei)
 
-[probot-url]: https://probot.github.io
+[version-badge]: https://badgen.net/https/pull.git.ci/badges/version?label=Version&color=green&cache=300
+[version-url]: https://pull.git.ci/version
+[deno-badge]: https://img.shields.io/badge/Deno%202.0-000000?logo=Deno&logoColor=ffffff
+[deno-url]: https://deno.com
+[ts-badge]: https://badgen.net/badge/_/TypeScript/blue?&label=&icon=typescript&cache=86400
+[ts-url]: https://www.typescriptlang.org
+[license-badge]: https://badgen.net/badge/License/MIT/black?cache=86400
 [license-url]: https://wei.mit-license.org
 [pull-app]: https://github.com/apps/pull
-[pull-website]: https://wei.github.io/pull
 [pull-repo]: https://github.com/wei/pull
 [pull-sponsor]: https://prod.download/pull-readme-sponsor
-[pull-social]: https://prod.download/pull-social-svg
-[probot-badge]: https://badgen.net/badge/Probot/Featured/red?icon=dependabot&cache=86400
-[deno-badge]: https://img.shields.io/badge/Deno%202.0-000000?logo=Deno&logoColor=ffffff
-[ts-badge]: https://badgen.net/badge/_/TypeScript/blue?&label=&icon=typescript&cache=86400
-[version-badge]: https://badgen.net/https/pull.git.ci/badges/version?label=Version&color=green&cache=300
-[stars-badge]: https://badgen.net/github/stars/wei/pull?label=Stars&icon=github&color=pink&cache=300
-[license-badge]: https://badgen.net/badge/License/MIT/black?cache=86400
-[repos-badge]: https://badgen.net/https/pull.git.ci/badges/repos?color=cyan&cache=600
-[installations-badge]: https://badgen.net/https/pull.git.ci/badges/installations?color=blue&cache=600
-[triggers-badge]: https://badgen.net/https/pull.git.ci/badges/triggers?color=purple&cache=600
-[triggers-url]: https://github.com/issues?q=author:app/pull
-[deno-url]: https://deno.com
-[ts-url]: https://www.typescriptlang.org
-[version-url]: https://pull.git.ci/version
