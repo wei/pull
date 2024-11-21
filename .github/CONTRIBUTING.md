@@ -11,7 +11,7 @@ project you agree to abide by its terms.
 
 ### Prerequisites
 
-- [Deno](https://deno.land/#installation) 2.0.6 or later
+- [Deno](https://deno.land/#installation) 2.1.1 or later
 - MongoDB 8.0
 - Redis 7.4
 
