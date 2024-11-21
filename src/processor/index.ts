@@ -52,8 +52,7 @@ export function getRepoProcessor(probot: Probot) {
 
       log.info(`✅ Repo job processed successfully`);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      log.error(error, `❌ Repo job failed: ${message}`);
+      log.error(error, "❌ Repo job failed");
     }
   };
 }
