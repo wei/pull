@@ -145,6 +145,18 @@ rules:
     mergeMethod: hardreset
 ```
 
+### Handling Upstream Branch Renaming
+
+If the upstream repository renames its default branch (e.g., from `master` to `main`), you need to manually update the configuration file to reflect the new branch name. Here is an example of how to update the `upstream` field in the configuration file:
+
+```yaml
+version: "1"
+rules:
+  - base: main
+    upstream: wei:main # change `wei` to the owner of upstream repo
+    mergeMethod: hardreset
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](./.github/CONTRIBUTING.md)

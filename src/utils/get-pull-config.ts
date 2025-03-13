@@ -97,5 +97,6 @@ export async function getPullConfig(
     config = getDefaultPullConfig(repository, log);
   }
 
+  // This function does not handle branch renaming.
   return config;
 }
