@@ -331,6 +331,19 @@ export class Pull {
         `#${prNumber} Created pull request`,
       );
 
+      try {
+        await this.github.issues.lock({
+          owner: this.owner,
+          repo: this.repo,
+          issue_number: prNumber,
+        });
+      } catch (err) {
+        this.logger.error(
+          { err },
+          `#${prNumber} Lock failed`,
+        );
+      }
+
       await this.github.issues.update({
         owner: this.owner,
         repo: this.repo,
