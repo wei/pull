@@ -11,7 +11,7 @@ project you agree to abide by its terms.
 
 ### Prerequisites
 
-- [Deno](https://deno.land/#installation) 2.1.1 or later
+- [Deno](https://deno.land/#installation) 2
 - MongoDB 8.0
 - Redis 7.4
 
@@ -128,6 +128,7 @@ graph TD
 ##### Main Components
 
 1. **Routine Check (`routineCheck`):**
+
    - Iterates through configured rules in `pull.yml`
    - For each rule:
      - Normalizes base and upstream branch names
@@ -135,6 +136,7 @@ graph TD
      - Creates or updates pull requests as needed
 
 2. **Difference Detection (`hasDiff`):**
+
    - Compares commits between base and upstream branches
    - Handles special cases:
      - Large diffs that timeout
@@ -143,6 +145,7 @@ graph TD
    - Returns true if changes are detected
 
 3. **Pull Request Management:**
+
    - **Updates (`getOpenPR`):**
      - Finds existing PRs created by the bot
      - Validates PR matches current sync rule

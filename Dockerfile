@@ -1,4 +1,4 @@
-ARG DENO_VERSION=2.1.1
+ARG DENO_VERSION=2.3.7
 FROM denoland/deno:alpine-${DENO_VERSION}
 
 ENV \
