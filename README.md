@@ -92,6 +92,7 @@ to yours using **hard reset** periodically. You can also manually
      - base: master
        upstream: wei:master # change `wei` to the owner of upstream repo
        mergeMethod: hardreset
+       mergeUnstable: true
    ```
 
    #### Advanced usage
@@ -140,9 +141,11 @@ rules:
   - base: master
     upstream: owner:master
     mergeMethod: hardreset
+    mergeUnstable: true
   - base: docs
     upstream: owner:docs
     mergeMethod: hardreset
+    mergeUnstable: true
 ```
 
 ## Contributing

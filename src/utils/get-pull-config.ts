@@ -58,6 +58,7 @@ function getDefaultPullConfig(
             base: `${defaultBranch}`,
             upstream: `${upstreamOwner}:${defaultBranch}`,
             mergeMethod: appConfig.defaultMergeMethod,
+            mergeUnstable: true,
           },
         ],
       };
