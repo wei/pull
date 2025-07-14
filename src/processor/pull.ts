@@ -280,6 +280,10 @@ export class Pull {
   }
 
   private async getOpenPR(base: string, head: string) {
+    this.logger.debug(
+      `Checking for open PRs from ${head} to ${base} created by ${appConfig.botName}`,
+    );
+
     const res = await this.github.issues.listForRepo({
       owner: this.owner,
       repo: this.repo,
@@ -287,25 +291,36 @@ export class Pull {
       per_page: 100,
     });
 
-    if (res.data.length === 0) return null;
+    if (res.data.length > 0) {
+      this.logger.debug(
+        `Found ${res.data.length} open ${pluralize("PR", res.data.length, true)} from ${appConfig.botName}`,
+      );
 
-    for (const issue of res.data) {
-      const pr = await this.github.pulls.get({
-        owner: this.owner,
-        repo: this.repo,
-        pull_number: issue.number,
-      });
+      for (const issue of res.data) {
+        const pr = await this.github.pulls.get({
+          owner: this.owner,
+          repo: this.repo,
+          pull_number: issue.number,
+        });
 
-      if (
-        pr.data.user.login === appConfig.botName &&
-        pr.data.base.label.replace(`${this.owner}:`, "") ===
-          base.replace(`${this.owner}:`, "") &&
-        pr.data.head.label.replace(`${this.owner}:`, "") ===
-          head.replace(`${this.owner}:`, "")
-      ) {
-        return pr.data;
+        if (
+          pr.data.user.login === appConfig.botName &&
+          pr.data.base.label.replace(`${this.owner}:`, "") ===
+            base.replace(`${this.owner}:`, "") &&
+          pr.data.head.label.replace(`${this.owner}:`, "") ===
+            head.replace(`${this.owner}:`, "")
+        ) {
+          this.logger.debug(
+            `Found open PR #${pr.data.number} from ${head} to ${base} created by ${appConfig.botName}`,
+          );
+          return pr.data;
+        }
       }
     }
+
+    this.logger.debug(
+      `No open PR found from ${head} to ${base} created by ${appConfig.botName}`,
+    );
     return null;
   }
 
