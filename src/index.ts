@@ -56,6 +56,12 @@ Deno.addSignalListener("SIGTERM", () => handleAppTermination("SIGTERM"));
 function handleAppTermination(signal: string) {
   log.info(`[${signal}] Signal received: closing MongoDB connection`);
   disconnectMongoDB();
+  try {
+    // Close Redis connection to avoid lingering connections
+    redisClient.quit();
+  } catch {
+    // ignore
+  }
   log.info("[MongoDB] Connection closed due to app termination");
   Deno.exit(0);
 }
