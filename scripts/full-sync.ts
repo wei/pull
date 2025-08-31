@@ -8,10 +8,11 @@ import { appConfig } from "@/src/configs/app-config.ts";
 
 async function main() {
   let exitCode = 0;
+  let redisClient: ReturnType<typeof getRedisClient> | undefined;
 
   try {
     await connectMongoDB();
-    const redisClient = getRedisClient(`${appConfig.appSlug}-full-sync`);
+    redisClient = getRedisClient(`${appConfig.appSlug}-full-sync`);
 
     const probot = createProbot({ overrides: { log: logger } });
     await fullSync(probot, {
@@ -23,6 +24,13 @@ async function main() {
     exitCode = 1;
   } finally {
     await disconnectMongoDB();
+    if (redisClient) {
+      try {
+        await redisClient.quit();
+      } catch {
+        // ignore
+      }
+    }
     Deno.exit(exitCode);
   }
 }
