@@ -12,11 +12,22 @@ const redisClient = new Redis(appConfig.redisConfig!, {
   name: `${appConfig.appSlug}-worker`,
 });
 
+const MAX_RETAINED_JOBS = 1000;
+const JOB_RETENTION_SECONDS = 3600; // 1 hour
+
 const worker = createSchedulerWorker(
   RepoJobProcessor,
   {
     connection: redisClient,
     concurrency: 10,
+    removeOnComplete: {
+      count: MAX_RETAINED_JOBS,
+      age: JOB_RETENTION_SECONDS,
+    },
+    removeOnFail: {
+      count: MAX_RETAINED_JOBS,
+      age: JOB_RETENTION_SECONDS,
+    },
   },
 );
 
@@ -31,6 +42,11 @@ worker.on("failed", (job, err) => {
 const gracefulShutdown = async (signal: string) => {
   console.log(`Received ${signal}, closing worker...`);
   await worker.close();
+  try {
+    await redisClient.quit();
+  } catch {
+    // ignore
+  }
   Deno.exit(0);
 };
 

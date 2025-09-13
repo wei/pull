@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "tasks": {
     "dev": "deno run --env-file --allow-all src/index.ts",
     "dev:skip-full-sync": "deno task dev --skip-full-sync",
