@@ -81,7 +81,7 @@ to yours using **hard reset** periodically. You can also manually
 ### Advanced Configuration (with config file)
 
 1. Create a new branch.
-2. Setup the new branch as default branch under repository Settings > Branches.
+2. Set up the new branch as default branch under repository Settings > Branches.
 3. Add `.github/pull.yml` to your default branch.
 
    #### Most Common
