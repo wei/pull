@@ -8,6 +8,7 @@ import { connectMongoDB, disconnectMongoDB } from "@/src/configs/database.ts";
 import { getRedisClient } from "@/src/configs/redis.ts";
 import createRouter from "@/src/router/index.ts";
 import { getRepositorySchedule } from "@/src/utils/get-repository-schedule.ts";
+import { createGracefulShutdown } from "@/src/utils/graceful-shutdown.ts";
 
 const args = Deno.args;
 const skipFullSync = args.includes("--skip-full-sync");
@@ -50,18 +51,13 @@ server.listen(appConfig.port, () => {
   log.info(`[Express] Server is running on port ${appConfig.port}`);
 });
 
-Deno.addSignalListener("SIGINT", () => handleAppTermination("SIGINT"));
-Deno.addSignalListener("SIGTERM", () => handleAppTermination("SIGTERM"));
+const handleAppTermination = createGracefulShutdown({
+  disconnectMongoDB,
+  quitRedis: () => redisClient.quit(),
+  exit: Deno.exit,
+  logInfo: (message) => log.info(message),
+  logError: (message, error) => log.error(error, message),
+});
 
-function handleAppTermination(signal: string) {
-  log.info(`[${signal}] Signal received: closing MongoDB connection`);
-  disconnectMongoDB();
-  try {
-    // Close Redis connection to avoid lingering connections
-    redisClient.quit();
-  } catch {
-    // ignore
-  }
-  log.info("[MongoDB] Connection closed due to app termination");
-  Deno.exit(0);
-}
+Deno.addSignalListener("SIGINT", () => void handleAppTermination("SIGINT"));
+Deno.addSignalListener("SIGTERM", () => void handleAppTermination("SIGTERM"));

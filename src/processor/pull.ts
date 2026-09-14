@@ -293,7 +293,9 @@ export class Pull {
 
     if (res.data.length > 0) {
       this.logger.debug(
-        `Found ${res.data.length} open ${pluralize("PR", res.data.length, true)} from ${appConfig.botName}`,
+        `Found ${res.data.length} open ${
+          pluralize("PR", res.data.length, true)
+        } from ${appConfig.botName}`,
       );
 
       for (const issue of res.data) {
