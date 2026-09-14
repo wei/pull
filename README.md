@@ -125,6 +125,40 @@ to yours using **hard reset** periodically. You can also manually
 You can manually trigger Pull by going to
 `https://pull.git.ci/process/${owner}/${repo}`.
 
+### Known limitation: upstream issue timeline events
+
+When Pull copies an upstream commit into a fork, GitHub can add a
+cross-repository "referenced this issue" event to an issue named in that commit
+message. This can happen even when the issue is already closed and the commit is
+already on the upstream default branch. The event is created by GitHub when it
+indexes the unchanged commit in another repository; Pull does not create the
+issue event itself, but its synchronization can trigger this GitHub behavior.
+
+Pull cannot suppress these events without changing commit messages and therefore
+creating different commits. Rewriting commits would also break commit identity
+and is incompatible with keeping a fork synchronized with upstream. Pull does
+not currently provide an upstream-owner opt-out, and an upstream
+`.github/pull.yml` cannot block installations or synchronization in forks.
+
+To avoid these events:
+
+- Fork owners can remove rules that sync the affected upstream branch, or
+  uninstall/disable Pull for the fork. A separate, non-default synchronization
+  branch can keep automated changes away from the fork's main development
+  branch, but it is not a guaranteed way to suppress GitHub timeline events.
+- Upstream owners can ask the owner of an affected fork to stop syncing that
+  branch. There is currently no setting an upstream owner can add to their own
+  repository to opt all forks out.
+- Where project policy permits, put issue-closing references in pull request
+  descriptions instead of commit messages. Existing commits retain their
+  messages when synchronized, so this only helps future commits.
+
+Do not add an empty or invalid `.github/pull.yml` to an upstream repository as
+an opt-out mechanism. It is not a supported opt-out; the configuration is
+invalid for the repository where it is installed and does not control
+configuration in forks. See [issue #639](https://github.com/wei/pull/issues/639)
+for context and current status.
+
 ### For Upstream Repository Owners
 
 For the most common use case (a single `master` branch), you can just direct
