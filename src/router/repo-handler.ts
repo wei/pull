@@ -2,15 +2,32 @@ import type { Request, Response } from "express";
 import type { Probot } from "probot";
 import { appConfig } from "@/src/configs/app-config.ts";
 import { getPullConfig } from "@/src/utils/get-pull-config.ts";
+import { missingRepositoryResponse } from "@/src/router/repo-response.ts";
 import {
   createSchedulerService,
   JobPriority,
   RepositoryModel,
 } from "@wei/probot-scheduler";
 
+interface RepositoryRecord {
+  installation_id: number;
+  id: number;
+  owner: { login: string };
+  name: string;
+}
+
+export interface RepoHandlerDependencies {
+  findRepository: (
+    filter: { full_name: string },
+  ) => Promise<RepositoryRecord | null>;
+}
+
 function getRepoHandlers(
   app: Probot,
   schedulerService: ReturnType<typeof createSchedulerService>,
+  dependencies: RepoHandlerDependencies = {
+    findRepository: async (filter) => await RepositoryModel.findOne(filter),
+  },
 ) {
   async function checkHandler(req: Request, res: Response) {
     const full_name = `${req.params.owner}/${req.params.repo}`;
@@ -18,11 +35,12 @@ function getRepoHandlers(
 
     try {
       // Get Octokit
-      const repoRecord = await RepositoryModel.findOne({ full_name });
+      const repoRecord = await dependencies.findRepository({ full_name });
 
       if (!repoRecord) {
-        app.log.error({ full_name }, `❌ Repo record not found`);
-        throw new Error(`❌ Repo record not found`);
+        app.log.warn({ full_name }, "Repository is not registered");
+        const response = missingRepositoryResponse(full_name);
+        return res.status(response.statusCode).json(response.body);
       }
 
       const {
