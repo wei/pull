@@ -102,6 +102,8 @@ to yours using **hard reset** periodically. You can also manually
      - base: master # Required. Target branch
        upstream: wei:master # Required. Must be in the same fork network.
        mergeMethod: hardreset # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+       # If GitHub rejects an automatic merge or hard reset, Pull adds a warning to
+       # the PR body. This works even though Pull-created PR conversations are locked.
        mergeUnstable: false # Optional, merge pull request even when the mergeable_state is not clean. Default: false
      - base: dev
        upstream: master # Required. Can be a branch in the same forked repo.

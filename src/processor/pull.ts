@@ -8,7 +8,12 @@ import {
 import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 import { appConfig } from "@/src/configs/app-config.ts";
 import { logger as pullLogger } from "@/src/utils/logger.ts";
-import { getPRBody, getPRTitle, timeout } from "@/src/utils/helpers.ts";
+import {
+  getMergeFailureBody,
+  getPRBody,
+  getPRTitle,
+  timeout,
+} from "@/src/utils/helpers.ts";
 
 interface PullOptions {
   owner: string;
@@ -188,8 +193,10 @@ export class Pull {
 
     if (!mergeableStatus?.mergeable) return false;
 
-    if (rule.mergeMethod === "hardreset") {
-      try {
+    let mergeMethod = rule.mergeMethod;
+
+    try {
+      if (mergeMethod === "hardreset") {
         this.logger.debug(
           `#${prNumber} Performing hard reset`,
         );
@@ -198,20 +205,15 @@ export class Pull {
           `#${prNumber} Hard reset successful`,
         );
         return true;
-      } catch (err) {
-        this.logger.error(
-          { err },
-          `#${prNumber} Hard reset failed`,
-        );
-        return false;
       }
-    } else if (rule.mergeMethod === "none") {
-      this.logger.debug(
-        `#${prNumber} Merge method is none, skip merging`,
-      );
-      return true;
-    } else {
-      let mergeMethod = rule.mergeMethod;
+
+      if (mergeMethod === "none") {
+        this.logger.debug(
+          `#${prNumber} Merge method is none, skip merging`,
+        );
+        return true;
+      }
+
       if (mergeMethod === "rebase" && !mergeableStatus.rebaseable) {
         mergeMethod = "merge";
       }
@@ -220,6 +222,33 @@ export class Pull {
         `#${prNumber} Auto merged pull request using ${mergeMethod}`,
       );
       return true;
+    } catch (err) {
+      this.logger.error(
+        { err },
+        `#${prNumber} ${mergeMethod} failed`,
+      );
+      await this.reportMergeFailure(prNumber, mergeMethod);
+      return false;
+    }
+  }
+
+  private async reportMergeFailure(
+    prNumber: number,
+    mergeMethod: PullRule["mergeMethod"],
+  ): Promise<void> {
+    try {
+      await this.github.issues.update({
+        owner: this.owner,
+        repo: this.repo,
+        issue_number: prNumber,
+        body: getMergeFailureBody(this.fullName, prNumber, mergeMethod),
+      });
+    } catch (err) {
+      // Reporting must never turn a recoverable merge failure into a failed job.
+      this.logger.warn(
+        { err },
+        `#${prNumber} Unable to report auto merge failure`,
+      );
     }
   }
 
@@ -293,7 +322,9 @@ export class Pull {
 
     if (res.data.length > 0) {
       this.logger.debug(
-        `Found ${res.data.length} open ${pluralize("PR", res.data.length, true)} from ${appConfig.botName}`,
+        `Found ${res.data.length} open ${
+          pluralize("PR", res.data.length, true)
+        } from ${appConfig.botName}`,
       );
 
       for (const issue of res.data) {

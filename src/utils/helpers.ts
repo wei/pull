@@ -22,3 +22,15 @@ export const getPRBody = (fullName: string, prNumber?: number): string =>
     : `See Commits and Changes for more details.`) +
   `\n\n-----\nCreated by [<img src="https://prod.download/pull-18h-svg" valign="bottom"/> **pull[bot]**](https://github.com/wei/pull) (v${appConfig.version})` +
   "\n\n_Can you help keep this open source service alive? **[💖 Please sponsor : )](https://prod.download/pull-pr-sponsor)**_";
+
+export const getMergeFailureBody = (
+  fullName: string,
+  prNumber: number,
+  mergeMethod: string,
+): string =>
+  getPRBody(fullName, prNumber) +
+  `
+
+<!-- pull-auto-merge-failure -->
+> [!WARNING]
+> Pull could not automatically complete the **${mergeMethod}** operation. GitHub may have blocked it because of branch protection, repository rules, or workflow permissions. Please review the repository settings and merge this pull request manually.`;
