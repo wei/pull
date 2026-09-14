@@ -1,4 +1,5 @@
 import { readEnvOptions } from "probot/lib/bin/read-env-options.js";
+import type { PullMergeMethod } from "@/src/utils/schema.ts";
 import denoJson from "@/deno.json" with { type: "json" };
 
 function getAppConfig(env: Record<string, string> = Deno.env.toObject()) {
@@ -12,7 +13,8 @@ function getAppConfig(env: Record<string, string> = Deno.env.toObject()) {
     mongoDBUrl: env.MONGODB_URL,
     port: parseInt(env.PORT || "3000", 10),
     webhookPath: env.WEBHOOK_PATH,
-    defaultMergeMethod: env.DEFAULT_MERGE_METHOD || "hardreset",
+    defaultMergeMethod: (env.DEFAULT_MERGE_METHOD ||
+      "hardreset") as PullMergeMethod,
   };
 }
 

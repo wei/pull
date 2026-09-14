@@ -1,4 +1,4 @@
-import { type Logger, ProbotOctokit } from "probot";
+import type { Logger, ProbotOctokit } from "probot";
 import pluralize from "@wei/pluralize";
 import {
   type PullConfig,
@@ -6,19 +6,21 @@ import {
   type PullRule,
 } from "@/src/utils/schema.ts";
 import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
-import { appConfig } from "@/src/configs/app-config.ts";
-import { logger as pullLogger } from "@/src/utils/logger.ts";
 import { getPRBody, getPRTitle, timeout } from "@/src/utils/helpers.ts";
 
-interface PullOptions {
+/** Repository identity and presentation options for a Pull processor. */
+export interface PullOptions {
   owner: string;
   repo: string;
-  logger?: Logger;
+  logger: Logger;
+  botName?: string;
+  version?: string;
 }
 
 type PullRequestData =
   RestEndpointMethodTypes["pulls"]["create"]["response"]["data"];
 
+/** Runs Pull synchronization rules for one repository. */
 export class Pull {
   private github: ProbotOctokit;
   private owner: string;
@@ -26,16 +28,20 @@ export class Pull {
   private fullName: string;
   private logger: Logger;
   private config: PullConfig;
+  private botName: string;
+  private version: string;
 
   constructor(
     github: ProbotOctokit,
-    { owner, repo, logger = pullLogger }: PullOptions,
+    { owner, repo, logger, botName = "pull[bot]", version = "2" }: PullOptions,
     config: PullConfig,
   ) {
     this.github = github;
     this.owner = owner;
     this.repo = repo;
     this.fullName = `${owner}/${repo}`;
+    this.botName = botName;
+    this.version = version;
     this.logger = logger.child({
       owner,
       repo,
@@ -127,7 +133,7 @@ export class Pull {
     if (
       rule.mergeMethod !== "none" &&
       incomingPR.state === "open" &&
-      incomingPR.user.login === appConfig.botName
+      incomingPR.user.login === this.botName
     ) {
       return await this.processMerge(prNumber, incomingPR, rule, config);
     }
@@ -165,7 +171,7 @@ export class Pull {
       repo: this.repo,
       issue_number: prNumber,
       labels: [this.config.label, this.config.conflictLabel],
-      body: getPRBody(this.fullName, prNumber),
+      body: getPRBody(this.fullName, prNumber, this.version),
     });
 
     if (rule?.conflictReviewers?.length) {
@@ -281,19 +287,21 @@ export class Pull {
 
   private async getOpenPR(base: string, head: string) {
     this.logger.debug(
-      `Checking for open PRs from ${head} to ${base} created by ${appConfig.botName}`,
+      `Checking for open PRs from ${head} to ${base} created by ${this.botName}`,
     );
 
     const res = await this.github.issues.listForRepo({
       owner: this.owner,
       repo: this.repo,
-      creator: appConfig.botName,
+      creator: this.botName,
       per_page: 100,
     });
 
     if (res.data.length > 0) {
       this.logger.debug(
-        `Found ${res.data.length} open ${pluralize("PR", res.data.length, true)} from ${appConfig.botName}`,
+        `Found ${res.data.length} open ${
+          pluralize("PR", res.data.length, true)
+        } from ${this.botName}`,
       );
 
       for (const issue of res.data) {
@@ -304,14 +312,14 @@ export class Pull {
         });
 
         if (
-          pr.data.user.login === appConfig.botName &&
+          pr.data.user.login === this.botName &&
           pr.data.base.label.replace(`${this.owner}:`, "") ===
             base.replace(`${this.owner}:`, "") &&
           pr.data.head.label.replace(`${this.owner}:`, "") ===
             head.replace(`${this.owner}:`, "")
         ) {
           this.logger.debug(
-            `Found open PR #${pr.data.number} from ${head} to ${base} created by ${appConfig.botName}`,
+            `Found open PR #${pr.data.number} from ${head} to ${base} created by ${this.botName}`,
           );
           return pr.data;
         }
@@ -319,7 +327,7 @@ export class Pull {
     }
 
     this.logger.debug(
-      `No open PR found from ${head} to ${base} created by ${appConfig.botName}`,
+      `No open PR found from ${head} to ${base} created by ${this.botName}`,
     );
     return null;
   }
@@ -338,7 +346,7 @@ export class Pull {
         base,
         maintainer_can_modify: false,
         title: getPRTitle(base, upstream),
-        body: getPRBody(this.fullName),
+        body: getPRBody(this.fullName, undefined, this.version),
       });
 
       const prNumber = createdPR.data.number;
@@ -365,7 +373,7 @@ export class Pull {
         issue_number: prNumber,
         assignees,
         labels: [this.config.label],
-        body: getPRBody(this.fullName, prNumber),
+        body: getPRBody(this.fullName, prNumber, this.version),
       });
 
       await this.addReviewers(prNumber, reviewers);

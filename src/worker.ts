@@ -5,7 +5,12 @@ import { getRepoProcessor } from "@/src/processor/index.ts";
 import { createProbot } from "probot";
 
 const probot = createProbot();
-const RepoJobProcessor = getRepoProcessor(probot);
+const RepoJobProcessor = getRepoProcessor(probot, {
+  botName: appConfig.botName,
+  version: appConfig.version,
+  configFilename: appConfig.configFilename,
+  defaultMergeMethod: appConfig.defaultMergeMethod,
+});
 
 const redisClient = new Redis(appConfig.redisConfig!, {
   maxRetriesPerRequest: null,

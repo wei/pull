@@ -148,6 +148,50 @@ rules:
     mergeUnstable: true
 ```
 
+## Use as a library
+
+Pull exposes a supported Deno/JSR-style library interface through `mod.ts` and
+its `deno.json` export map. Importing the library does not start the standalone
+HTTP server, MongoDB, Redis, or a BullMQ worker.
+
+Register Pull's scheduler hooks in an existing Probot app:
+
+```ts
+import createPullApp from "jsr:@wei/pull";
+import { Redis } from "ioredis";
+
+export default (app) => {
+  const redisClient = new Redis(Deno.env.get("REDIS_URL"));
+  createPullApp(app, {
+    redisClient,
+    skipFullSync: true,
+  });
+};
+```
+
+The host owns the Redis connection and its shutdown. Set `skipFullSync: false`
+(or omit it) only when registration should also perform the scheduler's initial
+full synchronization.
+
+For a separate BullMQ worker, `getRepoProcessor(probot)` returns the repository
+job processor. Advanced integrations can use `processRepository`, `Pull`,
+`getPullConfig`, `pullConfigSchema`, and the exported configuration and
+scheduler job types.
+
+```ts
+import { getRepoProcessor } from "jsr:@wei/pull/processor";
+
+const processRepositoryJob = getRepoProcessor(probot, {
+  logger: probot.log,
+});
+```
+
+Pull v2 does not expose a webhook event-to-handler map. Scheduler webhook
+registration belongs to `@wei/probot-scheduler`, while Pull processing occurs
+from scheduled BullMQ jobs. `createPullApp` is the supported registration seam.
+The standalone runtime files `src/index.ts` and `src/worker.ts` are
+intentionally not package exports.
+
 ## Contributing
 
 See [CONTRIBUTING.md](./.github/CONTRIBUTING.md)
