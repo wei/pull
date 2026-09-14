@@ -6,13 +6,14 @@ const pullMergeMethodEnum = z.enum([
   "squash",
   "rebase",
   "hardreset",
+  "forcehardreset",
 ]);
 
 const pullRuleSchema = z.object({
   base: z.string().min(1).describe("Destination local branch"),
   upstream: z.string().min(1).describe("Upstream owner:branch"),
   mergeMethod: pullMergeMethodEnum.default("none").describe(
-    "Auto merge pull request using this merge method. one of [none, merge, squash, rebase, hardreset], Default: none",
+    "Auto merge pull request using this merge method. one of [none, merge, squash, rebase, hardreset, forcehardreset], Default: none",
   ),
   mergeUnstable: z.boolean().default(false).describe(
     "Merge pull request even when the mergeable state is not clean",

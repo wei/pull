@@ -50,7 +50,7 @@ _Can you help keep this open source service alive? **[💖 Please sponsor : )][p
   creating pull requests to integrate new changes from upstream
 - ⚙️ **Flexible Configuration**: Customize sync behavior through
   `.github/pull.yml` configuration to accommodate different merge strategies,
-  including merge, squash, rebase, and hard reset
+  including merge, squash, rebase, and safe hard reset
 - 🕒 **Scheduled Updates**: Regularly checks for upstream changes periodically
   to ensure forks are always up-to-date
 - 👥 **Team Integration**: Facilitates collaboration by automatically adding
@@ -75,8 +75,10 @@ receive priority over other users)
   **[<img src="https://prod.download/pull-18h-svg" valign="bottom"/> Pull app][pull-app]**.
 
 Pull app will automatically watch and pull in upstream's default (master) branch
-to yours using **hard reset** periodically. You can also manually
-[trigger](#trigger-manually) it anytime.
+to yours using **safe hard reset** periodically. Safe hard reset refuses to
+update a destination branch that contains commits absent from upstream and uses
+the observed destination SHA as an atomic lease, so a concurrent update also
+aborts the reset. You can also manually [trigger](#trigger-manually) it anytime.
 
 ### Advanced Configuration (with config file)
 
@@ -101,8 +103,10 @@ to yours using **hard reset** periodically. You can also manually
    rules: # Array of rules
      - base: master # Required. Target branch
        upstream: wei:master # Required. Must be in the same fork network.
-       mergeMethod: hardreset # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+       mergeMethod: hardreset # Optional, one of [none, merge, squash, rebase, hardreset, forcehardreset], Default: none.
        mergeUnstable: false # Optional, merge pull request even when the mergeable_state is not clean. Default: false
+     # `forcehardreset` is an explicit destructive opt-in. It may discard destination-only commits,
+     # but still aborts if the destination changes while the reset is running.
      - base: dev
        upstream: master # Required. Can be a branch in the same forked repo.
        assignees: # Optional

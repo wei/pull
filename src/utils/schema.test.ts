@@ -11,6 +11,7 @@ const validConfigs = [
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'squash', mergeUnstable: true }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'hardreset', assignees: ['wei'] }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'forcehardreset' }] },
 ] as const;
 
 // deno-fmt-ignore
