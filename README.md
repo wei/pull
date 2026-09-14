@@ -50,7 +50,7 @@ _Can you help keep this open source service alive? **[💖 Please sponsor : )][p
   creating pull requests to integrate new changes from upstream
 - ⚙️ **Flexible Configuration**: Customize sync behavior through
   `.github/pull.yml` configuration to accommodate different merge strategies,
-  including merge, squash, rebase, and hard reset
+  including merge, squash, rebase, reverse rebase, and hard reset
 - 🕒 **Scheduled Updates**: Regularly checks for upstream changes periodically
   to ensure forks are always up-to-date
 - 👥 **Team Integration**: Facilitates collaboration by automatically adding
@@ -101,7 +101,7 @@ to yours using **hard reset** periodically. You can also manually
    rules: # Array of rules
      - base: master # Required. Target branch
        upstream: wei:master # Required. Must be in the same fork network.
-       mergeMethod: hardreset # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+       mergeMethod: hardreset # Optional, one of [none, merge, squash, rebase, reverse-rebase, hardreset], Default: none.
        mergeUnstable: false # Optional, merge pull request even when the mergeable_state is not clean. Default: false
      - base: dev
        upstream: master # Required. Can be a branch in the same forked repo.
@@ -114,6 +114,34 @@ to yours using **hard reset** periodically. You can also manually
    label: ":arrow_heading_down: pull" # Optional
    conflictLabel: "merge-conflict" # Optional, on merge conflict assign a custom label, Default: merge-conflict
    ```
+
+   #### Reverse rebase
+
+   ```yaml
+   version: "1"
+   rules:
+     - base: fork
+       upstream: upstream-owner:main
+       mergeMethod: reverse-rebase
+   ```
+
+   `reverse-rebase` keeps commits unique to `base` on top of the latest
+   `upstream` history. Pull creates a collision-resistant temporary branch and
+   pull request, uses GitHub's **Rebase and merge** operation to replay the
+   fork-only commits, verifies the observed branch SHAs, then atomically
+   force-updates `base` to the result using its original SHA as a lease. This
+   differs from `rebase`, which rebases the incoming upstream pull request onto
+   `base`.
+
+   This mode rewrites `base`. Back up the branch before enabling it. The Pull
+   GitHub App installation needs **Contents: write** and **Pull requests:
+   write** permissions. The repository must allow rebase merging, and branch
+   protection or rulesets must allow Pull to force-update `base`. Repositories
+   whose commits change workflow files must also allow the app to make those
+   changes. On a replay conflict, Pull leaves `base` unchanged and applies
+   `conflictLabel` to the synchronization pull request. Pull attempts to remove
+   its temporary pull request and ref on every exit; either may remain when
+   GitHub rejects cleanup.
 
 4. Go to `https://pull.git.ci/check/${owner}/${repo}` to validate your
    `.github/pull.yml`.

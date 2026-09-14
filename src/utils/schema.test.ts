@@ -11,6 +11,7 @@ const validConfigs = [
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'squash', mergeUnstable: true }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'hardreset', assignees: ['wei'] }] },
+  { version: '1', rules: [{ base: 'fork', upstream: 'upstream:main', mergeMethod: 'reverse-rebase' }] },
 ] as const;
 
 // deno-fmt-ignore
@@ -35,6 +36,8 @@ const invalidConfigs = [
   { version: '1', rules: [{ base: 'master', autoMerge: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'invalid' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'reverseRebase' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'reverse_rebase' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: true }] },
   { version: '2', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: "hardreset" }] },
 ] as const;

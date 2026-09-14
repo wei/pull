@@ -188,7 +188,9 @@ export class Pull {
 
     if (!mergeableStatus?.mergeable) return false;
 
-    if (rule.mergeMethod === "hardreset") {
+    if (rule.mergeMethod === "reverse-rebase") {
+      return await this.reverseRebase(incomingPR, rule);
+    } else if (rule.mergeMethod === "hardreset") {
       try {
         this.logger.debug(
           `#${prNumber} Performing hard reset`,
@@ -293,7 +295,9 @@ export class Pull {
 
     if (res.data.length > 0) {
       this.logger.debug(
-        `Found ${res.data.length} open ${pluralize("PR", res.data.length, true)} from ${appConfig.botName}`,
+        `Found ${res.data.length} open ${
+          pluralize("PR", res.data.length, true)
+        } from ${appConfig.botName}`,
       );
 
       for (const issue of res.data) {
@@ -470,6 +474,291 @@ export class Pull {
       pull_number: prNumber,
       merge_method: mergeMethod,
     });
+  }
+
+  /**
+   * Rebase the fork-owned commits from `base` onto the new upstream tip.
+   *
+   * GitHub cannot rebase a branch directly. A temporary branch at the upstream
+   * tip reverses the normal synchronization PR: the fork branch becomes its
+   * head, and GitHub's rebase merge writes the result to the temporary branch.
+   * The real branch is only moved after every observed SHA is verified.
+   */
+  private async reverseRebase(
+    incomingPR: PullRequestData,
+    rule: PullRule,
+  ): Promise<boolean> {
+    const prNumber = incomingPR.number;
+    const baseRef = incomingPR.base.ref;
+    const originalBaseSha = incomingPR.base.sha;
+    const upstreamSha = incomingPR.head.sha;
+    const temporaryRef = `pull-reverse-rebase/${crypto.randomUUID()}`;
+    let temporaryPR: PullRequestData | null = null;
+    let temporaryRefCreated = false;
+    const cleanupShas = new Set([upstreamSha]);
+
+    try {
+      this.logger.debug(
+        { temporaryRef, originalBaseSha, upstreamSha },
+        `#${prNumber} Performing reverse rebase`,
+      );
+
+      await this.github.git.createRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `refs/heads/${temporaryRef}`,
+        sha: upstreamSha,
+      });
+      temporaryRefCreated = true;
+
+      const forkComparison = await this.github.repos.compareCommits({
+        owner: this.owner,
+        repo: this.repo,
+        base: upstreamSha,
+        head: originalBaseSha,
+        per_page: 1,
+      });
+      if (forkComparison.data.ahead_by === 0) {
+        await this.updateRefWithLease(
+          incomingPR.base.repo.node_id,
+          baseRef,
+          originalBaseSha,
+          upstreamSha,
+        );
+        this.logger.info(
+          { originalBaseSha, upstreamSha },
+          `#${prNumber} Reverse rebase fast-forward successful`,
+        );
+        return true;
+      }
+
+      const created = await this.github.pulls.create({
+        owner: this.owner,
+        repo: this.repo,
+        head: baseRef,
+        base: temporaryRef,
+        maintainer_can_modify: false,
+        title: `[Pull] Temporarily rebase ${baseRef} onto ${upstreamSha}`,
+        body:
+          `Temporary pull request created by Pull while processing #${prNumber}.`,
+      });
+      temporaryPR = created.data;
+
+      // Fail closed if GitHub resolved either ref to an unexpected commit.
+      if (
+        temporaryPR.head.sha !== originalBaseSha ||
+        temporaryPR.base.sha !== upstreamSha ||
+        temporaryPR.head.ref !== baseRef ||
+        temporaryPR.base.ref !== temporaryRef
+      ) {
+        throw new Error("Temporary reverse-rebase pull request refs changed");
+      }
+
+      let merged;
+      try {
+        merged = await this.github.pulls.merge({
+          owner: this.owner,
+          repo: this.repo,
+          pull_number: temporaryPR.number,
+          merge_method: "rebase",
+          sha: originalBaseSha,
+        });
+      } catch (err) {
+        if (this.isMergeConflictError(err)) {
+          if (await this.isTemporaryPRConflicted(temporaryPR.number)) {
+            await this.handleMergeConflict(prNumber, rule);
+          }
+          return false;
+        }
+        throw err;
+      }
+      if (!merged.data.merged || !merged.data.sha) {
+        if (await this.isTemporaryPRConflicted(temporaryPR.number)) {
+          await this.handleMergeConflict(prNumber, rule);
+        }
+        return false;
+      }
+      const rebasedSha = merged.data.sha;
+      cleanupShas.add(rebasedSha);
+
+      const rebasedComparison = await this.github.repos.compareCommits({
+        owner: this.owner,
+        repo: this.repo,
+        base: upstreamSha,
+        head: rebasedSha,
+        per_page: 1,
+      });
+      if (
+        rebasedComparison.data.behind_by !== 0 ||
+        rebasedComparison.data.ahead_by !== forkComparison.data.ahead_by
+      ) {
+        throw new Error("Rebased commit provenance check failed");
+      }
+
+      const [currentBase, currentTemporary] = await Promise.all([
+        this.github.git.getRef({
+          owner: this.owner,
+          repo: this.repo,
+          ref: `heads/${baseRef}`,
+        }),
+        this.github.git.getRef({
+          owner: this.owner,
+          repo: this.repo,
+          ref: `heads/${temporaryRef}`,
+        }),
+      ]);
+
+      if (currentBase.data.object.sha !== originalBaseSha) {
+        throw new Error(
+          `Ref heads/${baseRef} changed while reverse rebase was running`,
+        );
+      }
+      if (currentTemporary.data.object.sha !== rebasedSha) {
+        throw new Error("Temporary reverse-rebase ref has an unexpected SHA");
+      }
+
+      await this.updateRefWithLease(
+        incomingPR.base.repo.node_id,
+        baseRef,
+        originalBaseSha,
+        rebasedSha,
+      );
+      this.logger.info(
+        { originalBaseSha, upstreamSha, rebasedSha },
+        `#${prNumber} Reverse rebase successful`,
+      );
+      return true;
+    } catch (err) {
+      this.logger.error(
+        { err, temporaryRef },
+        `#${prNumber} Reverse rebase failed`,
+      );
+      return false;
+    } finally {
+      if (temporaryPR) {
+        await this.cleanupTemporaryPR(temporaryPR, baseRef, temporaryRef);
+      }
+      if (temporaryRefCreated) {
+        await this.cleanupTemporaryRef(temporaryRef, cleanupShas);
+      }
+    }
+  }
+
+  private async isTemporaryPRConflicted(pullNumber: number): Promise<boolean> {
+    const current = await this.github.pulls.get({
+      owner: this.owner,
+      repo: this.repo,
+      pull_number: pullNumber,
+    });
+    return current.data.mergeable === false;
+  }
+
+  private isMergeConflictError(err: unknown): boolean {
+    return typeof err === "object" && err !== null &&
+      "status" in err && err.status === 405;
+  }
+
+  private async cleanupTemporaryPR(
+    temporaryPR: PullRequestData,
+    expectedHead: string,
+    expectedBase: string,
+  ): Promise<void> {
+    try {
+      const current = await this.github.pulls.get({
+        owner: this.owner,
+        repo: this.repo,
+        pull_number: temporaryPR.number,
+      });
+      if (
+        current.data.state === "open" &&
+        current.data.head.ref === expectedHead &&
+        current.data.base.ref === expectedBase
+      ) {
+        await this.github.pulls.update({
+          owner: this.owner,
+          repo: this.repo,
+          pull_number: temporaryPR.number,
+          state: "closed",
+        });
+      }
+    } catch (err) {
+      this.logger.error(
+        { err, pullNumber: temporaryPR.number },
+        "Unable to clean up temporary reverse-rebase pull request",
+      );
+    }
+  }
+
+  private async cleanupTemporaryRef(
+    temporaryRef: string,
+    expectedShas: ReadonlySet<string>,
+  ): Promise<void> {
+    try {
+      const current = await this.github.git.getRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `heads/${temporaryRef}`,
+      });
+      if (!expectedShas.has(current.data.object.sha)) {
+        this.logger.error(
+          { temporaryRef, sha: current.data.object.sha },
+          "Refusing to delete changed temporary reverse-rebase ref",
+        );
+        return;
+      }
+      await this.github.git.deleteRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `heads/${temporaryRef}`,
+      });
+    } catch (err) {
+      this.logger.error(
+        { err, temporaryRef },
+        "Unable to clean up temporary reverse-rebase ref",
+      );
+    }
+  }
+
+  private async updateRefWithLease(
+    repositoryId: string,
+    refName: string,
+    beforeOid: string,
+    afterOid: string,
+  ): Promise<void> {
+    if (!repositoryId || !refName || !beforeOid || !afterOid) {
+      throw new Error(
+        "Atomic ref update requires a repository ID, ref, and SHAs",
+      );
+    }
+
+    await this.github.graphql(
+      `mutation UpdateRefWithLease(
+        $repositoryId: ID!
+        $refName: GitRefname!
+        $beforeOid: GitObjectID!
+        $afterOid: GitObjectID!
+        $force: Boolean!
+      ) {
+        updateRefs(input: {
+          repositoryId: $repositoryId
+          refUpdates: [{
+            name: $refName
+            beforeOid: $beforeOid
+            afterOid: $afterOid
+            force: $force
+          }]
+        }) {
+          clientMutationId
+        }
+      }`,
+      {
+        repositoryId,
+        refName: `refs/heads/${refName}`,
+        beforeOid,
+        afterOid,
+        force: true,
+      },
+    );
   }
 
   private async hardResetCommit(
