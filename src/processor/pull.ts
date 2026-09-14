@@ -188,6 +188,10 @@ export class Pull {
 
     if (!mergeableStatus?.mergeable) return false;
 
+    if (rule.mergeMethod === "merge-ff") {
+      return await this.processMergeFf(prNumber, incomingPR);
+    }
+
     if (rule.mergeMethod === "hardreset") {
       try {
         this.logger.debug(
@@ -293,7 +297,9 @@ export class Pull {
 
     if (res.data.length > 0) {
       this.logger.debug(
-        `Found ${res.data.length} open ${pluralize("PR", res.data.length, true)} from ${appConfig.botName}`,
+        `Found ${res.data.length} open ${
+          pluralize("PR", res.data.length, true)
+        } from ${appConfig.botName}`,
       );
 
       for (const issue of res.data) {
@@ -458,9 +464,87 @@ export class Pull {
     });
   }
 
+  private async processMergeFf(
+    prNumber: number,
+    incomingPR: PullRequestData,
+  ): Promise<boolean> {
+    const baseSha = incomingPR.base.sha;
+    const headSha = incomingPR.head.sha;
+    const baseRef = incomingPR.base.ref;
+    const repositoryId = incomingPR.base.repo?.node_id;
+
+    if (!baseSha || !headSha || !baseRef || !repositoryId) return false;
+
+    try {
+      // Refresh the PR before making the decision. Both sides must still be the
+      // exact commits whose mergeability was checked above.
+      const currentPR = await this.github.pulls.get({
+        owner: this.owner,
+        repo: this.repo,
+        pull_number: prNumber,
+      });
+      if (
+        currentPR.data.state !== "open" ||
+        currentPR.data.user.login !== appConfig.botName ||
+        currentPR.data.base.ref !== incomingPR.base.ref ||
+        currentPR.data.head.label !== incomingPR.head.label ||
+        currentPR.data.base.sha !== baseSha ||
+        currentPR.data.head.sha !== headSha
+      ) {
+        this.logger.debug(`#${prNumber} merge-ff PR changed; skipping`);
+        return false;
+      }
+
+      // Compare upstream...destination using immutable SHAs. ahead_by is the
+      // number of commits unique to the destination.
+      const comparison = await this.github.repos.compareCommits({
+        owner: this.owner,
+        repo: this.repo,
+        base: headSha,
+        head: baseSha,
+        per_page: 1,
+      });
+
+      if (
+        comparison.data.status === "behind" &&
+        comparison.data.ahead_by === 0 &&
+        comparison.data.behind_by > 0
+      ) {
+        await this.hardResetCommit(
+          baseRef,
+          headSha,
+          baseSha,
+          repositoryId,
+        );
+        this.logger.info(`#${prNumber} merge-ff fast-forwarded by hard reset`);
+        return true;
+      }
+
+      if (
+        comparison.data.status === "diverged" &&
+        comparison.data.ahead_by > 0 &&
+        comparison.data.behind_by > 0
+      ) {
+        await this.mergePR(prNumber, "merge", headSha);
+        this.logger.info(`#${prNumber} merge-ff merged diverged histories`);
+        return true;
+      }
+
+      this.logger.debug(
+        { comparison: comparison.data.status },
+        `#${prNumber} merge-ff comparison is not safe to mutate`,
+      );
+      return false;
+    } catch (err) {
+      this.logger.error({ err }, `#${prNumber} merge-ff failed`);
+      return false;
+    }
+  }
+
   private async mergePR(
     prNumber: number | undefined,
     mergeMethod: "merge" | "squash" | "rebase" = "merge",
+    sha?: string,
   ): Promise<void> {
     if (!prNumber) return;
 
@@ -469,21 +553,46 @@ export class Pull {
       repo: this.repo,
       pull_number: prNumber,
       merge_method: mergeMethod,
+      sha,
     });
   }
 
   private async hardResetCommit(
     baseRef: string | undefined,
     sha: string,
+    expectedHeadOid?: string,
+    repositoryId?: string,
   ): Promise<void> {
     if (!baseRef || !sha) return;
 
-    await this.github.git.updateRef({
-      owner: this.owner,
-      repo: this.repo,
-      ref: `heads/${baseRef}`,
-      sha,
-      force: true,
-    });
+    if (!expectedHeadOid || !repositoryId) {
+      await this.github.git.updateRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `heads/${baseRef}`,
+        sha,
+        force: true,
+      });
+      return;
+    }
+
+    // updateRefs applies beforeOid as an atomic compare-and-swap. A concurrent
+    // destination update therefore rejects this mutation instead of being lost.
+    await this.github.graphql(
+      `mutation UpdateRefs($input: UpdateRefsInput!) {
+        updateRefs(input: $input) { clientMutationId }
+      }`,
+      {
+        input: {
+          repositoryId,
+          refUpdates: [{
+            name: `refs/heads/${baseRef}`,
+            beforeOid: expectedHeadOid,
+            afterOid: sha,
+            force: true,
+          }],
+        },
+      },
+    );
   }
 }

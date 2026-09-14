@@ -101,8 +101,10 @@ to yours using **hard reset** periodically. You can also manually
    rules: # Array of rules
      - base: master # Required. Target branch
        upstream: wei:master # Required. Must be in the same fork network.
-       mergeMethod: hardreset # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
+       mergeMethod: hardreset # Optional, one of [none, merge, squash, rebase, hardreset, merge-ff], Default: none.
        mergeUnstable: false # Optional, merge pull request even when the mergeable_state is not clean. Default: false
+     # merge-ff hard-resets only when the destination has no unique commits;
+     # diverged histories are merged normally. It fails closed if topology changes.
      - base: dev
        upstream: master # Required. Can be a branch in the same forked repo.
        assignees: # Optional

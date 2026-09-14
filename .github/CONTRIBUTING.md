@@ -161,6 +161,8 @@ graph TD
      - `squash`: Squash and merge
      - `rebase`: Rebase and merge
      - `hardreset`: Force push to base branch
+     - `merge-ff`: Fast-forward a destination with no unique commits; otherwise
+       merge diverged histories
    - Handles merge conflicts:
      - Adds conflict label
      - Assigns conflict reviewers
