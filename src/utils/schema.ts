@@ -26,6 +26,9 @@ const pullRuleSchema = z.object({
   conflictReviewers: z.array(z.string()).default([]).describe(
     "Merge Conflict Reviewers for the pull requests",
   ),
+  conflictComment: z.string().trim().min(1).optional().describe(
+    "Comment posted once when a merge conflict is detected (supports @mentions)",
+  ),
 });
 
 const pullConfigSchema = z.object({

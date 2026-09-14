@@ -9,6 +9,7 @@ const validConfigs = [
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: true, assignees: ['wei'] }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'] }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', autoMerge: false, reviewers: ['wei'], conflictReviewers: ['saurabh702'] }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', conflictComment: '@wei, this pull request has merge conflicts.' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'squash', mergeUnstable: true }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', mergeMethod: 'hardreset', assignees: ['wei'] }] },
 ] as const;
@@ -30,6 +31,9 @@ const invalidConfigs = [
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', assignees: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '' }] },
   { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', reviewers: '', conflictReviewers: '' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', conflictComment: '' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', conflictComment: '   ' }] },
+  { version: '1', rules: [{ base: 'master', upstream: 'upstream:master', conflictComment: true }] },
   { version: '1', rules: [{ base: 'master', upstream: '' }] },
   { version: '1', rules: [{ base: 'master', autoMerge: 1 }] },
   { version: '1', rules: [{ base: 'master', autoMerge: '' }] },

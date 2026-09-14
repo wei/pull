@@ -9,6 +9,7 @@ import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-meth
 import { appConfig } from "@/src/configs/app-config.ts";
 import { logger as pullLogger } from "@/src/utils/logger.ts";
 import { getPRBody, getPRTitle, timeout } from "@/src/utils/helpers.ts";
+import { postConflictCommentOnce } from "@/src/processor/conflict-notification.ts";
 
 interface PullOptions {
   owner: string;
@@ -171,6 +172,16 @@ export class Pull {
     if (rule?.conflictReviewers?.length) {
       await this.addReviewers(prNumber, rule.conflictReviewers);
     }
+
+    if (rule?.conflictComment) {
+      await postConflictCommentOnce(this.github, this.logger, {
+        owner: this.owner,
+        repo: this.repo,
+        issueNumber: prNumber,
+        comment: rule.conflictComment,
+        botLogin: appConfig.botName,
+      });
+    }
   }
 
   private async processMerge(
@@ -293,7 +304,9 @@ export class Pull {
 
     if (res.data.length > 0) {
       this.logger.debug(
-        `Found ${res.data.length} open ${pluralize("PR", res.data.length, true)} from ${appConfig.botName}`,
+        `Found ${res.data.length} open ${
+          pluralize("PR", res.data.length, true)
+        } from ${appConfig.botName}`,
       );
 
       for (const issue of res.data) {
